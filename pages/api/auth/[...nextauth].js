@@ -1,6 +1,7 @@
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import FacebookProvider from "next-auth/providers/facebook"
+import CredentialsProvider from "next-auth/providers/credentials";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
 import clientPromise from "../../../lib/mongodb"
 
@@ -29,6 +30,23 @@ export default NextAuth({
       },
     }),
     */
+
+    // CredentialsProvider({
+    //   name: "credentials",
+    //   credentials: {
+    //     username: {label: "Email", type:"email", placeholder:"johndoe@test.com"},
+    //     password: {label: "Password", type:"password"},
+    //   },
+    //   authorize: (credentials) => {
+    //     if(credentials.username === "john" && credentials.password ==="test"){
+    //       return {
+    //         id:2,
+    //         name: "John",
+    //         email: "johndoe@test.com",
+    //       };
+    //     }
+    //   }
+    // }),
     FacebookProvider({
       clientId: process.env.FACEBOOK_ID,
       clientSecret: process.env.FACEBOOK_SECRET,
@@ -41,8 +59,8 @@ export default NextAuth({
           id: profile.sub,
           name: profile.name,
           email: profile.email,
-          image: profile.picture,
-          role: 'user',
+          image: null,
+          role: "user"
         }
       },
     }),  
@@ -68,8 +86,8 @@ export default NextAuth({
           token.user = user
           //token.user.role = "admin"
         }
-
-        // console.log(token)
+      console.log("JWT")
+      console.log(token)
         // token.role = user.role
       return token
     },
@@ -78,7 +96,14 @@ export default NextAuth({
       // session.userRole = "admin"
       //session.user.role = user.role
       session.user.role = token.user.role;
+      console.log("session")
+      console.log(session)
       return session
     },
   },
+  events: {
+    async signIn(message){
+        console.log(message);
+    }
+  }
 })

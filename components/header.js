@@ -12,10 +12,14 @@ import Logout from '../components/logout'
 // component that works on pages which support both client and server side
 // rendering, and avoids any flash incorrect content on initial page load.
 export default function Header() {
-  const { data: session } = useSession()
-
   const router = useRouter();
 
+  const { data: session, status } = useSession()
+  console.log({session, status})
+  if (status === "loading") {
+    return <></>;
+  }
+  
   return (
     <header>
       <Container>
@@ -31,15 +35,64 @@ export default function Header() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="nav-custom me-auto">
-              <Link href="/" passHref >
-                <Nav.Link className={router.asPath == "/" ? "active" : ""}>Home</Nav.Link> 
-              </Link>
-              <Link href="/movies" passHref >
-                <Nav.Link className={router.asPath == "/movies" ? "active" : ""}>Movies</Nav.Link> 
-              </Link>
-              <Link href="/theaters" passHref>
-                <Nav.Link className={router.asPath == "/theaters" ? "active" : ""}>Theaters</Nav.Link>
-              </Link>
+              {!session 
+                ?
+                  <>
+                    <Link href="/" passHref >
+                      <Nav.Link className={router.asPath == "/" ? "active" : ""}>Home</Nav.Link> 
+                    </Link>
+                    <Link href="/movies" passHref >
+                      <Nav.Link className={router.asPath == "/movies" ? "active" : ""}>Movies</Nav.Link> 
+                    </Link>
+                    <Link href="/cinemas" passHref>
+                      <Nav.Link className={router.asPath == "/cinemas" ? "active" : ""}>Theaters</Nav.Link>
+                    </Link>
+                  </>
+                :
+               <>
+                  {session != "undefined" &&(
+                    <>
+                      {!session || session.user.role == "user" &&(
+                        <>
+                          <Link href="/" passHref >
+                            <Nav.Link className={router.asPath == "/" ? "active" : ""}>Home</Nav.Link> 
+                          </Link>
+                          <Link href="/movies" passHref >
+                            <Nav.Link className={router.asPath == "/movies" ? "active" : ""}>Movies</Nav.Link> 
+                          </Link>
+                          <Link href="/cinemas" passHref>
+                            <Nav.Link className={router.asPath == "/cinemas" ? "active" : ""}>Theaters</Nav.Link>
+                          </Link>
+                        </>
+                      )
+                      }
+                      {session.user.role == "moderator" &&(
+                        <>
+                          <Link href="/moderator/movies" passHref >
+                            <Nav.Link className={router.asPath == "/moderator/movies" ? "active" : ""}>(M)Movies</Nav.Link> 
+                          </Link>
+                        </>
+                      )
+                      }
+                      {session.user.role == "admin" &&(
+                        <>
+                          <Link href="/admin/cinemas" passHref>
+                            <Nav.Link className={router.asPath == "/admin/cinemas" ? "active" : ""}>(A)Cinemas</Nav.Link>
+                          </Link>
+                          <Link href="/admin/users" passHref>
+                            <Nav.Link className={router.asPath == "/admin/users" ? "active" : ""}>(A)Users</Nav.Link>
+                          </Link>
+                        </>
+                      )
+                      }
+                    </>            
+                  ) 
+                  }
+               </>     
+              }
+              
+              
+              
 
             </Nav>
             <Nav className="nav-custom">
