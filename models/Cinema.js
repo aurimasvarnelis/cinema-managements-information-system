@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { stringifyQuery } from "next/dist/server/server-route-utils";
 
 const CinemaSchema = new mongoose.Schema({
   name: {

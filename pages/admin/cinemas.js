@@ -2,7 +2,6 @@ import Layout from "../../components/layout"
 import dbConnect from '../../lib/dbConnect'
 import Cinema from '../../models/Cinema'
 import { Button, Col, Container, Row, Modal, Form, Table } from "react-bootstrap"
-import { useState } from 'react'
 import { AddCinema } from "../../components/admin/cinemas/AddCinema"
 import { ViewCinema } from "../../components/admin/cinemas/ViewCinema"
 import { EditCinema } from "../../components/admin/cinemas/EditCinema"

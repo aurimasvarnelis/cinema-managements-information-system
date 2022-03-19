@@ -1,5 +1,6 @@
 import dbConnect from '../../../lib/dbConnect'
 import Movie from '../../../models/Movie'
+import multer from 'multer'
 
 export default async function handler(req, res) {
   const {

@@ -1,4 +1,6 @@
 import Link from "next/link"
+// import dbConnect from '../lib/dbConnect'
+// import Cinema from '../models/Cinema'
 import Image from 'next/image'
 import { signIn, signOut, useSession } from "next-auth/react"
 import Logo from '../public/raqua-cinema.png'
@@ -8,10 +10,7 @@ import { useRouter } from "next/router";
 import Login from '../components/login'
 import Logout from '../components/logout'
 
-// The approach used in this component shows how to build a sign in and sign out
-// component that works on pages which support both client and server side
-// rendering, and avoids any flash incorrect content on initial page load.
-export default function Header() {
+export default function Header({ cinemas }) {
   const router = useRouter();
 
   const { data: session, status } = useSession()
@@ -19,6 +18,12 @@ export default function Header() {
   if (status === "loading") {
     return <></>;
   }
+
+  const handleTheaterSelect = (data) => {
+    postData(data)
+    handleClose()
+    //alert(`Room ${data.name} has been added.`)
+  };
   
   return (
     <header>
@@ -71,6 +76,12 @@ export default function Header() {
                           <Link href="/moderator/movies" passHref >
                             <Nav.Link className={router.asPath == "/moderator/movies" ? "active" : ""}>(M)Movies</Nav.Link> 
                           </Link>
+                          <Link href="/moderator/rooms" passHref >
+                            <Nav.Link className={router.asPath == "/moderator/rooms" ? "active" : ""}>(M)Rooms</Nav.Link> 
+                          </Link>
+                          <Link href="/moderator/sessions" passHref >
+                            <Nav.Link className={router.asPath == "/moderator/sessions" ? "active" : ""}>(M)Sessions</Nav.Link> 
+                          </Link>
                         </>
                       )
                       }
@@ -89,17 +100,15 @@ export default function Header() {
                   ) 
                   }
                </>     
-              }
-              
-              
-              
+              }     
 
             </Nav>
             <Nav className="nav-custom">
-              {/* <DropdownButton title="Select theater" id="theater-dropdown-menu" onSelect={handleTheaterSelect}>
+            
+              <DropdownButton title="Select cinema" id="theater-dropdown-menu" onSelect={handleTheaterSelect}>
                 <Dropdown.Item eventKey="kaunas">Kaunas</Dropdown.Item>
                 <Dropdown.Item eventKey="vilnius">Vilnius</Dropdown.Item>
-              </DropdownButton>  */}   
+              </DropdownButton>     
               {session
               ? <Logout />
               : <Login />     
@@ -112,3 +121,19 @@ export default function Header() {
     </header>
   )
 }
+
+
+// export async function getServerSideProps() {
+//   await dbConnect()
+
+//   /* find all the data in our database */
+//   const result = await Cinema.find({})
+//   const cinemas = result.map((doc) => {
+//     const cinema = doc.toObject()
+//     cinema._id = cinema._id.toString()
+//     return cinema
+//   })
+
+//   return { props: { cinemas: cinemas } }
+// }
+
