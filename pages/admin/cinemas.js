@@ -9,7 +9,7 @@ import { DeleteCinema } from "../../components/admin/cinemas/DeleteCinema"
 
 export default function cinemas({ cinemas }) {
   return (
-    <Layout>
+    <>
       <Container>
         <AddCinema />
 
@@ -41,7 +41,7 @@ export default function cinemas({ cinemas }) {
         </Table>
         
       </Container>
-    </Layout>
+    </>
   )
 }
 

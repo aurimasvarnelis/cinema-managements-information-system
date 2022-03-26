@@ -9,20 +9,42 @@ import styles from "./header.module.css"
 import { useRouter } from "next/router";
 import Login from '../components/login'
 import Logout from '../components/logout'
+import { setCookies, getCookie } from 'cookies-next';
+import { useState, useEffect } from 'react'
+import { render } from "react-dom"
+import {atom, selector, useRecoilState} from 'recoil';
+import { cinemaState } from "../atoms/cinemaAtom";
+//import { getCinemas } from "../controllers/cinemaController"
+import axios from "axios"
 
-export default function Header({ cinemas }) {
+export default function Header() {
+  const { data: session, status } = useSession()
+
   const router = useRouter();
 
-  const { data: session, status } = useSession()
-  console.log({session, status})
-  if (status === "loading") {
-    return <></>;
-  }
+  const [cinema, setCinema] = useRecoilState(cinemaState);
+  const [cinemas, setCinemas] = useState();
+
+  useEffect(() => {
+    //const MONGODB_URI = process.env.NODE_ENV.MONGODB_URI;
+    //console.log(MONGODB_URI)
+    setCinema(getCookie('cinema')) 
+    fetch(`http://localhost:3000/api/cinemas`)
+      .then((res) => res.json(res))
+      .then((data) => {
+        setCinemas(data)
+      }) 
+  });
+
+  // console.log({session, status})
+  // if (status === "loading") {
+  //   return <></>;
+  // }
 
   const handleTheaterSelect = (data) => {
-    postData(data)
-    handleClose()
-    //alert(`Room ${data.name} has been added.`)
+    setCinema(data);
+    setCookies("cinema", data);
+    //router.push("/")
   };
   
   return (
@@ -105,9 +127,12 @@ export default function Header({ cinemas }) {
             </Nav>
             <Nav className="nav-custom">
             
-              <DropdownButton title="Select cinema" id="theater-dropdown-menu" onSelect={handleTheaterSelect}>
-                <Dropdown.Item eventKey="kaunas">Kaunas</Dropdown.Item>
-                <Dropdown.Item eventKey="vilnius">Vilnius</Dropdown.Item>
+              <DropdownButton title={cinema} id="theater-dropdown-menu" onSelect={handleTheaterSelect}>
+                {cinemas &&
+                  cinemas.map((cinema) => (
+                    <Dropdown.Item key={cinema._id} eventKey={cinema.name}>{cinema.name} | {cinema.location}</Dropdown.Item>
+                  ))
+                }
               </DropdownButton>     
               {session
               ? <Logout />
@@ -121,19 +146,3 @@ export default function Header({ cinemas }) {
     </header>
   )
 }
-
-
-// export async function getServerSideProps() {
-//   await dbConnect()
-
-//   /* find all the data in our database */
-//   const result = await Cinema.find({})
-//   const cinemas = result.map((doc) => {
-//     const cinema = doc.toObject()
-//     cinema._id = cinema._id.toString()
-//     return cinema
-//   })
-
-//   return { props: { cinemas: cinemas } }
-// }
-

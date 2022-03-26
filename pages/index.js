@@ -8,7 +8,7 @@ export default function Home() {
   // const card1 = require('./images/lalaland-slider.jpg'); 
   // const card2 = require('./images/batman-slider.jpg'); 
   return (
-    <Layout>
+    <>
       <Container className="home-carousel">
       <Carousel>
         <Carousel.Item interval={100000}>
@@ -43,6 +43,6 @@ export default function Home() {
         
       </Carousel>
     </Container>
-    </Layout>  
+    </>  
   )
 }

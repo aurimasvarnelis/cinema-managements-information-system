@@ -14,7 +14,7 @@ import { getSession } from "next-auth/react"
 
 export default function users({ users }) {
   return (
-    <Layout>
+    <>
       <Container>
         {/* <AddUser /> */}
 
@@ -50,7 +50,7 @@ export default function users({ users }) {
         </Table>
         
       </Container>
-    </Layout>
+    </>
   )
 }
 

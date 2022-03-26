@@ -1,32 +1,26 @@
-import dbConnect from '../../../lib/dbConnect'
-import Cinema from '../../../models/Cinema'
+import nextConnect from 'next-connect'
+import { dbMiddleware } from "../../../middlewares/dbMiddleware"
+import { getCinemas, postCinema } from "../../../controllers/cinemaController"
 
-export default async function handler(req, res) {
-  const { method } = req
+const handler = nextConnect({
+  onError: (err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).end("Something broke!");
+  },
+  onNoMatch: (req, res) => {
+    res.status(404).end("Page is not found");
+  },
+})
+  .use(async (req, res, next) => {
+    await dbMiddleware(req, res, next);
+  })
+  .get(async (req, res) => {
+    const result = await getCinemas(req);
+    res.send(result);
+  })
+  .post(async (req, res) => {
+    const result = await postCinema(req);
+    res.send(result);
+  });
 
-  await dbConnect()
-
-  switch (method) {
-    case 'GET':
-      try {
-        const cinemas = await Cinema.find({}) /* find all the data in our database */
-        res.status(200).json({ success: true, data: cinemas })
-      } catch (error) {
-        res.status(400).json({ success: false })
-      }
-      break
-    case 'POST':
-      try {
-        const cinema = await Cinema.create(
-          req.body
-        ) /* create a new model in the database */
-        res.status(201).json({ success: true, data: cinema })
-      } catch (error) {
-        res.status(400).json({ success: false })
-      }
-      break
-    default:
-      res.status(400).json({ success: false })
-      break
-  }
-}
+  export default handler;

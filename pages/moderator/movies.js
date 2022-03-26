@@ -10,7 +10,7 @@ import { ViewMovie } from "../../components/moderator/movies/ViewMovie"
 
 export default function movies({ movies }) {
   return (
-    <Layout>
+    <>
       <Container>     
         <AddMovie />
              
@@ -57,7 +57,7 @@ export default function movies({ movies }) {
           </Row>
         ))}
       </Container>
-    </Layout>
+    </>
   )
 }
 

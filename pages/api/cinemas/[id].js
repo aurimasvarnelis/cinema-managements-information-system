@@ -1,56 +1,39 @@
-import dbConnect from '../../../lib/dbConnect'
-import Cinema from '../../../models/Cinema'
+import nextConnect from 'next-connect'
+import { dbMiddleware } from "../../../middlewares/dbMiddleware"
+import { getCinema, putCinema, deleteCinema } from "../../../controllers/cinemaController"
 
-export default async function handler(req, res) {
-  const {
-    query: { id },
-    method,
-  } = req
+const handler = nextConnect({
+  onError: (err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).end("Something broke!");
+  },
+  onNoMatch: (req, res) => {
+    res.status(404).end("Page is not found");
+  },
+})
+  .use(async (req, res, next) => {
+    await dbMiddleware(req, res, next);
+  })
+  .get(async (req, res) => {
+    const result = await getCinema(req);
+    res.send(result);
+  })
+  .put(async (req, res) => {
+    const result = await putCinema(req);
+    res.send(result);
+  })
+  .delete(async (req, res) => {
+    const result = await deleteCinema(req);
+    res.send(result);
+    // try {
+    //   const deletedCinema = await deleteCinema(req);
+    //   if (!deletedCinema) {
+    //     return res.status(400).end()
+    //   }
+    //   res.send(result);
+    // } catch (error) {
+    //   res.status(400).end()
+    // }
+  })
 
-  await dbConnect()
-
-  switch (method) {
-    case 'GET' /* Get a model by its ID */:
-      try {
-        const cinema = await Cinema.findById(id)
-        if (!cinema) {
-          return res.status(400).json({ success: false })
-        }
-        res.status(200).json({ success: true, data: cinema })
-      } catch (error) {
-        res.status(400).json({ success: false })
-      }
-      break
-
-    case 'PUT' /* Edit a model by its ID */:
-      try {
-        const cinema = await Cinema.findByIdAndUpdate(id, req.body, {
-          new: true,
-          runValidators: true,
-        })
-        if (!cinema) {
-          return res.status(400).json({ success: false })
-        }
-        res.status(200).json({ success: true, data: cinema })
-      } catch (error) {
-        res.status(400).json({ success: false })
-      }
-      break
-
-    case 'DELETE' /* Delete a model by its ID */:
-      try {
-        const deletedCinema = await Cinema.deleteOne({ _id: id })
-        if (!deletedCinema) {
-          return res.status(400).json({ success: false })
-        }
-        res.status(200).json({ success: true, data: {} })
-      } catch (error) {
-        res.status(400).json({ success: false })
-      }
-      break
-
-    default:
-      res.status(400).json({ success: false })
-      break
-  }
-}
+  export default handler;
