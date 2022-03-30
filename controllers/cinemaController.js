@@ -1,4 +1,3 @@
-import dbConnect from "../lib/dbConnect"
 import Cinema from "../models/Cinema"
 
 async function getCinemas() {
@@ -6,8 +5,8 @@ async function getCinemas() {
   return cinemas;
 }
 
-async function getCinema(req) {
-  const cinema = await Cinema.findById(req.query.id)
+async function getCinema(cinemaId) {
+  const cinema = await Cinema.findById(cinemaId)
   return cinema;
 }
 

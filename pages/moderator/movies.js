@@ -1,6 +1,4 @@
-import Layout from "../../components/layout"
 import dbConnect from '../../lib/dbConnect'
-import Link from 'next/link'
 import Movie from '../../models/Movie'
 import { Button, Col, Container, Row, Modal, Form } from "react-bootstrap"
 import { useState } from 'react'
@@ -61,19 +59,18 @@ export default function movies({ movies }) {
   )
 }
 
-/* Retrieves movie(s) data from mongodb database */
 export async function getServerSideProps() {
   await dbConnect()
 
   /* find all the data in our database */
   const result = await Movie.find({})
-  const movies = result.map((doc) => {
-    const movie = doc.toObject()
-    movie._id = movie._id.toString()
-    return movie
-  })
+  // const movies = result.map((doc) => {
+  //   const movie = doc.toObject()
+  //   movie._id = movie._id.toString()
+  //   return movie
+  // })
 
-  return { props: { movies: movies } }
+  return { props: { movies: JSON.parse(JSON.stringify(result)) } }
 }
 
 

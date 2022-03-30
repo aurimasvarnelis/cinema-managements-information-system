@@ -12,7 +12,7 @@ import Logout from '../components/logout'
 import { setCookies, getCookie } from 'cookies-next';
 import { useState, useEffect } from 'react'
 import { render } from "react-dom"
-import {atom, selector, useRecoilState} from 'recoil';
+import { atom, selector, useRecoilState } from 'recoil';
 import { cinemaState } from "../atoms/cinemaAtom";
 //import { getCinemas } from "../controllers/cinemaController"
 import axios from "axios"
@@ -26,15 +26,23 @@ export default function Header() {
   const [cinemas, setCinemas] = useState();
 
   useEffect(() => {
-    //const MONGODB_URI = process.env.NODE_ENV.MONGODB_URI;
-    //console.log(MONGODB_URI)
     setCinema(getCookie('cinema')) 
-    fetch(`http://localhost:3000/api/cinemas`)
-      .then((res) => res.json(res))
-      .then((data) => {
-        setCinemas(data)
-      }) 
-  });
+    const response = fetchCinemas()
+  }, []);
+
+  async function fetchCinemas(){
+    //const MONGODB_URI = process.env.NODE_ENV.MONGODB_URI;
+    const response = await fetch(`http://localhost:3000/api/cinemas`)
+    .then((res) => res.json(res))
+    .then((data) => {
+      setCinemas(data)
+      // const selected = data.find((e) => {
+      //   return e._id === getCookie('cinema')
+      // })
+      // setCinema(selected.name) 
+    }) 
+    return response
+  }
 
   // console.log({session, status})
   // if (status === "loading") {
@@ -42,9 +50,13 @@ export default function Header() {
   // }
 
   const handleTheaterSelect = (data) => {
-    setCinema(data);
-    setCookies("cinema", data);
-    //router.push("/")
+    const selected = cinemas.find((e) => {
+      return e._id === data
+    })
+    setCinema(selected.name);
+    setCookies("cinema", selected.name);
+    setCookies("cinemaId", selected._id);
+    router.replace(router.asPath)
   };
   
   return (
@@ -130,7 +142,7 @@ export default function Header() {
               <DropdownButton title={cinema} id="theater-dropdown-menu" onSelect={handleTheaterSelect}>
                 {cinemas &&
                   cinemas.map((cinema) => (
-                    <Dropdown.Item key={cinema._id} eventKey={cinema.name}>{cinema.name} | {cinema.location}</Dropdown.Item>
+                    <Dropdown.Item key={cinema._id} eventKey={cinema._id}>{cinema.name} | {cinema.location}</Dropdown.Item>
                   ))
                 }
               </DropdownButton>     

@@ -1,4 +1,3 @@
-import Layout from "../../components/layout"
 import dbConnect from '../../lib/dbConnect'
 import Link from 'next/link'
 import User from '../../models/User'

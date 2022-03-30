@@ -1,4 +1,3 @@
-import Layout from "../../components/layout"
 import dbConnect from '../../lib/dbConnect'
 import Cinema from '../../models/Cinema'
 import { Button, Col, Container, Row, Modal, Form, Table } from "react-bootstrap"
