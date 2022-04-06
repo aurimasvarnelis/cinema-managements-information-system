@@ -1,15 +1,15 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const CellSchema = new mongoose.Schema({
+const ColumnSchema = new mongoose.Schema({
   status: {
     type: String,
   }
 })
 
 const RowSchema = new mongoose.Schema({
-  cells: [
-    CellSchema
+  columns: [
+    ColumnSchema
   ]
 })
 

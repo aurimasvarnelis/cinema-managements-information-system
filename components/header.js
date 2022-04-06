@@ -1,21 +1,16 @@
 import Link from "next/link"
-// import dbConnect from '../lib/dbConnect'
-// import Cinema from '../models/Cinema'
 import Image from 'next/image'
 import { signIn, signOut, useSession } from "next-auth/react"
 import Logo from '../public/raqua-cinema.png'
 import { Navbar, Container, Nav, NavDropdown, DropdownButton, Dropdown } from 'react-bootstrap'
 import styles from "./header.module.css"
 import { useRouter } from "next/router";
-import Login from '../components/login'
-import Logout from '../components/logout'
+import Login from './auth/login'
+import Logout from './auth/logout'
 import { setCookies, getCookie } from 'cookies-next';
 import { useState, useEffect } from 'react'
-import { render } from "react-dom"
-import { atom, selector, useRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { cinemaState } from "../atoms/cinemaAtom";
-//import { getCinemas } from "../controllers/cinemaController"
-import axios from "axios"
 
 export default function Header() {
   const { data: session, status } = useSession()

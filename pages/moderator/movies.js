@@ -2,9 +2,10 @@ import dbConnect from '../../lib/dbConnect'
 import Movie from '../../models/Movie'
 import { Button, Col, Container, Row, Modal, Form } from "react-bootstrap"
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
 import { AddMovie } from "../../components/moderator/movies/AddMovie"
 import { ViewMovie } from "../../components/moderator/movies/ViewMovie"
+import { EditMovie } from "../../components/moderator/movies/EditMovie"
+import { DeleteMovie } from "../../components/moderator/movies/DeleteMovie"
 
 export default function movies({ movies }) {
   return (
@@ -51,6 +52,8 @@ export default function movies({ movies }) {
 
             <Col>
               <ViewMovie movie={movie}/>
+              <EditMovie movie={movie}/>
+              <DeleteMovie movie={movie}/>
             </Col>
           </Row>
         ))}

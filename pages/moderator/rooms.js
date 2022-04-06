@@ -2,10 +2,10 @@ import dbConnect from '../../lib/dbConnect'
 //import Room from '../../models/Room'
 import { Button, Col, Container, Row, Modal, Form, Table } from "react-bootstrap"
 import { useEffect, useState } from 'react'
-// import { AddRoom } from "../../components/admin/rooms/AddRoom"
-// import { ViewRoom } from "../../components/admin/rooms/ViewRoom"
-// import { EditRoom } from "../../components/admin/rooms/EditRoom"
-// import { DeleteRoom } from "../../components/admin/rooms/DeleteRoom"
+import { AddRoom } from "../../components/moderator/rooms/AddRoom"
+import { ViewRoom } from "../../components/moderator/rooms/ViewRoom"
+// import { EditRoom } from "../../components/admin/movies/EditRoom"
+// import { DeleteRoom } from "../../components/admin/movies/DeleteRoom"
 import { getRooms } from "../../controllers/roomController"
 import { setCookies, getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
@@ -14,22 +14,22 @@ import { atom, selector, useRecoilState } from 'recoil';
 export default function Rooms({ rooms }) {
   const router = useRouter()
 
-  const refreshData = () => router.replace(router.asPath);
+  //const refreshData = () => router.replace(router.asPath);
   
   //const [cinema, setCinema] = useRecoilState(cinemaState);
   
-  useEffect(() => {
-    fetch('http://localhost:3000/api/cinemas')
-      .then((res) => res.json())
-      .then((data) => {
-        rooms = data;
-      })
-  }, [rooms])
+  // useEffect(() => {
+  //   fetch('http://localhost:3000/api/cinemas')
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       rooms = data;
+  //     })
+  // }, [rooms])
 
   return (
     <>
       <Container>
-        {/* <AddRoom /> */}
+        <AddRoom />
 
         <Table striped bordered hover>
           <thead>
@@ -49,8 +49,8 @@ export default function Rooms({ rooms }) {
                 </td>
 
                 <td>
-                  {/* <ViewRoom room={room}/>
-                  <EditRoom room={room}/>
+                  <ViewRoom room={room}/>
+                  {/* <EditRoom room={room}/>
                   <DeleteRoom room={room} /> */}
                 </td>
               </tr>
@@ -67,7 +67,6 @@ export async function getServerSideProps({ req, res }) {
   await dbConnect()
 
   const cinemaId = getCookie('cinemaId', { req, res })
-  console.log(cinemaId)
   const data = await getRooms(cinemaId)
 
   return { 
