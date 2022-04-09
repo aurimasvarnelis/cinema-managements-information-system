@@ -15,34 +15,27 @@ const MovieSchema = new mongoose.Schema({
     type: String,
     //required: [true, 'Please provide a name for this movie'],
   },
-  // director: {
-  //   type: String,
-  // },
-  // writer: {
-  //   type: String,
-  // },
-  // actor: {
-  //   type: String,
-  // },
-  // census: {
-  //   type: String,
-  // },
-  // genre: {
-  //   type: String,
-  // },
-  // duration: {
-  //   type: String,
-  // },
-  // premiere: {
-  //   type: String,
-  // },
-  // description: {
-  //   type: String,
-  // },
-
-
-
-
+  director: {
+    type: String,
+  },
+  actors: {
+    type: String,
+  },
+  census: {
+    type: String,
+  },
+  genre: {
+    type: String,
+  },
+  duration: {
+    type: String,
+  },
+  premiere_date: {
+    type: Date,
+  },
+  synopsis: {
+    type: String,
+  },
 })
 
 export default mongoose.models.Movie || mongoose.model('Movie', MovieSchema)

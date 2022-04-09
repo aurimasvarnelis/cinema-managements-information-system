@@ -1,6 +1,6 @@
 import nextConnect from 'next-connect'
 import { dbMiddleware } from "../../../middlewares/dbMiddleware"
-import { getMovies, postMovie } from "../../../controllers/movieController"
+import { getSessions, postSession } from "../../../controllers/sessionController"
 
 const handler = nextConnect({
   onError: (err, req, res, next) => {
@@ -15,11 +15,11 @@ const handler = nextConnect({
     await dbMiddleware(req, res, next);
   })
   .get(async (req, res) => {
-    const result = await getMovies(req);
+    const result = await getSessions(req.query.cinemaId);
     res.send(result);
   })
   .post(async (req, res) => {
-    const result = await postMovie(req);
+    const result = await postSession(req);
     res.send(result);
   });
 

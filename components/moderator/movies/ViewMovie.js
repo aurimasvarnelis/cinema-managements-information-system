@@ -19,17 +19,45 @@ export function ViewMovie({ movie }) {
       <Modal show={show} onHide={handleClose} centered>
         
         <Modal.Header closeButton>
-          <Modal.Title>View cinema</Modal.Title>
+          <Modal.Title>View movie</Modal.Title>
         </Modal.Header>
         <Modal.Body> 
           <Form id="hook-form" >         
             <Form.Group className="mb-3" >
               <Form.Label>Poster</Form.Label>
-              <Form.Group><embed src={movie.poster}></embed></Form.Group>
+              <Form.Group><embed height="100px" src={movie.poster}></embed></Form.Group>
             </Form.Group>      
             <Form.Group className="mb-3" >
               <Form.Label>Name</Form.Label>
               <Form.Control disabled defaultValue={movie.name}/>
+            </Form.Group>
+            <Form.Group className="mb-3" >
+              <Form.Label>Director</Form.Label>
+              <Form.Control disabled defaultValue={movie.director}/>
+            </Form.Group>
+            <Form.Group className="mb-3" >
+              <Form.Label>Actors</Form.Label>
+              <Form.Control disabled defaultValue={movie.actors}/>
+            </Form.Group>
+            <Form.Group className="mb-3" >
+              <Form.Label>Age census</Form.Label>
+              <Form.Control disabled defaultValue={movie.census}/>
+            </Form.Group>
+            <Form.Group className="mb-3" >
+              <Form.Label>Genre</Form.Label>
+              <Form.Control disabled defaultValue={movie.genre}/>
+            </Form.Group>
+            <Form.Group className="mb-3" >
+              <Form.Label>Duration</Form.Label>
+              <Form.Control disabled defaultValue={movie.duration}/>
+            </Form.Group>
+            <Form.Group className="mb-3" >
+              <Form.Label>Premiere date</Form.Label>
+              <Form.Control disabled defaultValue={movie.premiere_date}/>
+            </Form.Group>
+            <Form.Group className="mb-3" >
+              <Form.Label>Synopsis</Form.Label>
+              <Form.Control disabled defaultValue={movie.synopsis}/>
             </Form.Group>
             
           </Form>

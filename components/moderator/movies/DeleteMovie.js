@@ -42,7 +42,7 @@ export function DeleteMovie({ movie }) {
 
       <Modal show={show} onHide={handleClose} centered size="sm">
         <Modal.Header closeButton>
-          <Modal.Title>Delete theater</Modal.Title>
+          <Modal.Title>Delete movie</Modal.Title>
         </Modal.Header>
 
         <Modal.Footer>

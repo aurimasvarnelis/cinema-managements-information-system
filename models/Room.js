@@ -33,6 +33,4 @@ const RoomSchema = new mongoose.Schema({
   // },
 })
 
-RoomSchema.set("versionKey", false);
-
 export default mongoose.models.Room || mongoose.model('Room', RoomSchema)

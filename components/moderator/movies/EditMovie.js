@@ -3,13 +3,16 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 
+// TODO: fix image upload preview
 export function EditMovie({ movie }) {
   // Model state
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  const { register, handleSubmit } = useForm()
+  // Validation
+  const [validated, setValidated] = useState(false);
+  // Form hook
+  const { register, handleSubmit, reset } = useForm();
 
   // Refreshing page after updating data
   const router = useRouter()
@@ -30,18 +33,27 @@ export function EditMovie({ movie }) {
     if (res.status < 300) {
       refreshData();
     }
-
-    const resData = await res.json()
-    console.log(resData)
+    //const resData = await res.json()
+    //console.log(resData)
   }
 
 
-  const onSubmit = (data) => {
-    putData(data)
-    handleClose()
-    //console.log(data);
-   // alert(`Theater ${data.name} has been updated.`)
+  const onSubmit = (data, event) => {
+    const form = event.target;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+      setValidated(true);
+    }
+    else {
+      putData(data);
+      handleClose();
+      reset();
+      setValidated(false);
+    }
+    //alert(`Room ${data.name} has been added.`)
   };
+
   return (
     <>
       <Button variant="outline-warning" className="me-2" onClick={handleShow}>
@@ -51,20 +63,62 @@ export function EditMovie({ movie }) {
         </svg>
       </Button>
       
-      <Modal show={show} onHide={handleClose} centered>
+      <Modal size="lg" show={show} onHide={() => {handleClose(); setValidated(false);}} centered>
         <Modal.Header closeButton>
           <Modal.Title>Edit movie</Modal.Title>
         </Modal.Header>
         <Modal.Body> 
-          <Form id="hook-form" onSubmit={handleSubmit(onSubmit)}>               
+          <Form noValidate id="hook-form" validated={validated} onSubmit={handleSubmit(onSubmit)}> 
+            {/* <Form.Group className="mb-3" controlId="validationPoster">
+              <Form.Label>Poster</Form.Label>
+              <Form.Control required accept=".png, .jpg" type="file" {...register("poster")}/>
+              <Form.Group><embed height="100px" src={movie.poster}></embed></Form.Group>
+            </Form.Group>             */}
             <Form.Group className="mb-3" >
               <Form.Label>Name</Form.Label>
               <Form.Control required type="text" placeholder="Enter name" defaultValue={movie.name} {...register("name")}/>
             </Form.Group>
-            <Form.Group className="mb-3" >
-              <Form.Label>Location</Form.Label>
-              <Form.Control required type="text" placeholder="Enter location" defaultValue={movie.location} {...register("location")}/>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="director">Director</Form.Label>
+              <Form.Control  type="text" placeholder="Director" defaultValue={movie.director} {...register("director")}/>
             </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="actors">Actors</Form.Label>
+              <Form.Control  type="text" placeholder="Actors" defaultValue={movie.actors} {...register("actors")}/>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="census">Age census</Form.Label>
+              <Form.Select defaultValue={movie.census} {...register("census")}>  
+                <option key="blankChoice" hidden value> Select age census </option> 
+                <option>V</option>
+                <option>N-7</option>
+                <option>N-13</option>
+                <option>N-16</option>
+                <option>N-18</option>
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="genre">Genre</Form.Label>
+              <Form.Select defaultValue={movie.genre} {...register("genre")}>
+                <option key="blankChoice" hidden value> Select genre </option>    
+                <option>Drama</option>
+                <option>Comedy</option>
+                <option>Action</option>
+                <option>Animation</option>
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="duration">Duration</Form.Label>
+              <Form.Control  type="number" placeholder="Duration" defaultValue={movie.duration} {...register("duration")}/>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="premiere_date">Premiere date</Form.Label>
+              <Form.Control  type="date" placeholder="Premiere" defaultValue={movie.premiere_date} {...register("premiere_date")}/>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="synopsis">Synopsis</Form.Label>
+              <Form.Control  type="text" placeholder="Description" defaultValue={movie.synopsis} {...register("synopsis")}/>
+            </Form.Group> 
           </Form>
         </Modal.Body>
         <Modal.Footer>

@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 
 
+// TODO: get census and genre selection from database
 export function AddMovie() {
   // Model state
   const [show, setShow] = useState(false);
@@ -79,13 +80,13 @@ export function AddMovie() {
       
       <Modal size="lg" show={show} onHide={() => {handleClose(); setValidated(false);}} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Add a movie</Modal.Title>
+          <Modal.Title>Add movie</Modal.Title>
         </Modal.Header>
         <Modal.Body> 
           <Form noValidate id="hook-form" validated={validated} onSubmit={handleSubmit(onSubmit)}>
             <Form.Group className="mb-3" controlId="validationPoster">
               <Form.Label>Poster</Form.Label>
-              <Form.Control required accept=".png, .jpg" type="file" {...register("poster")}/>
+              <Form.Control required accept=".png, .jpg" type="file" {...register("poster")}/>      
             </Form.Group>    
             {/* <Form.Group className="mb-3">
               <Form.Label htmlFor="cover">Cover</Form.Label>
@@ -97,21 +98,18 @@ export function AddMovie() {
               {/* <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback> */}
               {/* <Form.Control.Feedback type="invalid">Please choose a movie name.</Form.Control.Feedback> */}
             </Form.Group>
-            {/* <Form.Group className="mb-3">
-              <Form.Label htmlFor="capacity">Director(s)</Form.Label>
-              <Form.Control  type="text" placeholder="Director(s)" {...register("director")}/>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="director">Director</Form.Label>
+              <Form.Control  type="text" placeholder="Director" {...register("director")}/>
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label htmlFor="capacity">Writer(s)</Form.Label>
-              <Form.Control  type="text" placeholder="Writer(s)" {...register("writer")}/>
+              <Form.Label htmlFor="actors">Actors</Form.Label>
+              <Form.Control  type="text" placeholder="Actors" {...register("actors")}/>
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label htmlFor="capacity">Actors(s)</Form.Label>
-              <Form.Control  type="text" placeholder="Actors(s)" {...register("actor")}/>
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label htmlFor="capacity">Age census</Form.Label>
-              <Form.Select  {...register("census")}>   
+              <Form.Label htmlFor="census">Age census</Form.Label>
+              <Form.Select placeholder="Actors" {...register("census")}>  
+                <option key="blankChoice" hidden value> Select age census </option> 
                 <option>V</option>
                 <option>N-7</option>
                 <option>N-13</option>
@@ -120,28 +118,27 @@ export function AddMovie() {
               </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label htmlFor="capacity">Genre</Form.Label>
-              <Form.Select  {...register("genre")}>   
+              <Form.Label htmlFor="genre">Genre</Form.Label>
+              <Form.Select {...register("genre")}>
+                <option key="blankChoice" hidden value> Select genre </option>    
                 <option>Drama</option>
                 <option>Comedy</option>
                 <option>Action</option>
-                <option>N-16</option>
-                <option>N-18</option>
+                <option>Animation</option>
               </Form.Select>
-         
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label htmlFor="capacity">Duration</Form.Label>
-              <Form.Control  type="time" placeholder="Duration" {...register("duration")}/>
+              <Form.Label htmlFor="duration">Duration</Form.Label>
+              <Form.Control  type="number" placeholder="Duration" {...register("duration")}/>
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label htmlFor="capacity">Premiere</Form.Label>
-              <Form.Control  type="date" placeholder="Premiere" {...register("premiere")}/>
+              <Form.Label htmlFor="premiere_date">Premiere date</Form.Label>
+              <Form.Control  type="date" placeholder="Premiere" {...register("premiere_date")}/>
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label htmlFor="capacity">Description</Form.Label>
-              <Form.Control  type="text" placeholder="Description" {...register("description")}/>
-            </Form.Group>  */}
+              <Form.Label htmlFor="synopsis">Synopsis</Form.Label>
+              <Form.Control  type="text" placeholder="Description" {...register("synopsis")}/>
+            </Form.Group> 
           </Form>
         </Modal.Body>
         <Modal.Footer>

@@ -15,16 +15,19 @@ export default function movies({ movies }) {
              
         <Row className="item-header">
           <Col>
+            Poster
+          </Col>
+          <Col>
             Name
           </Col>
           <Col>
-            Writers
+            Premiere date
           </Col>
           <Col>
-            Actors
+            Genre
           </Col>
           <Col>
-            Action
+            Actions
           </Col>
         </Row>
         {/* Create a card for each movie */}
@@ -43,11 +46,15 @@ export default function movies({ movies }) {
             </Col>
 
             <Col>
+              {movie.premiere_date}
               {/* <ul>
                 {movie.actors.map((data, index) => (
                   <li key={index}>{data} </li>
                 ))}
               </ul> */}
+            </Col>
+            <Col>
+              {movie.genre}
             </Col>
 
             <Col>
