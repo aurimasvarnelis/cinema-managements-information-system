@@ -28,13 +28,9 @@ export function EditMovie({ movie }) {
       },
       body: JSON.stringify(data),
     })
-    // Check that our status code is in the 200s,
-    // meaning the request was successful.
     if (res.status < 300) {
       refreshData();
     }
-    //const resData = await res.json()
-    //console.log(resData)
   }
 
 
@@ -48,7 +44,6 @@ export function EditMovie({ movie }) {
     else {
       putData(data);
       handleClose();
-      reset();
       setValidated(false);
     }
     //alert(`Room ${data.name} has been added.`)

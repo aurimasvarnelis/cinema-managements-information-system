@@ -11,15 +11,14 @@ export async function getSession(req) {
 }
 
 export async function postSession(req) {
-  const session = await Session.create({
-    ...req.body,
-    cinema_id: req.query.cinemaId,
-  })
+  const session = await Session.create(
+    req.body
+  )
   return session;
 }
 
 export async function putSession(req) {
-  const session = await Session.findByIdAndUpdate(req.query.id, req.body, {
+  const session = await Session.findByIdAndUpdate(req.query.sessionId, req.body, {
     new: true,
     runValidators: true,
   })
@@ -27,6 +26,6 @@ export async function putSession(req) {
 }
 
 export async function deleteSession(req) {
-  const deletedSession = await Session.deleteOne({ _id: req.query.id })
+  const deletedSession = await Session.deleteOne({ _id: req.query.sessionId })
   return deletedSession;
 }

@@ -24,6 +24,10 @@ const RoomSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  capacity: {
+    type: Number,
+    required: false,
+  },
   rows: [
     RowSchema
   ]

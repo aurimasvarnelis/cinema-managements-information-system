@@ -1,60 +1,50 @@
 import dbConnect from '../../lib/dbConnect'
-//import Session from '../../models/Session'
 import { Button, Col, Container, Row, Modal, Form, Table } from "react-bootstrap"
-import { useEffect, useState } from 'react'
 import { AddSession } from "../../components/moderator/sessions/AddSession"
-// import { ViewSession } from "../../components/moderator/sessions/ViewSession"
-// import { EditSession } from "../../components/admin/movies/EditSession"
-// import { DeleteSession } from "../../components/admin/movies/DeleteSession"
+import { ViewSession } from "../../components/moderator/sessions/ViewSession"
+import { EditSession } from "../../components/moderator/sessions/EditSession"
+import { DeleteSession } from "../../components/moderator/sessions/DeleteSession"
 import { getSessions } from "../../controllers/sessionController"
-import { setCookies, getCookie } from 'cookies-next';
-import { useRouter } from 'next/router';
-import { atom, selector, useRecoilState } from 'recoil';
+import { getRooms } from "../../controllers/roomController"
+import { getMovies } from "../../controllers/movieController"
+import { getCookie } from 'cookies-next';
 
-export default function Sessions({ sessions }) {
-  const router = useRouter()
-
-  //const refreshData = () => router.replace(router.asPath);
-  
-  //const [cinema, setCinema] = useRecoilState(cinemaState);
-  
-  // useEffect(() => {
-  //   fetch('http://localhost:3000/api/cinemas')
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       sessions = data;
-  //     })
-  // }, [sessions])
+export default function Sessions({ sessions, movies, rooms, cinemaId }) {
 
   return (
     <>
       <Container>
-        <AddSession />
+        <AddSession movies={movies} rooms={rooms} cinemaId={cinemaId}/>
 
         <Table striped bordered hover>
           <thead>
             <tr>  
-              <th>Name</th>
+              <th>Movie</th>
               <th>Room</th>
               <th>Time</th>
+              <th>Status</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {sessions.map((session) => (
-              <tr key={session._id} className="item-row">
-                <td>{session.name}</td>
-
+          {sessions.map((session) => {
+            const movie = movies.find(movie => movie._id === session.movie_id)
+            const room = rooms.find(room => room._id === session.room_id)
+            return(
+              <tr key={session._id} className="item-row">            
+                <td>{movie.name}</td>
+                <td>{room.name}</td>
+                <td>{session.display_time}</td>
+                <td>{session.status}</td>
                 <td>
-                  {session.cinema_id}
-                </td>
-
-                <td>
-                  {/* <ViewSession session={session}/> */}
-                  {/* <EditSession session={session}/>
-                  <DeleteSession session={session} /> */}
+                  <ViewSession session={session} movie={movie} room={room}/>
+                  <EditSession session={session} movies={movies} rooms={rooms} movie={movie}/>
+                  <DeleteSession session={session} />
                 </td>
               </tr>
-            ))}
+            )
+            })
+          }           
           </tbody>
         </Table>
         
@@ -67,11 +57,17 @@ export async function getServerSideProps({ req, res }) {
   await dbConnect()
 
   const cinemaId = getCookie('cinemaId', { req, res })
-  const data = await getSessions(cinemaId)
+  
+  const sessions = await getSessions(cinemaId)
+  const movies = await getMovies()
+  const rooms = await getRooms(cinemaId)
 
   return { 
     props: { 
-      sessions: JSON.parse(JSON.stringify(data)) 
+      sessions: JSON.parse(JSON.stringify(sessions)),
+      movies: JSON.parse(JSON.stringify(movies)),
+      rooms: JSON.parse(JSON.stringify(rooms)),
+      cinemaId: cinemaId,
     } 
   }
 }

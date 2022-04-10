@@ -1,6 +1,6 @@
 import nextConnect from 'next-connect'
-import { dbMiddleware } from "../../../../middlewares/dbMiddleware"
-import { getRoom, putRoom, deleteRoom } from "../../../../controllers/roomController"
+import { dbMiddleware } from "../../../../../../middlewares/dbMiddleware"
+import { getRoom, putRoom, deleteRoom } from "../../../../../../controllers/roomController"
 
 // TODO: finish this
 const handler = nextConnect({

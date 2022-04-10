@@ -1,6 +1,6 @@
 import nextConnect from 'next-connect'
-import { dbMiddleware } from "../../../../middlewares/dbMiddleware"
-import { getSession, putSession, deleteSession } from "../../../../controllers/sessionController"
+import { dbMiddleware } from "../../../middlewares/dbMiddleware"
+import { getSession, putSession, deleteSession } from "../../../controllers/sessionController"
 
 
 // TODO: finish this

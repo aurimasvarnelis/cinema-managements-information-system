@@ -4,7 +4,8 @@ import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import { getCookie } from 'cookies-next';
 
-export function AddRoom({ cinemaId }) {
+// TODO: Complete room edit (doesn't work currently)
+export function EditRoom({ room, cinemaId }) {
   // Model state
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -25,10 +26,9 @@ export function AddRoom({ cinemaId }) {
     status: "available"
   }]);
 
-  const postData = async (data) => {
-    data.rows = rows;
-    const res = await fetch(`/api/cinemas/${cinemaId}/rooms`, {
-      method: 'POST',
+  const putData = async (data) => {
+    const res = await fetch(`/api/cinemas/${cinemaId}/rooms/${room._id}`, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -49,7 +49,6 @@ export function AddRoom({ cinemaId }) {
     else {
       postData(data);
       handleClose();
-      reset();
       setValidated(false);
     }
     //alert(`Room ${data.name} has been added.`)
@@ -114,21 +113,16 @@ export function AddRoom({ cinemaId }) {
 
   return (
     <>
-      <Button className="my-3" variant="success" onClick={handleShow}>
-          <div className="p-1 d-inline">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-square" viewBox="0 0 16 16">
-                  <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-              </svg>
-          </div>
-          <div className="p-1 d-inline">
-            Add a room
-          </div>
+      <Button variant="outline-warning" className="me-2" onClick={handleShow}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+          <path d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+        </svg>
       </Button>
       
       <Modal size="lg" show={show} onHide={() => {handleClose(); setValidated(false);}} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Add a room</Modal.Title>
+          <Modal.Title>Edit room</Modal.Title>
         </Modal.Header>
         <Modal.Body> 
         <Form noValidate id="hook-form" validated={validated} onSubmit={handleSubmit(onSubmit)}>
@@ -198,30 +192,16 @@ export function AddRoom({ cinemaId }) {
             )).reverse()}
           </Container>    
         </Container>
-
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" type="submit" form="hook-form">
-              Submit
-          </Button>
+            <Button variant="secondary" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button variant="primary" type="submit" form="hook-form">
+              Update
+            </Button>
         </Modal.Footer>
-      </Modal>        
+      </Modal>
     </>   
-  )
-}
-
-function AddRow({ rows, setRows }) {
-  return(
-    <Button onClick={handleAddRow}>
-      Add row
-    </Button>
-  )
-}
-
-function AddColumn() {
-  return(
-    <Button>
-      Add column
-    </Button>
   )
 }

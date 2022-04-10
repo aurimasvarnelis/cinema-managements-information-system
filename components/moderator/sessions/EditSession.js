@@ -6,8 +6,8 @@ import { useEffect } from "react"
 import { getCookie } from 'cookies-next';
 import moment from "moment"
 
-// TODO: fix refresh on cinema change and add field array later on
-export function AddSession({movies, rooms, cinemaId}) {
+// TODO: fix image upload preview
+export function EditSession({ session, movies, rooms, movie }) {
   // Model state
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -15,33 +15,29 @@ export function AddSession({movies, rooms, cinemaId}) {
   // Validation
   const [validated, setValidated] = useState(false);
   // Form hook
-  const { register, handleSubmit, reset, setValue } = useForm();
-
+  const { register, handleSubmit, setValue } = useForm();
+  
   // Refreshing page after updating data
   const router = useRouter()
   const refreshData = () => router.replace(router.asPath);
 
-  const postData = async (data) => {
-    data.cinema_id = cinemaId;
+  const putData = async (data) => {
     data.display_time = moment(data.start_time).format('HH:mm') + " - " + moment(data.end_time).format('HH:mm')
-    const res = await fetch('/api/sessions', {
-      method: 'POST',
+    const res = await fetch(`/api/sessions/${session._id}`, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     })
     if (res.status < 300) {
-      refreshData()
+      refreshData();
     }
   }
 
-  const [movie, setMovie] = useState();
-  const [disabled, setDisabled] = useState(true);
-
   const onMovieChange = (e) => {
-    setMovie(movies.find(movie => movie._id === e.target.value))
-    setDisabled(false)
+    console.log(movies.find(movie => movie._id === e.target.value))
+    movie = movies.find(movie => movie._id === e.target.value)
   }
 
   const onStartDateTimeChange = (e) => {
@@ -58,9 +54,8 @@ export function AddSession({movies, rooms, cinemaId}) {
       setValidated(true);
     }
     else {
-      postData(data);
+      putData(data);
       handleClose();
-      reset();
       setValidated(false);
     }
     //alert(`Session ${data.name} has been added.`)
@@ -68,28 +63,23 @@ export function AddSession({movies, rooms, cinemaId}) {
 
   return (
     <>
-      <Button className="my-3" variant="success" onClick={handleShow}>
-          <div className="p-1 d-inline">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-square" viewBox="0 0 16 16">
-                  <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-              </svg>
-          </div>
-          <div className="p-1 d-inline">
-            Add a session
-          </div>
+      <Button variant="outline-warning" className="me-2" onClick={handleShow}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+          <path d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+        </svg>
       </Button>
       
       <Modal size="lg" show={show} onHide={() => {handleClose(); setValidated(false);}} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Add a session</Modal.Title>
+          <Modal.Title>Edit session</Modal.Title>
         </Modal.Header>
         <Modal.Body> 
           <Form noValidate id="hook-form" validated={validated} onSubmit={handleSubmit(onSubmit)}>
             <Row className="mb-3">
               <Form.Group className="mb-3" as={Col}>
                 <Form.Label htmlFor="movie">Movie</Form.Label>
-                <Form.Select {...register("movie_id")} onChange={onMovieChange}>  
+                <Form.Select defaultValue={session.movie_id} {...register("movie_id")} onChange={onMovieChange}>  
                   <option key="blankMovie" hidden value> Select movie </option>        
                   {movies.map((movie) => (
                     <option key={movie._id} value={movie._id}>{movie.name}</option>
@@ -98,7 +88,7 @@ export function AddSession({movies, rooms, cinemaId}) {
               </Form.Group>
               <Form.Group className="mb-3" as={Col}>
                 <Form.Label htmlFor="movie">Room</Form.Label>
-                <Form.Select {...register("room_id")}>  
+                <Form.Select defaultValue={session.room_id} {...register("room_id")}>  
                   <option key="blankRoom" hidden value> Select room </option>        
                   {rooms.map((room) => (
                     <option key={room._id} value={room._id}>{room.name}</option>
@@ -108,18 +98,19 @@ export function AddSession({movies, rooms, cinemaId}) {
             </Row> 
             <Row className="mb-3">
               <Form.Group className="mb-3" as={Col}>
-                <Form.Label>Start time</Form.Label>
-                <Form.Control required disabled={disabled} type="datetime-local" min={moment(new Date()).format('YYYY-MM-DDTHH:mm')} placeholder="Start time" onSelect={onStartDateTimeChange} {...register("start_time")}/>
+                <Form.Label>Start time </Form.Label>
+                <Form.Control required type="datetime-local" min={moment(new Date()).format('YYYY-MM-DDTHH:mm')} 
+                  placeholder="Start time" onSelect={onStartDateTimeChange} defaultValue={moment(session.start_time).format('YYYY-MM-DDTHH:mm')} {...register("start_time")}/>
               </Form.Group>            
               <Form.Group className="mb-3" as={Col}>
                 <Form.Label>End time</Form.Label>
-                <Form.Control disabled type="datetime-local" {...register("end_time")}/>
+                <Form.Control disabled type="datetime-local" defaultValue={moment(session.end_time).format('YYYY-MM-DDTHH:mm')} {...register("end_time")}/>
               </Form.Group>
             </Row>
             <Form.Group className="mb-3">
               <Form.Label htmlFor="census">Status</Form.Label>
-              <Form.Select placeholder="Actors" {...register("status")}>  
-                <option key="blankStatus" hidden value> Select status </option>         
+              <Form.Select placeholder="Actors" defaultValue={session.status} {...register("status")}>  
+                <option key="blankChoice" hidden value> Select status </option>         
                 <option key="public" value="public">Public</option>
                 <option key="private" value="private">Private</option>
               </Form.Select>
@@ -127,11 +118,14 @@ export function AddSession({movies, rooms, cinemaId}) {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" type="submit" form="hook-form">
-              Submit
-          </Button>
+            <Button variant="secondary" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button variant="primary" type="submit" form="hook-form">
+              Update
+            </Button>
         </Modal.Footer>
-      </Modal>        
+      </Modal>
     </>   
   )
 }

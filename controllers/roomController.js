@@ -1,16 +1,16 @@
 import Room from "../models/Room"
 
-async function getRooms(cinemaId) {
+export async function getRooms(cinemaId) {
   const rooms = await Room.find({ cinema_id: cinemaId }).exec();
   return rooms;
 }
 
-async function getRoom(req) {
+export async function getRoom(req) {
   const room = await Room.findById(req.query.roomId)
   return room;
 }
 
-async function postRoom(req) {
+export async function postRoom(req) {
   const room = await Room.create({
     ...req.body,
     cinema_id: req.query.cinemaId,
@@ -18,23 +18,15 @@ async function postRoom(req) {
   return room;
 }
 
-async function putRoom(req) {
-  const room = await Room.findByIdAndUpdate(req.query.id, req.body, {
+export async function putRoom(req) {
+  const room = await Room.findByIdAndUpdate(req.query.roomId, req.body, {
     new: true,
     runValidators: true,
   })
   return room;
 }
 
-async function deleteRoom(req) {
-  const deletedRoom = await Room.deleteOne({ _id: req.query.id })
+export async function deleteRoom(req) {
+  const deletedRoom = await Room.deleteOne({ _id: req.query.roomId })
   return deletedRoom;
-}
-
-module.exports = {
-  getRooms,
-  getRoom,
-  postRoom,
-  putRoom,
-  deleteRoom
 }

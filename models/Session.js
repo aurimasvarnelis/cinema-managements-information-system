@@ -5,6 +5,10 @@ const { Schema } = mongoose;
 //var RoomSchema = require("./RoomSchema");
 
 const SessionSchema = new mongoose.Schema({
+  cinema_id: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
   room_id: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -19,7 +23,11 @@ const SessionSchema = new mongoose.Schema({
   },
   end_time: {
     type: Date,
-    required: false,
+    required: true,
+  },
+  display_time: {
+    type: String,
+    required: true,
   },
   status: {
     type: String,
