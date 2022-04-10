@@ -1,7 +1,6 @@
 import dbConnect from '../../lib/dbConnect'
 import Movie from '../../models/Movie'
-import { Button, Col, Container, Row, Modal, Form } from "react-bootstrap"
-import { useState } from 'react'
+import { Button, Col, Container, Row, Modal, Form, Table } from "react-bootstrap"
 import { AddMovie } from "../../components/moderator/movies/AddMovie"
 import { ViewMovie } from "../../components/moderator/movies/ViewMovie"
 import { EditMovie } from "../../components/moderator/movies/EditMovie"
@@ -13,57 +12,37 @@ export default function movies({ movies }) {
       <Container>     
         <AddMovie />
              
-        <Row className="item-header">
-          <Col>
-            Poster
-          </Col>
-          <Col>
-            Name
-          </Col>
-          <Col>
-            Premiere date
-          </Col>
-          <Col>
-            Genre
-          </Col>
-          <Col>
-            Actions
-          </Col>
-        </Row>
-        {/* Create a card for each movie */}
-        {movies.map((movie) => (
-          <Row key={movie._id} className="item-row">
-            {/* <img src={movie.image_url} /> */}
-            <Col><embed src={movie.poster} height="100px"></embed></Col>
+        <Table striped bordered hover>
+         <thead>
+            <tr>  
+              <th>Poster</th>
+              <th>Name</th>
+              <th>Premiere date</th>
+              <th>Genre</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {/* Create a card for each movie */}
+            {movies.map((movie) => (
+              <tr key={movie._id} className="item-row">
+                {/* <img src={movie.image_url} /> */}
+                <td><embed src={movie.poster} height="100px"></embed></td>
+                <td>{movie.name}</td>
+                <td>{movie.premiere_date}</td>
+                <td>{movie.genre}</td>
 
-            <Col>
-              {movie.name}
-              {/* <ul>
-                {movie.writers.map((data, index) => (
-                  <li key={index}>{data} </li>
-                ))}
-              </ul> */}
-            </Col>
-
-            <Col>
-              {movie.premiere_date}
-              {/* <ul>
-                {movie.actors.map((data, index) => (
-                  <li key={index}>{data} </li>
-                ))}
-              </ul> */}
-            </Col>
-            <Col>
-              {movie.genre}
-            </Col>
-
-            <Col>
-              <ViewMovie movie={movie}/>
-              <EditMovie movie={movie}/>
-              <DeleteMovie movie={movie}/>
-            </Col>
-          </Row>
-        ))}
+                <td>
+                  <ViewMovie movie={movie}/>
+                  <EditMovie movie={movie}/>
+                  <DeleteMovie movie={movie}/>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+  
+        </Table>
+        
       </Container>
     </>
   )
