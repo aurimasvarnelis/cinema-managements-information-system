@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-// var MovieSchema = require("./MovieSchema");
-
 const MovieSchema = new mongoose.Schema({
   poster: {
     //data: Buffer,
@@ -29,14 +27,13 @@ const MovieSchema = new mongoose.Schema({
     type: String,
   },
   duration: {
-    type: Number,
+    type: String,
   },
   premiere_date: {
-    type: String,
+    type: Date,
   },
   synopsis: {
     type: String,
   },
 })
 
-export default mongoose.models.Movie || mongoose.model('Movie', MovieSchema)

@@ -1,23 +1,20 @@
 import mongoose from "mongoose";
-const { Schema } = mongoose;
 
 const ColumnSchema = new mongoose.Schema({
   status: {
     type: String,
   }
-},
-{ _id: false })
+})
 
 const RowSchema = new mongoose.Schema({
   columns: [
     ColumnSchema
   ]
-},
-{ _id: false })
+})
 
 const RoomSchema = new mongoose.Schema({
   cinema_id: {
-    type: Schema.Types.ObjectId,
+    type: String,
     required: true,
   },
   name: {
@@ -34,6 +31,3 @@ const RoomSchema = new mongoose.Schema({
   //   type: String,
   // },
 })
-//const RoomSchema = require("./RoomSchema");
-
-export default mongoose.models.Room || mongoose.model('Room', RoomSchema)

@@ -2,7 +2,7 @@ import { Button, Col, Container, Row, Modal, Form, Table, Image, Stack, InputGro
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
-import { useEffect } from "react"
+import { getCookie } from 'cookies-next';
 
 export function AddRoom() {
   // Model state
@@ -14,6 +14,7 @@ export function AddRoom() {
   // Form hook
   const { register, handleSubmit, reset } = useForm();
   
+  const cinemaId = getCookie('cinemaId')
 
   // Refreshing page after updating data
   const router = useRouter()
@@ -30,7 +31,7 @@ export function AddRoom() {
   // post data using form data and rows
   const postData = async (data) => {
     data.rows = rows;
-    const res = await fetch('/api/cinemas/6222045bb2d59bf45f7be75d/rooms', {
+    const res = await fetch(`/api/cinemas/${cinemaId}/rooms`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -45,9 +46,6 @@ export function AddRoom() {
     // const resData = await res.json()
     // console.log(resData)
   }
-
-
-  
 
   const onSubmit = (data, event) => {
     const form = event.target;

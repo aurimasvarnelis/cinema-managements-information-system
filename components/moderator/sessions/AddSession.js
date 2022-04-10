@@ -3,7 +3,10 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import { useEffect } from "react"
+import { getCookie } from 'cookies-next';
+import moment from "moment"
 
+// TODO: fix refresh on cinema change
 export function AddSession() {
   // Model state
   const [show, setShow] = useState(false);
@@ -12,14 +15,14 @@ export function AddSession() {
   // Validation
   const [validated, setValidated] = useState(false);
   // Form hook
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, setValue } = useForm();
   
+  const cinemaId = getCookie('cinemaId')
 
   // Refreshing page after updating data
   const router = useRouter()
   const refreshData = () => router.replace(router.asPath);
   
-
   // fetch movies from api
   const [movies, setMovies] = useState([]);
   const fetchMovies = async () => {
@@ -27,8 +30,18 @@ export function AddSession() {
     const data = await res.json();
     setMovies(data);
   }
+
+  // fetch rooms from api
+  const [rooms, setRooms] = useState([]);
+  const fetchRooms = async () => {
+    const res = await fetch(`/api/cinemas/${cinemaId}/rooms`);
+    const data = await res.json();
+    setRooms(data);
+  }
+
   useEffect(() => {
    fetchMovies();
+   fetchRooms();
   }, [])
 
   // post data using form data and rows
@@ -40,13 +53,23 @@ export function AddSession() {
       },
       body: JSON.stringify(data),
     })
-    // Check that our status code is in the 200s,
-    // meaning the request was successful.
     if (res.status < 300) {
-      refreshData();
+      refreshData()
     }
-    // const resData = await res.json()
-    // console.log(resData)
+  }
+
+  const [movie, setMovie] = useState();
+  const [disabled, setDisabled] = useState(true);
+
+  const onMovieChange = (e) => {
+    setMovie(movies.find(movie => movie._id === e.target.value))
+    setDisabled(false)
+  }
+
+  const onStartTimeChange = (e) => {
+    var time = moment(e.target.value,'HH:mm')
+    time.add(movie.duration,'m')
+    setValue('end_time', time.format('HH:mm'))
   }
 
   const onSubmit = (data, event) => {
@@ -87,10 +110,36 @@ export function AddSession() {
           <Form noValidate id="hook-form" validated={validated} onSubmit={handleSubmit(onSubmit)}>
             <Form.Group className="mb-3">
               <Form.Label htmlFor="movie">Movie</Form.Label>
-              <Form.Select {...register("movie")}>  
+              <Form.Select {...register("movie")} onChange={onMovieChange}>  
+                <option key="blankChoice" hidden value> Select movie </option>        
                 {movies.map((movie) => (
-                  <option key={movie.id} value={movie.id}>{movie.name}</option>
+                  <option key={movie._id} value={movie._id}>{movie.name}</option>
                 ))}
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="movie">Room</Form.Label>
+              <Form.Select {...register("room")}>  
+                <option key="blankChoice" hidden value> Select room </option>        
+                {rooms.map((room) => (
+                  <option key={room.id} value={room.id}>{room.name}</option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Start time</Form.Label>
+              <Form.Control required disabled={disabled} type="time" placeholder="Start time" onSelect={onStartTimeChange} {...register("start_time")}/>
+            </Form.Group>            
+            <Form.Group className="mb-3">
+              <Form.Label>End time</Form.Label>
+              <Form.Control disabled type="time" {...register("end_time")}/>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="census">Status</Form.Label>
+              <Form.Select placeholder="Actors" {...register("status")}>  
+                <option key="blankChoice" hidden value> Select status </option>         
+                <option>Public</option>
+                <option>Private</option>
               </Form.Select>
             </Form.Group>
           </Form>

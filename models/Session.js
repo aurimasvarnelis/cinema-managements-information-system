@@ -1,14 +1,16 @@
 import mongoose from "mongoose";
+
 const { Schema } = mongoose;
 
-// TODO: add embedded room
+//var RoomSchema = require("./RoomSchema");
+
 const SessionSchema = new mongoose.Schema({
   room_id: {
-    type: String,
+    type: Schema.Types.ObjectId,
     required: true,
   },
   movie_id: {
-    type: String,
+    type: Schema.Types.ObjectId,
     required: true,
   },
   start_time: {
@@ -17,12 +19,15 @@ const SessionSchema = new mongoose.Schema({
   },
   end_time: {
     type: Date,
-    required: true,
+    required: false,
   },
   status: {
     type: String,
     required: false,
   }
+}, 
+{ 
+  timestamps: true 
 })
 
 export default mongoose.models.Session || mongoose.model('Session', SessionSchema)
