@@ -1,5 +1,4 @@
 import dbConnect from "../lib/dbConnect";
-import Movie from "../models/Movie";
 import {
   Button,
   Col,
@@ -11,20 +10,69 @@ import {
   Card,
 } from "react-bootstrap";
 import Image from "next/image";
-import { useState } from "react";
-
-export default function Movies({ movies }) {
+import { useEffect, useState } from "react";
+import {
+  getMovies,
+  getGenres,
+  getRatings,
+} from "../controllers/movieController";
+export default function Movies({ movies, genres, ratings }) {
   // checkbox filter for movies
-  const [filter, setFilter] = useState([]);
+  const [filterGenre, setGenreFilter] = useState([]);
+  const [filteredMovies, setFilteredMovies] = useState(movies);
+
+  // handle filter movies by filterGenre
+  const handleFilter = () => {
+    if (filterGenre.length === 0) {
+      setFilteredMovies(movies);
+    } else {
+      setFilteredMovies(
+        movies.filter((movie) => {
+          return filterGenre.includes(movie.genre);
+        })
+      );
+    }
+  };
+  useEffect(() => {
+    handleFilter();
+  }, [filterGenre]);
 
   return (
     <>
       <Container>
         <Row>
-          <Col xs={0} md={4} lg={4}></Col>
+          <Col xs={0} md={4} lg={4}>
+            <div className="filter">
+              <h2>Genre</h2>
+              {/* // checkbox filter map genres for movies  */}
+              <Form.Group controlId="formBasicCheckbox">
+                {genres.map((genre, idx) => {
+                  return (
+                    <Form.Check
+                      type="checkbox"
+                      label={genre}
+                      value={genre}
+                      key={idx}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setGenreFilter([...filterGenre, e.target.value]);
+                        } else {
+                          setGenreFilter(
+                            filterGenre.filter(
+                              (item) => item !== e.target.value
+                            )
+                          );
+                        }
+                      }}
+                    />
+                  );
+                })}
+              </Form.Group>
+            </div>
+          </Col>
           <Col xs={12} md={8} lg={8}>
             <Row>
-              {movies.map((movie) => (
+              {filteredMovies.map((movie) => (
                 <Col key={movie._id} xs={6} md={4} lg={4}>
                   <Card>
                     <div className="card-image-top">
@@ -57,13 +105,15 @@ export default function Movies({ movies }) {
 export async function getServerSideProps() {
   await dbConnect();
 
-  /* find all the data in our database */
-  const result = await Movie.find({});
-  // const movies = result.map((doc) => {
-  //   const movie = doc.toObject()
-  //   movie._id = movie._id.toString()
-  //   return movie
-  // })
+  const movies = await getMovies();
+  const genres = await getGenres();
+  const ratings = await getRatings();
 
-  return { props: { movies: JSON.parse(JSON.stringify(result)) } };
+  return {
+    props: {
+      movies: JSON.parse(JSON.stringify(movies)),
+      genres: JSON.parse(JSON.stringify(genres)),
+      ratings: JSON.parse(JSON.stringify(ratings)),
+    },
+  };
 }
