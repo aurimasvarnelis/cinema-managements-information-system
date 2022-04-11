@@ -59,8 +59,8 @@ export function AddSession({movies, rooms, cinemaId}) {
     }
     else {
       postData(data);
-      handleClose();
-      reset();
+      //handleClose();
+      //reset();
       setValidated(false);
     }
     //alert(`Session ${data.name} has been added.`)
