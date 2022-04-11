@@ -1,20 +1,29 @@
-import dbConnect from '../../lib/dbConnect'
-import Movie from '../../models/Movie'
-import { Button, Col, Container, Row, Modal, Form, Table } from "react-bootstrap"
-import { AddMovie } from "../../components/moderator/movies/AddMovie"
-import { ViewMovie } from "../../components/moderator/movies/ViewMovie"
-import { EditMovie } from "../../components/moderator/movies/EditMovie"
-import { DeleteMovie } from "../../components/moderator/movies/DeleteMovie"
+import dbConnect from "../../lib/dbConnect";
+// import Movie from "../../models/Movie";
+import {
+  Button,
+  Col,
+  Container,
+  Row,
+  Modal,
+  Form,
+  Table,
+} from "react-bootstrap";
+import { AddMovie } from "../../components/moderator/movies/AddMovie";
+import { ViewMovie } from "../../components/moderator/movies/ViewMovie";
+import { EditMovie } from "../../components/moderator/movies/EditMovie";
+import { DeleteMovie } from "../../components/moderator/movies/DeleteMovie";
+import { getMovies, getGenres, getRatings } from "../../controllers/movieController";
 
-export default function movies({ movies }) {
+export default function movies({ movies, genres, ratings }) {
   return (
     <>
-      <Container>     
-        <AddMovie />
-             
+      <Container>
+        <AddMovie genres={genres} ratings={ratings} />
+
         <Table striped bordered hover>
-         <thead>
-            <tr>  
+          <thead>
+            <tr>
               <th>Poster</th>
               <th>Name</th>
               <th>Premiere date</th>
@@ -23,43 +32,41 @@ export default function movies({ movies }) {
             </tr>
           </thead>
           <tbody>
-            {/* Create a card for each movie */}
             {movies.map((movie) => (
               <tr key={movie._id} className="item-row">
-                {/* <img src={movie.image_url} /> */}
-                <td><embed src={movie.poster} height="100px"></embed></td>
+                <td>
+                  <embed src={movie.poster} height="100px"></embed>
+                </td>
                 <td>{movie.name}</td>
                 <td>{movie.premiere_date}</td>
                 <td>{movie.genre}</td>
 
                 <td>
-                  <ViewMovie movie={movie}/>
-                  <EditMovie movie={movie}/>
-                  <DeleteMovie movie={movie}/>
+                  <ViewMovie movie={movie} />
+                  <EditMovie movie={movie} genres={genres} ratings={ratings}/>
+                  <DeleteMovie movie={movie} />
                 </td>
               </tr>
             ))}
           </tbody>
-  
         </Table>
-        
       </Container>
     </>
-  )
+  );
 }
 
 export async function getServerSideProps() {
-  await dbConnect()
+  await dbConnect();
 
-  /* find all the data in our database */
-  const result = await Movie.find({})
-  // const movies = result.map((doc) => {
-  //   const movie = doc.toObject()
-  //   movie._id = movie._id.toString()
-  //   return movie
-  // })
+  const movies = await getMovies();
+  const genres = await getGenres();
+  const ratings = await getRatings();
 
-  return { props: { movies: JSON.parse(JSON.stringify(result)) } }
+  return {
+    props: {
+      movies: JSON.parse(JSON.stringify(movies)),
+      genres: JSON.parse(JSON.stringify(genres)),
+      ratings: JSON.parse(JSON.stringify(ratings)),
+    },
+  };
 }
-
-

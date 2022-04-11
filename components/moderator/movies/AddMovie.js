@@ -14,7 +14,7 @@ import Image from "next/image";
 
 // TODO: get census and genre selection from database
 // TODO: set image max size to 5mb (5242880 bytes) and fix file select on canceling
-export function AddMovie() {
+export function AddMovie({ genres, ratings }) {
   // Model state
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -196,16 +196,16 @@ export function AddMovie() {
             <Row>
               <Col>
                 <Form.Group className="mb-3">
-                  <Form.Label htmlFor="census">Age census</Form.Label>
-                  <Form.Select placeholder="Actors" {...register("census")}>
+                  <Form.Label htmlFor="rating">Age rating</Form.Label>
+                  <Form.Select {...register("rating")}>
                     <option key="blankChoice" hidden value="">
-                      Select age census
+                      Select age rating
                     </option>
-                    <option>V</option>
-                    <option>N-7</option>
-                    <option>N-13</option>
-                    <option>N-16</option>
-                    <option>N-18</option>
+                    {ratings.map((rating, idx) => (
+                      <option key={idx} value={rating}>
+                        {rating}
+                      </option>
+                    ))}
                   </Form.Select>
                 </Form.Group>
               </Col>
@@ -216,10 +216,11 @@ export function AddMovie() {
                     <option key="blankChoice" hidden value="">
                       Select genre
                     </option>
-                    <option>Drama</option>
-                    <option>Comedy</option>
-                    <option>Action</option>
-                    <option>Animation</option>
+                    {genres.map((genre, idx) => (
+                      <option key={idx} value={genre}>
+                        {genre}
+                      </option>
+                    ))}
                   </Form.Select>
                 </Form.Group>
               </Col>

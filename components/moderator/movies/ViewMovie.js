@@ -40,8 +40,8 @@ export function ViewMovie({ movie }) {
               <Form.Control disabled defaultValue={movie.actors}/>
             </Form.Group>
             <Form.Group className="mb-3" >
-              <Form.Label>Age census</Form.Label>
-              <Form.Control disabled defaultValue={movie.census}/>
+              <Form.Label>Age rating</Form.Label>
+              <Form.Control disabled defaultValue={movie.rating}/>
             </Form.Group>
             <Form.Group className="mb-3" >
               <Form.Label>Genre</Form.Label>

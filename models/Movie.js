@@ -22,11 +22,34 @@ const MovieSchema = new mongoose.Schema({
   actors: {
     type: String,
   },
-  census: {
+
+  rating: {
     type: String,
+    enum: ["G", "PG", "PG-13", "R", "NC-17"],
   },
   genre: {
     type: String,
+    enum: [
+      "Action",
+      "Adventure",
+      "Animation",
+      "Comedy",
+      "Crime",
+      "Documentary",
+      "Drama",
+      "Family",
+      "Fantasy",
+      "History",
+      "Horror",
+      "Music",
+      "Mystery",
+      "Romance",
+      "Sci-Fi",
+      "Sport",
+      "Thriller",
+      "War",
+      "Western",
+    ],
   },
   duration: {
     type: Number,
@@ -37,6 +60,6 @@ const MovieSchema = new mongoose.Schema({
   synopsis: {
     type: String,
   },
-})
+});
 
-export default mongoose.models.Movie || mongoose.model('Movie', MovieSchema)
+export default mongoose.models.Movie || mongoose.model("Movie", MovieSchema);

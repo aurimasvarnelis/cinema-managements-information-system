@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 
 // TODO: add image size validation
-export function EditMovie({ movie }) {
+export function EditMovie({ movie, genres, ratings }) {
   // Model state
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -196,16 +196,16 @@ export function EditMovie({ movie }) {
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label htmlFor="census">Age census</Form.Label>
-              <Form.Select defaultValue={movie.census} {...register("census")}>
+              <Form.Label htmlFor="rating">Age rating</Form.Label>
+              <Form.Select defaultValue={movie.rating} {...register("rating")}>
                 <option key="blankChoice" hidden value="">
-                  Select age census
+                  Select age rating
                 </option>
-                <option>V</option>
-                <option>N-7</option>
-                <option>N-13</option>
-                <option>N-16</option>
-                <option>N-18</option>
+                {ratings.map((rating, idx) => (
+                  <option key={idx} value={rating}>
+                    {rating}
+                  </option>
+                ))}
               </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3">
@@ -214,10 +214,11 @@ export function EditMovie({ movie }) {
                 <option key="blankChoice" hidden value="">
                   Select genre
                 </option>
-                <option>Drama</option>
-                <option>Comedy</option>
-                <option>Action</option>
-                <option>Animation</option>
+                {genres.map((genre, idx) => (
+                  <option key={idx} value={genre}>
+                    {genre}
+                  </option>
+                ))}
               </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3">
