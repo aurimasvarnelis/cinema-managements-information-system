@@ -4,13 +4,15 @@ $main-brand-color: #7F53D2;
 $dark-accent: #8F6D96;
 $dark-shade: #4C475E;
 
+
+
 html,
 body {
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background-color: rgba(248,248,250) !important;
+  background-color: $light-shade !important;
 }
 
 a {
@@ -32,8 +34,8 @@ a {
   background-color: transparent;  
 }
 
-.nav-link, .nav-custom > .btn {
-  background-color: rgb(232, 110, 142);
+.nav-link, .nav-custom > .btn,  .cinema-dropdown-button > .btn, .profile-dropdown-button > .btn {
+  background-color: $light-accent;
   border-radius: 10px;
   margin: 0.5rem;
   padding-left: 1.5rem !important;
@@ -42,34 +44,34 @@ a {
   padding-bottom: 0.5rem !important;
   text-transform: uppercase;
   font-weight: bold;
-  box-shadow: 0 .5rem 1rem rgba(232, 110, 142, .4);
+  box-shadow: 0 .5rem 1rem rgba($light-accent, .4);
   transition: all 0.5s cubic-bezier(.645,.045,.355,1);
   font-size: 1.3rem;
   color: #ffffff !important;
-  border-color: rgb(232, 110, 142);
+  border-color: $light-accent;
   text-align: center;
 }
 
 .nav-link:focus,
 .nav-link.active  {
-  background-color: rgba(99,86,154, 0.6);
-  box-shadow: 0 .5rem 1rem rgba(99,86,154, .4);
+  background-color: rgba($main-brand-color, 0.9);
+  box-shadow: 0 .5rem 1rem rgba($main-brand-color, .5);
 }
 
 .nav-link:active,
 .nav-custom > .btn:focus,
 .nav-custom > .btn:active {    
   outline: 0;
-  background-color: rgb(232, 110, 142);
-  box-shadow: 0 .5rem 1rem rgba(232, 110, 142, .4);
+  background-color: $light-accent;
+  box-shadow: 0 .5rem 1rem rgba($light-accent, .5);
 }
 
 .nav-link:hover,
 .nav-custom > .btn:hover,
 .open>.dropdown-toggle.nav-custom > .btn {
-  box-shadow: 0 0 0 0.25rem rgba(99,86,154, 0.6);
-  background-color:  rgb(99,86,154);
-  border-color: rgb(232, 110, 142); /*set the color you want here*/
+  box-shadow: 0 0 0 0.25rem rgba($main-brand-color, 0.6);
+  background-color:  $main-brand-color;
+  border-color: $light-accent; /*set the color you want here*/
 }
 
 /* Login modal */
@@ -171,6 +173,17 @@ a {
   margin-left: 10px;
 }
 
+// .movie-info {
+//   background-color: transparent !important;
+// }
+
+// .movie-title {
+//   font-size: 5rem;
+// }
+
+
+
+
 /* Items */
 
 // .item-header {
@@ -181,7 +194,7 @@ a {
 //   margin-top: 1rem;
 //   margin-bottom: 1rem;
 //   border-radius: 0.5rem;
-//   box-shadow: 0rem .3rem 1rem rgba(232, 110, 142, 0.1);  
+//   box-shadow: 0rem .3rem 1rem rgba($light-accent, 0.1);  
 
 // }
 
@@ -194,13 +207,13 @@ a {
 // .col:nth-child(odd) {
 //   padding-top: 10px;
 //   padding-bottom: 10px;
-//   background-color: rgba(232, 110, 142, .3);
+//   background-color: rgba($light-accent, .3);
 // }
 
 // .col:nth-child(even) {
 //   padding-top: 10px;
 //   padding-bottom: 10px;
-//   background-color: rgba(232, 110, 142, .2);
+//   background-color: rgba($light-accent, .2);
 // }
 
 // .col:first-child{

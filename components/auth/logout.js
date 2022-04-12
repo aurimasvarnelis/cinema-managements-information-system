@@ -1,8 +1,7 @@
-import { useState } from 'react';
-import { Modal, Button, Form} from 'react-bootstrap';
+import { useState } from "react";
+import { Modal, Button, Form, Dropdown } from "react-bootstrap";
 //import { useNavigate } from "react-router";
-import { signOut } from 'next-auth/react';
-
+import { signOut } from "next-auth/react";
 
 export default function Logout() {
   const [show, setShow] = useState(false);
@@ -11,19 +10,18 @@ export default function Logout() {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  
-  const handleLogout = async () => {
 
+  const handleLogout = async () => {
     signOut();
     handleClose();
     //navigate("/");
-};
+  };
 
   return (
     <>
-      <Button variant="dark" onClick={handleShow}>
+      <Dropdown.Item as="div" variant="dark" onClick={handleShow}>
         Logout
-      </Button>
+      </Dropdown.Item>
 
       <Modal size="sm" centered show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -39,5 +37,5 @@ export default function Logout() {
         </Modal.Footer>
       </Modal>
     </>
-  )
+  );
 }
