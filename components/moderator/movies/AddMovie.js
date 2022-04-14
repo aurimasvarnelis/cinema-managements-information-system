@@ -249,12 +249,12 @@ export function AddMovie({ genres, ratings }) {
                 </Form.Group>
               </Col>
             </Row>
-
             <Form.Group className="mb-3">
               <Form.Label htmlFor="synopsis">Synopsis</Form.Label>
               <Form.Control
-                type="text"
-                placeholder="Description"
+                as="textarea"
+                rows="3"
+                placeholder="Synopsis"
                 {...register("synopsis")}
               />
             </Form.Group>

@@ -242,8 +242,9 @@ export function EditMovie({ movie, genres, ratings }) {
             <Form.Group className="mb-3">
               <Form.Label htmlFor="synopsis">Synopsis</Form.Label>
               <Form.Control
-                type="text"
-                placeholder="Description"
+                as="textarea"
+                rows="3"
+                placeholder="Synopsis"
                 defaultValue={movie.synopsis}
                 {...register("synopsis")}
               />

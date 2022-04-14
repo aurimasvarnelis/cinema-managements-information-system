@@ -4,7 +4,9 @@ $main-brand-color: #7F53D2;
 $dark-accent: #8F6D96;
 $dark-shade: #4C475E;
 
-
+:export {
+  main-brand-color: $main-brand-color
+}
 
 html,
 body {

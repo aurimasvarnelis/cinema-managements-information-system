@@ -60,6 +60,9 @@ const MovieSchema = new mongoose.Schema({
   synopsis: {
     type: String,
   },
+  trailer: {
+    type: String,
+  },
 });
 
 export default mongoose.models.Movie || mongoose.model("Movie", MovieSchema);

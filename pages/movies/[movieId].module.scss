@@ -1,0 +1,104 @@
+.movieSection {
+  margin-left: 4rem;
+  margin-right: 4rem;
+}
+
+.movieInfo {
+  dt {
+    float: left;
+    clear: left;
+    font-weight: bold;
+
+  }
+
+  dt::after {
+    content: ":";
+  }
+
+  dd {
+    margin: 0 0 0 80px;
+    padding: 0 0 0.5em 0;
+  }
+
+  color: gray;
+  font-size: 1rem;
+}
+
+// turn off all default styling
+.movieSynopsis {
+
+  // background: none;
+  // color: inherit;
+  // border: none;
+  // padding: 0;
+  // font-size: 1rem;
+  // cursor: pointer;
+  // outline: inherit;
+  // vertical-align: unset;
+  // text-decoration: none;
+  // display: block;
+  .movieSynopsisButton {
+    display: block;
+    padding: 0;
+
+  }
+
+  .movieSynopsisButton:hover {
+    outline: 0;
+    color: $main-brand-color;
+  }
+}
+
+.playerWrapper {
+  position: relative;
+  padding-top: 56.25%;
+  /* 720 / 1280 = 0.5625 */
+}
+
+.reactPlayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.sessions {
+
+  list-style: none;
+  padding: 0;
+
+  // dont show link decoration
+  a {
+    text-decoration: none;
+  }
+}
+
+.session {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+// align right of the container
+.sessionBuy {
+  float: right;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  background: $dark-accent;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 0.25rem;
+  transition: background 0.2s ease-in-out;
+  border: 0;
+
+
+  //on hover change background color
+  &:hover {
+    background: $dark-shade;
+  }
+
+}
+
+
+//.video-wrapper > video { width: 55vw; height: min-content; }
