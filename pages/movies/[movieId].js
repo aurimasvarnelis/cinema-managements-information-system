@@ -21,8 +21,6 @@ import { getSessionsByMovie } from "../../controllers/sessionController";
 import moment from "moment";
 import styles from "./[movieId].module.scss";
 
-//import YouTube from "react-youtube";
-
 export default function Movie({ movie, sessions }) {
 	const [showMore, setShowMore] = useState(false);
 
@@ -101,36 +99,35 @@ export default function Movie({ movie, sessions }) {
 							layout="responsive"
 						/>
 					</div>
+					<div className={styles.movieTags}></div>
+					<div className={styles.movieInfo}>
+						<dl>
+							<dt>Genre</dt>
+							<dd>{movie.genre}</dd>
+							<dt>Rating</dt>
+							<dd>{movie.rating}</dd>
+							<dt>Duration</dt>
+							<dd>{movie.duration} min.</dd>
+						</dl>
+					</div>
+					<div className={styles.movieSynopsis}>
+						<span className={`${styles.movieSynopsisText} `}>
+							{!showMore ? synopsis.substring(0, 100) + "..." : synopsis}
+						</span>
+						<Button
+							className={styles.movieSynopsisButton}
+							variant="link"
+							onClick={handleShowMore}
+						>
+							{showMore ? "Show less" : "Show more"}
+						</Button>
+					</div>
 				</Col>
 				<Col xs={12} md={7} lg={7} xl={7}>
 					<div className={styles.movieSection}>
 						<h1 className={styles.movieTitle}>{movie.name}</h1>
-						<div className={styles.movieTags}></div>
-						<div className={styles.movieInfo}>
-							<dl>
-								<dt>Genre</dt>
-								<dd>{movie.genre}</dd>
-								<dt>Rating</dt>
-								<dd>{movie.rating}</dd>
-								<dt>Duration</dt>
-								<dd>{movie.duration} min.</dd>
-							</dl>
-						</div>
-						<div className={styles.movieSynopsis}>
-							<span className={`${styles.movieSynopsisText} `}>
-								{!showMore ? synopsis.substring(0, 100) + "..." : synopsis}
-							</span>
-							<Button
-								className={styles.movieSynopsisButton}
-								variant="link"
-								onClick={handleShowMore}
-							>
-								{showMore ? "Show less" : "Show more"}
-							</Button>
-						</div>
 
-						<div className={styles.movieSchedule}>
-							<h2>Dates</h2>
+						<div className={styles.movieDate}>
 							<div className={styles.date}>
 								{/* // Form input type date with list of available dates from sessionsByDate array and select first sessionsByDate value */}
 								<DatePicker
@@ -168,15 +165,14 @@ export default function Movie({ movie, sessions }) {
 													{moment(session.start_time).format("HH:mm")}
 												</span>
 												<Link
-													href="/session/[sessionId]"
-													as={`/session/${session._id}`}
+													href="/sessions/[sessionId]"
+													as={`/sessions/${session._id}`}
 													passHref
 												>
 													<Button className={styles.sessionBuy}>
 														Buy tickets
 													</Button>
 												</Link>
-												<hr></hr>
 											</li>
 										)
 									)}

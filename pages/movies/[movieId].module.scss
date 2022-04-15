@@ -4,6 +4,12 @@
 }
 
 .movieInfo {
+  margin-top: 1rem;
+
+  dl {
+    margin: 0;
+  }
+
   dt {
     float: left;
     clear: left;
@@ -13,19 +19,25 @@
 
   dt::after {
     content: ":";
+    margin-right: 0.5rem;
   }
 
   dd {
-    margin: 0 0 0 80px;
+    //margin: 0 0 0 100px;
+    //margin-left: 4rem;
     padding: 0 0 0.5em 0;
   }
 
-  color: gray;
+  color: $textColorDark;
   font-size: 1rem;
 }
 
 // turn off all default styling
 .movieSynopsis {
+  margin-top: 1rem;
+
+  color: $textColorDark;
+  font-size: 1rem;
 
   // background: none;
   // color: inherit;
@@ -40,12 +52,13 @@
   .movieSynopsisButton {
     display: block;
     padding: 0;
-
+    text-decoration: none;
+    color: $dark-accent;
   }
 
   .movieSynopsisButton:hover {
     outline: 0;
-    color: $main-brand-color;
+    color: $dark-shade;
   }
 }
 
@@ -61,27 +74,50 @@
   left: 0;
 }
 
-.sessions {
+.date {
+  border-bottom: 1px solid #ccc;
+}
 
-  list-style: none;
+.sessions {
+  margin: 0;
   padding: 0;
 
   // dont show link decoration
   a {
     text-decoration: none;
   }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
 }
 
 .session {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 0;
+  padding-right: 0;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+}
+
+.sessionTime {
+  font-size: 1.8rem;
+  color: $textColorDark;
 }
 
 // align right of the container
 .sessionBuy {
-  float: right;
-  padding: 0.5rem;
-  margin: 0.5rem 0;
+
+  // float: right;
+  // display: flex;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   background: $dark-accent;
   color: white;
   text-align: center;
@@ -91,6 +127,9 @@
   border-radius: 0.25rem;
   transition: background 0.2s ease-in-out;
   border: 0;
+  box-shadow: 0 0 .5rem 0.25rem rgba($dark-accent, 0.4);
+  outline: 0;
+  margin-left: auto;
 
 
   //on hover change background color
