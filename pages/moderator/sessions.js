@@ -7,6 +7,10 @@ import {
 	Row,
 	Table,
 } from "react-bootstrap";
+import {
+	getSessions,
+	getTicketTypes,
+} from "../../controllers/sessionController";
 
 import { AddSession } from "../../components/moderator/sessions/AddSession";
 import { DeleteSession } from "../../components/moderator/sessions/DeleteSession";
@@ -16,14 +20,24 @@ import dbConnect from "../../lib/dbConnect";
 import { getCookie } from "cookies-next";
 import { getMovies } from "../../controllers/movieController";
 import { getRooms } from "../../controllers/roomController";
-import { getSessions } from "../../controllers/sessionController";
 import moment from "moment";
 
-export default function Sessions({ sessions, movies, rooms, cinemaId }) {
+export default function Sessions({
+	sessions,
+	movies,
+	rooms,
+	cinemaId,
+	ticketTypes,
+}) {
 	return (
 		<>
 			<Container>
-				<AddSession movies={movies} rooms={rooms} cinemaId={cinemaId} />
+				<AddSession
+					movies={movies}
+					rooms={rooms}
+					cinemaId={cinemaId}
+					ticketTypes={ticketTypes}
+				/>
 
 				<Table striped bordered hover>
 					<thead>
@@ -45,17 +59,19 @@ export default function Sessions({ sessions, movies, rooms, cinemaId }) {
 							return (
 								<tr key={session._id} className="item-row">
 									<td>{movie.name}</td>
-									<td>{room.name}</td>
+									<td>{session.room.name}</td>
 									<td>{moment(session.start_time).format("YYYY-MM-DD")}</td>
 									<td>{session.display_time}</td>
 									<td>{session.status}</td>
 									<td>
-										<ViewSession session={session} movie={movie} room={room} />
+										<ViewSession session={session} movie={movie} />
 										<EditSession
 											session={session}
 											movies={movies}
 											rooms={rooms}
 											movie={movie}
+											cinemaId={cinemaId}
+											ticketTypes={ticketTypes}
 										/>
 										<DeleteSession session={session} />
 									</td>
@@ -77,6 +93,7 @@ export async function getServerSideProps({ req, res }) {
 	const sessions = await getSessions(cinemaId);
 	const movies = await getMovies();
 	const rooms = await getRooms(cinemaId);
+	const ticketTypes = await getTicketTypes();
 
 	return {
 		props: {
@@ -84,6 +101,7 @@ export async function getServerSideProps({ req, res }) {
 			movies: JSON.parse(JSON.stringify(movies)),
 			rooms: JSON.parse(JSON.stringify(rooms)),
 			cinemaId: cinemaId,
+			ticketTypes: JSON.parse(JSON.stringify(ticketTypes)),
 		},
 	};
 }

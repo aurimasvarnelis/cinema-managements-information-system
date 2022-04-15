@@ -54,6 +54,5 @@ const RoomSchema = new mongoose.Schema({
 	},
 	rows: [RowSchema],
 });
-//const RoomSchema = require("./RoomSchema");
 
 export default mongoose.models.Room || mongoose.model("Room", RoomSchema);

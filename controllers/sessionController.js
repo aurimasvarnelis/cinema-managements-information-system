@@ -39,3 +39,9 @@ export async function deleteSession(req) {
 	const deletedSession = await Session.deleteOne({ _id: req.query.sessionId });
 	return deletedSession;
 }
+
+export async function getTicketTypes() {
+	const ticketTypes = await Session.schema.path("ticket_types.ticket_type_name")
+		.options.enum;
+	return ticketTypes;
+}
