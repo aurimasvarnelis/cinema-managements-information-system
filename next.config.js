@@ -19,5 +19,8 @@ module.exports = {
     $textColorLight: #e7d4e4;
   `,
 	},
+	env: {
+		url: "http://localhost:3000",
+	},
 	nextConfig,
 };

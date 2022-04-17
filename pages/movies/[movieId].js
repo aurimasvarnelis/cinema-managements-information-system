@@ -164,6 +164,7 @@ export default function Movie({ movie, sessions }) {
 												<span className={styles.sessionTime}>
 													{moment(session.start_time).format("HH:mm")}
 												</span>
+												<span className="mx-3">{session.room.name}</span>
 												<Link
 													href="/sessions/[sessionId]"
 													as={`/sessions/${session._id}`}

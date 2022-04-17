@@ -87,13 +87,13 @@ export default function Header() {
 											Movies
 										</Nav.Link>
 									</Link>
-									<Link href="/cinemas" passHref>
+									{/* <Link href="/cinemas" passHref>
 										<Nav.Link
 											className={router.asPath == "/cinemas" ? "active" : ""}
 										>
 											Cinemas
 										</Nav.Link>
-									</Link>
+									</Link> */}
 								</>
 							) : (
 								<>
@@ -118,7 +118,7 @@ export default function Header() {
 																Movies
 															</Nav.Link>
 														</Link>
-														<Link href="/cinemas" passHref>
+														{/* <Link href="/cinemas" passHref>
 															<Nav.Link
 																className={
 																	router.asPath == "/cinemas" ? "active" : ""
@@ -126,7 +126,7 @@ export default function Header() {
 															>
 																Cinemas
 															</Nav.Link>
-														</Link>
+														</Link> */}
 													</>
 												))}
 											{session.user.role == "moderator" && (
