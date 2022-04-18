@@ -98,9 +98,6 @@ export default function Session({ movieSession, movie, cinema, order }) {
 				} else {
 					movieSession.room = data.session.room;
 					order.tickets = data.order.tickets;
-					// order.tickets = order.tickets.filter(
-					// 	(ticket) => ticket._id !== ticket._id
-					// );
 					refreshData();
 				}
 			});
@@ -125,7 +122,7 @@ export default function Session({ movieSession, movie, cinema, order }) {
 	};
 
 	const handleSubmitOrder = async () => {
-		const response = await fetch(`${process.env.url}/api/orders`, {
+		const response = await fetch(`${process.env.url}/api/orders/submit-order`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",

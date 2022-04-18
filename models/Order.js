@@ -20,6 +20,10 @@ const OrderSchema = new Schema({
 			price: Number,
 		},
 	],
+	price_total: {
+		type: Number,
+		default: 0,
+	},
 	status: {
 		type: String,
 		enum: ["Reserved", "Pending", "Confirmed", "Cancelled"],

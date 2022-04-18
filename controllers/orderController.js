@@ -36,21 +36,29 @@ export async function addTicketToOrder(req) {
 	if (order) {
 		// update order
 		order.tickets = [...order.tickets, ticket];
+		order.price_total = order.price_total + ticket.price;
 		await order.save();
+
+		return {
+			order: order,
+			session: session,
+		};
 	} else {
 		// create new order
-		const order = new Order({
+		const newOrder = new Order({
 			user_id: user_id,
 			session_id: session_id,
 			tickets: [ticket],
+			price_total: ticket.price,
 		});
-		await order.save();
-	}
+		console.log(newOrder);
+		await newOrder.save();
 
-	return {
-		order: order,
-		session: session,
-	};
+		return {
+			order: newOrder,
+			session: session,
+		};
+	}
 }
 
 export async function removeTicketFromOrder(req) {
@@ -82,6 +90,7 @@ export async function removeTicketFromOrder(req) {
 				t.rowIndex !== ticket.rowIndex || t.columnIndex !== ticket.columnIndex
 			);
 		});
+		order.price_total = order.price_total - ticket.price;
 		await order.save();
 	}
 
@@ -104,6 +113,7 @@ export async function getCurrentUserOrder(userId, sessionId) {
 			user_id: userId,
 			session_id: sessionId,
 			tickets: [],
+			price_total: 0,
 		});
 		return order;
 	}
