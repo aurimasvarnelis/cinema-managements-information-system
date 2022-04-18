@@ -16,6 +16,7 @@ const handler = nextConnect({
 	})
 	.post(async (req, res) => {
 		const result = await removeTicketFromOrder(req);
+
 		res.send(result);
 	});
 

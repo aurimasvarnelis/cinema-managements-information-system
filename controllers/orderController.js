@@ -57,9 +57,18 @@ export async function removeTicketFromOrder(req) {
 	const { user_id, session_id, ticket } = req.body;
 	const session = await Session.findById(session_id);
 
-	session.room.rows[ticket.rowIndex].columns[ticket.columnIndex].status = 0;
-	session.markModified("room");
-	await session.save();
+	if (
+		session.room.rows[ticket.rowIndex].columns[ticket.columnIndex].status === 1
+	) {
+		session.room.rows[ticket.rowIndex].columns[ticket.columnIndex].status = 0;
+		session.markModified("room");
+		await session.save();
+	} else {
+		return {
+			error: "This seat is already free.",
+			session: session,
+		};
+	}
 
 	const order = await Order.findOne({
 		user_id: user_id,

@@ -46,8 +46,8 @@ export default function Session({ movieSession, movie, cinema, order }) {
 	// 	//console.log(movieSession);
 	// }
 
-	async function addTicketToOrder(ticket) {
-		const response = await fetch(`${process.env.url}/api/orders/add-seat`, {
+	const addTicketToOrder = async (ticket) => {
+		const response = await fetch(`${process.env.url}/api/orders/select-seat`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -67,24 +67,27 @@ export default function Session({ movieSession, movie, cinema, order }) {
 					alert(data.error);
 				} else {
 					movieSession.room = data.session.room;
-					order.tickets = [...order.tickets, ticket];
+					order.tickets = data.order.tickets;
 					refreshData();
 				}
 			});
-	}
+	};
 
-	async function removeTicketFromOrder(ticket) {
-		const response = await fetch(`${process.env.url}/api/orders/remove-seat`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				user_id: order.user_id,
-				session_id: movieSession._id,
-				ticket,
-			}),
-		})
+	const removeTicketFromOrder = async (ticket) => {
+		const response = await fetch(
+			`${process.env.url}/api/orders/deselect-seat`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					user_id: order.user_id,
+					session_id: movieSession._id,
+					ticket,
+				}),
+			}
+		)
 			.then((res) => res.json(res))
 			.then((data) => {
 				console.log(data);
@@ -94,30 +97,31 @@ export default function Session({ movieSession, movie, cinema, order }) {
 					alert(data.error);
 				} else {
 					movieSession.room = data.session.room;
-					order.tickets = order.tickets.filter(
-						(ticket) => ticket._id !== ticket._id
-					);
+					order.tickets = data.order.tickets;
+					// order.tickets = order.tickets.filter(
+					// 	(ticket) => ticket._id !== ticket._id
+					// );
 					refreshData();
 				}
 			});
-	}
+	};
 
-	const handleSelectTicket = (rowIndex, columnIndex, ticketType) => {
+	const handleSelectTicket = async (rowIndex, columnIndex, ticketType) => {
 		const newTicket = {
 			rowIndex,
 			columnIndex,
 			ticket_type_name: ticketType.ticket_type_name,
 			price: ticketType.price,
 		};
-		addTicketToOrder(newTicket);
+		await addTicketToOrder(newTicket);
 	};
 
-	const handleDeselectTicket = (rowIndex, columnIndex) => {
+	const handleDeselectTicket = async (rowIndex, columnIndex) => {
 		const removeTicket = order.tickets.find(
 			(ticket) =>
 				ticket.rowIndex === rowIndex && ticket.columnIndex === columnIndex
 		);
-		removeTicketFromOrder(removeTicket);
+		await removeTicketFromOrder(removeTicket);
 	};
 
 	const handleSubmitOrder = async () => {
