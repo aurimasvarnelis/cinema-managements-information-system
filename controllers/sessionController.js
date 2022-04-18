@@ -13,8 +13,8 @@ export async function getSessionsByMovie(cinemaId, movieId) {
 	return sessions;
 }
 
-export async function getSession(sessionId) {
-	const session = await Session.findById(sessionId);
+export async function getMovieSession(sessionId) {
+	const session = await Session.findById(sessionId).lean();
 	return session;
 }
 

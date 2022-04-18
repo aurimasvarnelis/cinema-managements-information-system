@@ -9,7 +9,8 @@ import {
 	Stack,
 	Table,
 } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { getSession, useSession } from "next-auth/react";
+import { useEffect, useRef, useState } from "react";
 
 import DatePicker from "react-datepicker";
 import Image from "next/image";
@@ -20,85 +21,140 @@ import armchairYellow from "../../public/images/armchair-seat-yellow.svg";
 import dbConnect from "../../lib/dbConnect";
 import { getCinema } from "../../controllers/cinemaController";
 import { getCookie } from "cookies-next";
+import { getCurrentUserOrder } from "../../controllers/orderController";
 import { getMovie } from "../../controllers/movieController";
-import { getSession } from "../../controllers/sessionController";
+import { getMovieSession } from "../../controllers/sessionController";
 import moment from "moment";
 import styles from "./[sessionId].module.scss";
 import { useRouter } from "next/router";
 
-export default function Session({ movieSession, movie, cinema }) {
-	//console.log(movieSession.room);
-
+export default function Session({ movieSession, movie, cinema, order }) {
 	const router = useRouter();
 	const refreshData = () => {
 		router.replace(router.asPath);
 	};
 
-	// fetch session from api
-	const [session, setSession] = useState(movieSession);
+	// async function fetchSession() {
+	// 	const response = await fetch(
+	// 		`${process.env.url}/api/sessions/${movieSession._id}`
+	// 	)
+	// 		.then((res) => res.json(res))
+	// 		.then((data) => {
+	// 			movieSession = data;
+	// 		});
+	// 	//refreshData();
+	// 	//console.log(movieSession);
+	// }
 
-	async function fetchSession() {
-		const response = await fetch(
-			`${process.env.url}/api/sessions/${movieSession._id}`
-		)
+	async function addTicketToOrder(ticket) {
+		const response = await fetch(`${process.env.url}/api/orders/add-seat`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				user_id: order.user_id,
+				session_id: movieSession._id,
+				ticket,
+			}),
+		})
 			.then((res) => res.json(res))
 			.then((data) => {
-				setSession(data);
+				console.log(data);
+				if (data.error) {
+					movieSession.room = data.session.room;
+					refreshData();
+					alert(data.error);
+				} else {
+					movieSession.room = data.session.room;
+					order.tickets = [...order.tickets, ticket];
+					refreshData();
+				}
 			});
-		//refreshData();
-		console.log(movieSession);
 	}
 
-	// tickets state for multiple tickets
-	const [tickets, setTickets] = useState([]);
+	async function removeTicketFromOrder(ticket) {
+		const response = await fetch(`${process.env.url}/api/orders/remove-seat`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				user_id: order.user_id,
+				session_id: movieSession._id,
+				ticket,
+			}),
+		})
+			.then((res) => res.json(res))
+			.then((data) => {
+				console.log(data);
+				if (data.error) {
+					movieSession.room = data.session.room;
+					refreshData();
+					alert(data.error);
+				} else {
+					movieSession.room = data.session.room;
+					order.tickets = order.tickets.filter(
+						(ticket) => ticket._id !== ticket._id
+					);
+					refreshData();
+				}
+			});
+	}
 
 	const handleSelectTicket = (rowIndex, columnIndex, ticketType) => {
-		// store rowIndex, columnIndex, ticket_type in tickets array
 		const newTicket = {
 			rowIndex,
 			columnIndex,
 			ticket_type_name: ticketType.ticket_type_name,
 			price: ticketType.price,
 		};
-		setTickets([...tickets, newTicket]);
-
-		movieSession.room.rows[rowIndex].columns[columnIndex].status = 1;
-
-		fetchSession();
-
-		console.log(tickets);
+		addTicketToOrder(newTicket);
 	};
 
 	const handleDeselectTicket = (rowIndex, columnIndex) => {
-		// remove rowIndex, columnIndex from tickets array
-		const newTickets = tickets.filter(
+		const removeTicket = order.tickets.find(
 			(ticket) =>
-				ticket.rowIndex !== rowIndex || ticket.columnIndex !== columnIndex
+				ticket.rowIndex === rowIndex && ticket.columnIndex === columnIndex
 		);
-		setTickets(newTickets);
-
-		movieSession.room.rows[rowIndex].columns[columnIndex].status = 0;
-
-		fetchSession();
-
-		console.log(tickets);
+		removeTicketFromOrder(removeTicket);
 	};
 
-	// useEffect(() => {
-	// 	fetchSession();
-	// }, [movieSession]);
+	const handleSubmitOrder = async () => {
+		const response = await fetch(`${process.env.url}/api/orders`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				// Authorization: `Bearer ${getCookie("token")}`,
+			},
+			body: JSON.stringify({
+				user_id: order.user_id,
+				session_id: movieSession._id,
+				tickets,
+			}),
+		});
+		const data = await response.json();
+		console.log(data);
+		if (data) {
+			alert("Order placed successfully!");
+			setTickets([]);
+			fetchSession();
+		} else {
+			alert("Order failed!");
+		}
+	};
 
 	return (
 		<Container>
-			<Row>
-				<div>
+			<Row style={{ justifyContent: "center" }}>
+				<Col xs={12} md={10} lg={8} xl={8}>
 					<h1>{movie.name}</h1>
-					<h3>{moment(movieSession.start_time).format("MMMM DD, YYYY")}</h3>
-					<h3>{movieSession.display_time}</h3>
-					<h3>
+					<div>{moment(movieSession.start_time).format("MMMM DD, YYYY")}</div>
+					<div>{movieSession.display_time}</div>
+					<div>
 						{cinema.name}, {movieSession.room.name}
-					</h3>
-				</div>
+					</div>
+				</Col>
 			</Row>
 			<Row className={styles.seating}>
 				<div>
@@ -123,12 +179,6 @@ export default function Session({ movieSession, movie, cinema }) {
 												height="100%"
 												alt="green"
 												onClick={() => {
-													// ??????????
-													// if (column.status === 0) {
-													// 	row.columns[columnIndex].status = 1;
-													// 	fetchSession();
-													// }
-
 													// only works with standard ticket type
 													handleSelectTicket(
 														rowIndex,
@@ -227,15 +277,25 @@ export default function Session({ movieSession, movie, cinema }) {
 										alt="red"
 									/>
 								</div>
-								<div>Sold</div>
+								<div>Unavailable</div>
 							</div>
 						</li>
 					</ul>
 				</Col>
 			</Row>
 
+			{order.tickets.length === 0 && (
+				<Row className={styles.ticketRow}>
+					<Col xs={12} md={10} lg={8} xl={8} className={styles.ticketColumn}>
+						<div className={styles.ticketSeating}>No ticket selected</div>
+						<div className={styles.ticketType}></div>
+						<div className={styles.ticketPrice}></div>
+					</Col>
+				</Row>
+			)}
+
 			{/* map through all tickets and display row, column, ticket_type_name, price  */}
-			{tickets.map((ticket, ticketIndex) => (
+			{order.tickets.map((ticket, ticketIndex) => (
 				<Row key={ticketIndex} className={styles.ticketRow}>
 					<Col xs={12} md={10} lg={8} xl={8} className={styles.ticketColumn}>
 						<div className={styles.ticketSeating}>
@@ -244,7 +304,9 @@ export default function Session({ movieSession, movie, cinema }) {
 						<div className={styles.ticketType}>
 							Ticket type: {ticket.ticket_type_name}
 						</div>
-						<div className={styles.ticketPrice}>${ticket.price}</div>
+						<div className={styles.ticketPrice}>
+							${parseFloat(ticket.price).toFixed(2)}
+						</div>
 					</Col>
 				</Row>
 			))}
@@ -253,7 +315,10 @@ export default function Session({ movieSession, movie, cinema }) {
 				<Col xs={12} md={10} lg={8} xl={8} className={styles.ticketsTotal}>
 					<div className={styles.ticketTotal}>Total:</div>
 					<div className={styles.ticketPrice}>
-						${movieSession.ticket_types[0].price * tickets.length}
+						$
+						{parseFloat(
+							movieSession.ticket_types[0].price * order.tickets.length
+						).toFixed(2)}
 					</div>
 				</Col>
 			</Row>
@@ -261,7 +326,7 @@ export default function Session({ movieSession, movie, cinema }) {
 				<Col className={styles.submit}>
 					<Button
 						onClick={() => {
-							handleSubmitTickets();
+							handleSubmitOrder();
 						}}
 					>
 						Submit Order
@@ -276,15 +341,21 @@ export async function getServerSideProps(context) {
 	await dbConnect();
 
 	const { sessionId } = context.query;
-	const session = await getSession(sessionId);
+	const session = await getMovieSession(sessionId);
+	// session._id = session._id.toString();
+	// session.movie_id = session.movie_id.toString();
+
 	const movie = await getMovie(session.movie_id);
 	const cinema = await getCinema(session.room.cinema_id);
+	const userSession = await getSession(context);
+	const order = await getCurrentUserOrder(userSession.user.id, sessionId);
 
 	return {
 		props: {
 			movieSession: JSON.parse(JSON.stringify(session)),
 			movie: JSON.parse(JSON.stringify(movie)),
 			cinema: JSON.parse(JSON.stringify(cinema)),
+			order: JSON.parse(JSON.stringify(order)),
 		},
 	};
 }

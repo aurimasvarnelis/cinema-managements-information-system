@@ -6,10 +6,12 @@ const SessionSchema = new mongoose.Schema(
 	{
 		room: {
 			type: Schema.Types.Mixed,
+			ref: "Room",
 		},
 		movie_id: {
 			type: Schema.Types.ObjectId,
 			required: true,
+			ref: "Movie",
 		},
 		start_time: {
 			type: Date,

@@ -1,209 +1,184 @@
 .seating {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+	margin-top: 2rem;
+	margin-bottom: 2rem;
 }
-
 // don`t let row to be split into different rows
 .seatRow {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+	justify-content: center;
 }
-
 .rowIndexNumber {
-  width: 8rem;
-  font-size: 1rem;
-  font-weight: bold;
+	width: 8rem;
+	font-size: 1rem;
+	font-weight: bold;
 }
-
 // Small devices (landscape phones, 576px and up)
 @media (min-width: 576px) {
-  .rowIndexNumber {
-    font-size: 1rem;
-    font-weight: bold;
-  }
-
-  .seatColumn {
-    cursor: pointer;
-    min-width: 1vw;
-    min-height: 1vw;
-    max-width: 4vw;
-    max-height: 4vw;
-    margin-right: 0.1vw;
-    //border: 1px solid #ccc;
-  }
+	.rowIndexNumber {
+		font-size: 1rem;
+		font-weight: bold;
+	}
+	.seatColumn {
+		margin-right: 0.1vw;
+		cursor: pointer;
+		min-width: 1vw;
+		max-width: 4vw;
+		min-height: 1vw;
+		max-height: 4vw;
+		//border: 1px solid #ccc;
+	}
 }
-
 // Medium devices (tablets, 768px and up)
 @media (min-width: 768px) {
-  .rowIndexNumber {
-    width: 2rem;
-    font-size: 1rem;
-    font-weight: bold;
-  }
-
-  .seatColumn {
-    max-width: 2.5vw;
-    max-height: 2.5vw;
-  }
+	.rowIndexNumber {
+		width: 2rem;
+		font-size: 1rem;
+		font-weight: bold;
+	}
+	.seatColumn {
+		max-width: 2.5vw;
+		max-height: 2.5vw;
+	}
 }
-
 // Large devices (desktops, 992px and up)
 @media (min-width: 992px) {
-  .rowIndexNumber {
-    width: 2rem;
-    font-size: 1rem;
-    font-weight: bold;
-  }
-
-  .seatColumn {
-    max-width: 2vw;
-    max-height: 2vw;
-  }
+	.rowIndexNumber {
+		width: 2rem;
+		font-size: 1rem;
+		font-weight: bold;
+	}
+	.seatColumn {
+		max-width: 2vw;
+		max-height: 2vw;
+	}
 }
-
 // Extra large devices (large desktops, 1200px and up)
 @media (min-width: 1200px) {
-  .seatColumn {
-    cursor: pointer;
-    max-width: 2.5vw;
-    max-height: 2.5vw;
-  }
+	.seatColumn {
+		cursor: pointer;
+		max-width: 2.5vw;
+		max-height: 2.5vw;
+	}
 }
-
 // XX-Large devices (larger desktops, 1400px and up)
 @media (min-width: 1400px) {
-  .seatColumn {
-    cursor: pointer;
-    max-width: 3vmin;
-    max-height: 3vmin;
-  }
+	.seatColumn {
+		cursor: pointer;
+		max-width: 3vmin;
+		max-height: 3vmin;
+	}
 }
-
 .armchair {
-  width: 10px;
-  height: 10px;
+	width: 10px;
+	height: 10px;
 }
-
 // remove li decoration
 .ticketTypesList {
-  list-style: none;
-  padding: 0;
-
-  // display list items horizontally
-  li {
-    display: inline-block;
-    margin-right: 1rem;
-    margin-bottom: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 0.5rem;
-    padding-top: 0.3rem;
-    padding-bottom: 0.3rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-
-  }
+	padding: 0;
+	list-style: none;
+	// display list items horizontally
+	li {
+		display: inline-block;
+		margin-right: 1rem;
+		margin-bottom: 0.5rem;
+		border: 1px solid #ccc;
+		border-radius: 0.5rem;
+		padding-top: 0.3rem;
+		padding-right: 0.5rem;
+		padding-bottom: 0.3rem;
+		padding-left: 0.5rem;
+	}
 }
-
 .armchairTypesList {
-  list-style: none;
-  padding: 0;
-  align-items: center;
-
-  li {
-    margin-bottom: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 0.5rem;
-    padding-top: 0.3rem;
-    //padding-bottom: 0.3rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
+	align-items: center;
+	padding: 0;
+	list-style: none;
+	li {
+		margin-bottom: 0.5rem;
+		border: 1px solid #ccc;
+		border-radius: 0.5rem;
+		padding-top: 0.3rem;
+		padding-right: 0.5rem;
+		padding-left: 0.5rem;
+		//padding-bottom: 0.3rem;
+	}
 }
-
 .ticketTypeColumn {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
-  width: auto;
-  //border-bottom: 1px solid #ccc;
-  // flex-basis: calc(50% - 2rem);
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+	justify-content: center;
+	width: auto;
+	//border-bottom: 1px solid #ccc;
+	// flex-basis: calc(50% - 2rem);
 }
-
 .armchairBlock {
-  display: inline-flex;
-  align-items: center;
+	display: inline-flex;
+	align-items: center;
 }
-
 .armchairType {
-  width: 1.5rem;
-  height: 1.5rem;
-  margin-right: 0.5rem;
+	margin-right: 0.5rem;
+	width: 1.5rem;
+	height: 1.5rem;
 }
-
 // center the column in a row
 .ticketRow {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
-
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+	justify-content: center;
 }
-
 .ticketColumn {
-  border-bottom: 1px solid #ccc;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  height: 2rem;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	border-bottom: 1px solid #ccc;
+	height: 2rem;
 }
-
 .ticketSeating {
-  flex-basis: 40%;
+	flex-basis: 40%;
 }
-
 .ticketType {
-  // font-weight: bold;
-  flex-basis: 40%;
+	flex-basis: 40%;
+	// font-weight: bold;
 }
-
 .ticketsTotal {
-  // display: flex;
-  // flex-direction: row;
-  // flex-wrap: nowrap;
-  // justify-content: end;
-  // flex-basis: 20%;
-
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
-  height: 2rem;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+	justify-content: center;
+	height: 2rem;
+	// display: flex;
+	// flex-direction: row;
+	// flex-wrap: nowrap;
+	// justify-content: end;
+	// flex-basis: 20%;
 }
-
 .ticketTotal {
-  flex-basis: 80%;
-  justify-content: end;
+	flex-basis: 80%;
+	justify-content: end;
 }
-
 .ticketPrice {
-  // font-size: 1rem;
-  // font-weight: bold;
-  flex-basis: 20%;
-  text-align: end;
+	flex-basis: 20%;
+	text-align: end;
+	// font-size: 1rem;
+	// font-weight: bold;
 }
-
 .submit {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+	justify-content: center;
+	button {
+		padding-left: 2rem;
+		padding-right: 2rem;
+	}
 }
