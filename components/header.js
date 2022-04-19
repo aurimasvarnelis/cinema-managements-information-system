@@ -7,7 +7,6 @@ import {
 	Navbar,
 } from "react-bootstrap";
 import { getCookie, setCookies } from "cookies-next";
-import { signIn, signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 import Image from "next/image";
@@ -18,11 +17,12 @@ import Logout from "./auth/logout";
 import { cinemaState } from "../atoms/cinemaAtom";
 import { useRecoilState } from "recoil";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 // import styles from "./header.module.css";
 
 export default function Header() {
-	const { data: session, status } = useSession();
+	const { data: session } = useSession();
 
 	const router = useRouter();
 
@@ -47,11 +47,6 @@ export default function Header() {
 			});
 		return response;
 	}
-
-	// console.log({session, status})
-	// if (status === "loading") {
-	//   return <></>;
-	// }
 
 	const handleCinemaSelect = (data) => {
 		const selected = cinemas.find((e) => {
@@ -113,12 +108,12 @@ export default function Header() {
 														</Link>
 													</>
 												))}
-											{session.user.role == "moderator" && (
+											{session.user.role == "manager" && (
 												<>
-													<Link href="/moderator/movies" passHref>
+													<Link href="/manager/movies" passHref>
 														<Nav.Link
 															className={
-																router.asPath == "/moderator/movies"
+																router.asPath == "/manager/movies"
 																	? "active"
 																	: ""
 															}
@@ -126,10 +121,10 @@ export default function Header() {
 															(M)Movies
 														</Nav.Link>
 													</Link>
-													<Link href="/moderator/rooms" passHref>
+													<Link href="/manager/rooms" passHref>
 														<Nav.Link
 															className={
-																router.asPath == "/moderator/rooms"
+																router.asPath == "/manager/rooms"
 																	? "active"
 																	: ""
 															}
@@ -137,10 +132,10 @@ export default function Header() {
 															(M)Rooms
 														</Nav.Link>
 													</Link>
-													<Link href="/moderator/sessions" passHref>
+													<Link href="/manager/sessions" passHref>
 														<Nav.Link
 															className={
-																router.asPath == "/moderator/sessions"
+																router.asPath == "/manager/sessions"
 																	? "active"
 																	: ""
 															}

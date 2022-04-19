@@ -8,10 +8,10 @@ import {
 	Table,
 } from "react-bootstrap";
 
-import { AddRoom } from "../../components/moderator/rooms/AddRoom";
-import { DeleteRoom } from "../../components/moderator/rooms/DeleteRoom";
-import { EditRoom } from "../../components/moderator/rooms/EditRoom";
-import { ViewRoom } from "../../components/moderator/rooms/ViewRoom";
+import { AddRoom } from "../../components/manager/rooms/AddRoom";
+import { DeleteRoom } from "../../components/manager/rooms/DeleteRoom";
+import { EditRoom } from "../../components/manager/rooms/EditRoom";
+import { ViewRoom } from "../../components/manager/rooms/ViewRoom";
 import dbConnect from "../../lib/dbConnect";
 import { getCookie } from "cookies-next";
 import { getRooms } from "../../controllers/roomController";

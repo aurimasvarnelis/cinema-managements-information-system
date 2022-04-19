@@ -1,4 +1,3 @@
-import "../styles/globals.css";
 import "../styles/globals.scss";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/scss/bootstrap.scss";
@@ -18,8 +17,9 @@ import Layout from "../components/layout";
 import React from "react";
 import { SessionProvider } from "next-auth/react";
 
+// TODO: fix cinema cookies
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
-	if (!checkCookies("cinema")) setCookies("cinema", "based");
+	if (!checkCookies("cinema")) setCookies("cinema", "atlas cinema");
 	return (
 		<SessionProvider session={session}>
 			<RecoilRoot>

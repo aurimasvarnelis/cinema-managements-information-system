@@ -12,10 +12,10 @@ import {
 	getTicketTypes,
 } from "../../controllers/sessionController";
 
-import { AddSession } from "../../components/moderator/sessions/AddSession";
-import { DeleteSession } from "../../components/moderator/sessions/DeleteSession";
-import { EditSession } from "../../components/moderator/sessions/EditSession";
-import { ViewSession } from "../../components/moderator/sessions/ViewSession";
+import { AddSession } from "../../components/manager/sessions/AddSession";
+import { DeleteSession } from "../../components/manager/sessions/DeleteSession";
+import { EditSession } from "../../components/manager/sessions/EditSession";
+import { ViewSession } from "../../components/manager/sessions/ViewSession";
 import dbConnect from "../../lib/dbConnect";
 import { getCookie } from "cookies-next";
 import { getMovies } from "../../controllers/movieController";
