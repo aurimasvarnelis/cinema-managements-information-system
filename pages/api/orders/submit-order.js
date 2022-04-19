@@ -1,6 +1,6 @@
-import { addTicketToOrder } from "../../../controllers/orderController";
 import { dbMiddleware } from "../../../middlewares/dbMiddleware";
 import nextConnect from "next-connect";
+import { submitOrder } from "../../../controllers/orderController";
 
 const handler = nextConnect({
 	onError: (err, req, res, next) => {

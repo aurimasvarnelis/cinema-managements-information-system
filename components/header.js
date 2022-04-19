@@ -214,7 +214,7 @@ export default function Header() {
 									className="profile-dropdown-button"
 								>
 									<Dropdown.Item eventKey="1">View profile</Dropdown.Item>
-									<Logout />
+									<Logout router={router} />
 								</DropdownButton>
 							) : (
 								<Login />

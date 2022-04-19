@@ -129,20 +129,25 @@ export default function Session({ movieSession, movie, cinema, order }) {
 				// Authorization: `Bearer ${getCookie("token")}`,
 			},
 			body: JSON.stringify({
-				user_id: order.user_id,
-				session_id: movieSession._id,
-				tickets,
+				orderId: order._id,
 			}),
-		});
-		const data = await response.json();
-		console.log(data);
-		if (data) {
-			alert("Order placed successfully!");
-			setTickets([]);
-			fetchSession();
-		} else {
-			alert("Order failed!");
-		}
+		})
+			.then((res) => res.json(res))
+			.then((data) => {
+				console.log(data);
+				refreshData();
+				// if (data.error) {
+				// 	movieSession.room = data.session.room;
+				// 	refreshData();
+				// 	alert(data.error);
+				// 	// alert("Order failed!")
+				// } else {
+				// 	movieSession.room = data.session.room;
+				// 	order.tickets = data.order.tickets;
+				// 	refreshData();
+				// 	alert("Order placed successfully!");
+				// }
+			});
 	};
 
 	return (

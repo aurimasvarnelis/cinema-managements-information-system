@@ -31,6 +31,7 @@ export async function addTicketToOrder(req) {
 	const order = await Order.findOne({
 		user_id: user_id,
 		session_id: session_id,
+		status: "Reserved",
 	});
 
 	if (order) {
@@ -50,6 +51,7 @@ export async function addTicketToOrder(req) {
 			session_id: session_id,
 			tickets: [ticket],
 			price_total: ticket.price,
+			status: "Reserved",
 		});
 		console.log(newOrder);
 		await newOrder.save();
@@ -104,6 +106,7 @@ export async function getCurrentUserOrder(userId, sessionId) {
 	const order = await Order.findOne({
 		user_id: userId,
 		session_id: sessionId,
+		status: "Reserved",
 	});
 
 	if (order) {
@@ -117,4 +120,24 @@ export async function getCurrentUserOrder(userId, sessionId) {
 		});
 		return order;
 	}
+}
+
+// submit order change by changing order.status to Confirmed
+export async function submitOrder(req) {
+	const { orderId } = req.body;
+	const order = await Order.findById(orderId);
+	order.status = "Confirmed";
+
+	const session = await Session.findById(order.session_id);
+
+	order.tickets.forEach((ticket) => {
+		session.room.rows[ticket.rowIndex].columns[ticket.columnIndex].status = 2;
+		console.log(ticket);
+	});
+
+	session.markModified("room");
+	await session.save();
+	await order.save();
+
+	return order;
 }
