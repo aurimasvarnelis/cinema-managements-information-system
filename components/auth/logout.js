@@ -6,8 +6,6 @@ import { useState } from "react";
 export default function Logout({ router }) {
 	const [show, setShow] = useState(false);
 
-	//const navigate = useNavigate();
-
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
 

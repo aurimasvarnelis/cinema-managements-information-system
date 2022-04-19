@@ -3,50 +3,20 @@ import FacebookProvider from "next-auth/providers/facebook";
 import GoogleProvider from "next-auth/providers/google";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import NextAuth from "next-auth";
+import User from "../../../models/User";
 import clientPromise from "../../../lib/mongodb";
+import { compare } from "bcryptjs";
+import { createUser } from "../../../controllers/userController";
+import dbConnect from "./../../../lib/dbConnect";
+
+dbConnect();
 
 export default NextAuth({
 	session: {
 		strategy: "jwt",
 	},
 	adapter: MongoDBAdapter(clientPromise),
-	// https://next-auth.js.org/configuration/providers/oauth
 	providers: [
-		/* 
-    EmailProvider({
-         server: process.env.EMAIL_SERVER,
-         from: process.env.EMAIL_FROM,
-       }),
-    // Temporarily removing the Apple provider from the demo site as the
-    // callback URL for it needs updating due to Vercel changing domains
-     
-    Providers.Apple({
-      clientId: process.env.APPLE_ID,
-      clientSecret: {
-        appleId: process.env.APPLE_ID,
-        teamId: process.env.APPLE_TEAM_ID,
-        privateKey: process.env.APPLE_PRIVATE_KEY,
-        keyId: process.env.APPLE_KEY_ID,
-      },
-    }),
-    */
-
-		// CredentialsProvider({
-		//   name: "credentials",
-		//   credentials: {
-		//     username: {label: "Email", type:"email", placeholder:"johndoe@test.com"},
-		//     password: {label: "Password", type:"password"},
-		//   },
-		//   authorize: (credentials) => {
-		//     if(credentials.username === "john" && credentials.password ==="test"){
-		//       return {
-		//         id:2,
-		//         name: "John",
-		//         email: "johndoe@test.com",
-		//       };
-		//     }
-		//   }
-		// }),
 		FacebookProvider({
 			clientId: process.env.FACEBOOK_ID,
 			clientSecret: process.env.FACEBOOK_SECRET,
@@ -64,6 +34,44 @@ export default NextAuth({
 				};
 			},
 		}),
+		CredentialsProvider({
+			name: "Credentials",
+			credentials: {
+				email: { label: "Email Address", type: "text", placeholder: "Email" },
+				password: { label: "Password", type: "password" },
+			},
+			async authorize(credentials, req) {
+				const user = await User.findOne({
+					email: credentials.email,
+				});
+
+				if (!user) {
+					const createdUser = createUser(req);
+					return createdUser;
+				}
+
+				const checkPassword = await compare(
+					credentials.password,
+					user.password
+				);
+
+				if (!checkPassword) {
+					throw new Error("Password doesn't match");
+				}
+
+				return user;
+
+				//return { id: user._id, email: user.email, role: user.role };
+			},
+			// profile(profile) {
+			// 	return {
+			// 		id: profile.sub,
+			// 		name: profile.name,
+			// 		email: profile.email,
+			// 		role: "user",
+			// 	};
+			// },
+		}),
 	],
 	theme: {
 		colorScheme: "light",
@@ -77,35 +85,24 @@ export default NextAuth({
 	// },
 	callbacks: {
 		async jwt({ token, user, profile }) {
-			const administrator = ["aurimas.varnelis@gmail.com"];
-			//token.isAdmin = administrators.includes(user?.email)
-
-			if (profile) {
-				token.user = user;
-			}
 			if (user) {
-				token.uid = user.id;
+				token.user = {
+					id: user.id,
+					email: user.email,
+					role: user.role,
+				};
 			}
+
 			// console.log("JWT");
 			// console.log(token);
 			return token;
 		},
 		async session({ session, token, user }) {
-			// Send properties to the client, like an access_token from a provider.
+			session.user = token.user;
 
-			if (session?.user) {
-				session.user.role = token.user.role;
-				session.user.id = token.uid;
-			}
-			//session.userId = token.sub;
 			// console.log("session");
 			// console.log(session);
 			return session;
-		},
-	},
-	events: {
-		async signIn(message) {
-			console.log(message);
 		},
 	},
 });

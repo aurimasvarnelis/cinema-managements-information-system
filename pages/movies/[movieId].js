@@ -129,7 +129,6 @@ export default function Movie({ movie, sessions }) {
 
 						<div className={styles.movieDate}>
 							<div className={styles.date}>
-								{/* // Form input type date with list of available dates from sessionsByDate array and select first sessionsByDate value */}
 								<DatePicker
 									selected={startDate}
 									onChange={(date) => setStartDate(date)}
@@ -144,7 +143,6 @@ export default function Movie({ movie, sessions }) {
 										);
 									}}
 								/>
-								{/* Button with calendar svg */}
 								<Button
 									className={styles.dateButton}
 									variant="link"
@@ -156,7 +154,6 @@ export default function Movie({ movie, sessions }) {
 								></Button>
 							</div>
 							<div className={styles.sessions}>
-								{/* List of sessions for selected startDate */}
 								<ul>
 									{groupedSessions[moment(startDate).format("YYYY-MM-DD")].map(
 										(session) => (
