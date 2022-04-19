@@ -63,14 +63,6 @@ export default NextAuth({
 
 				//return { id: user._id, email: user.email, role: user.role };
 			},
-			// profile(profile) {
-			// 	return {
-			// 		id: profile.sub,
-			// 		name: profile.name,
-			// 		email: profile.email,
-			// 		role: "user",
-			// 	};
-			// },
 		}),
 	],
 	theme: {

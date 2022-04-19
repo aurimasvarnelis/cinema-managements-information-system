@@ -66,12 +66,12 @@ export function AddCinema() {
 						<path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
 					</svg>
 				</div>
-				<div className="p-1 d-inline">Add a cinema</div>
+				<div className="p-1 d-inline">Add cinema</div>
 			</Button>
 
 			<Modal size="lg" show={show} onHide={handleClose} centered>
 				<Modal.Header closeButton>
-					<Modal.Title>Add a cinema</Modal.Title>
+					<Modal.Title>Add cinema</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<Form id="hook-form" onSubmit={handleSubmit(onSubmit)}>

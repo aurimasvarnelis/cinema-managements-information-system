@@ -15,23 +15,6 @@ export default function Login() {
 
 	const { register, handleSubmit } = useForm();
 
-	//const [user, setUser] = useState({});
-
-	const signUp = async (email, password) => {
-		const response = await fetch(`${process.env.url}/api/auth/signup`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				email: email,
-				password: password,
-			}),
-		});
-		const data = await response.json();
-		console.log(data);
-	};
-
 	const onSubmit = async (data) => {
 		if (loginActive) {
 			const status = await signIn("credentials", {
@@ -52,6 +35,7 @@ export default function Login() {
 			console.log(status);
 		}
 	};
+	
 	const onGoogleSignIn = (e) => {
 		signIn("google");
 	};

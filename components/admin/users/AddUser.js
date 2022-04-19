@@ -8,11 +8,11 @@ import {
 	Table,
 } from "react-bootstrap";
 
+import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-// TODO: add user from
 export function AddUser() {
 	// Model state
 	const [show, setShow] = useState(false);
@@ -23,30 +23,17 @@ export function AddUser() {
 
 	// Refreshing page after updating data
 	const router = useRouter();
-	const refreshData = () => {
-		router.replace(router.asPath);
-	};
+	const refreshData = () => router.replace(router.asPath);
 
-	const postData = async (data) => {
-		const res = await fetch("/api/cinemas", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(data),
+	const onSubmit = async (data) => {
+		const status = await signIn("credentials", {
+			redirect: false,
+			email: data.email,
+			password: data.password,
+			role: data.role,
 		});
-		// Check that our status code is in the 200s,
-		// meaning the request was successful.
-		if (res.status < 300) {
-			refreshData();
-		}
-
-		const resData = await res.json();
-		console.log(resData);
-	};
-
-	const onSubmit = (data) => {
-		postData(data);
+		console.log(status);
+		refreshData();
 		handleClose();
 		//alert(`Room ${data.name} has been added.`)
 	};
@@ -72,7 +59,7 @@ export function AddUser() {
 
 			<Modal size="lg" show={show} onHide={handleClose} centered>
 				<Modal.Header closeButton>
-					<Modal.Title>Add a cinema</Modal.Title>
+					<Modal.Title>Add user</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<Form id="hook-form" onSubmit={handleSubmit(onSubmit)}>
