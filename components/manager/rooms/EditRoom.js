@@ -19,7 +19,7 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-// TODO: Complete room edit (doesn't work currently)
+// TODO: Update room edit form
 export function EditRoom({ room, cinemaId }) {
 	// Model state
 	const [show, setShow] = useState(false);

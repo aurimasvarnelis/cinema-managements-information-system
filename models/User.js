@@ -15,8 +15,14 @@ const UserSchema = new mongoose.Schema({
 	},
 	role: {
 		type: String,
-		required: false,
+		required: true,
 	},
+	manages: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Cinema",
+		},
+	],
 	emailVerified: {
 		type: String,
 		default: null,

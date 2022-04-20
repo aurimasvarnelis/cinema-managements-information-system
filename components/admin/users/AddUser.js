@@ -7,25 +7,50 @@ import {
 	Row,
 	Table,
 } from "react-bootstrap";
+import {
+	ButtonToolbar,
+	Typeahead,
+	TypeaheadMenu,
+} from "react-bootstrap-typeahead";
+import { useEffect, useState } from "react";
 
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
-import { useState } from "react";
 
-export function AddUser() {
+export function AddUser({ cinemas }) {
 	// Model state
 	const [show, setShow] = useState(false);
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
 
-	const { register, handleSubmit } = useForm();
-
 	// Refreshing page after updating data
 	const router = useRouter();
 	const refreshData = () => router.replace(router.asPath);
 
+	const { register, handleSubmit } = useForm();
+
+	const [userManager, setUserManager] = useState(false);
+	const [selectedCinemas, setSelectedCinemas] = useState([]);
+
+	const sortCinemas = () => {
+		return cinemas.sort((a, b) => {
+			if (a.name < b.name) return -1;
+			if (a.name > b.name) return 1;
+			return 0;
+		});
+	};
+
+	useEffect(() => {
+		sortCinemas();
+	}, [userManager]);
+
 	const onSubmit = async (data) => {
+		if (userManager) {
+			sortCinemas();
+			const cinemasIds = selectedCinemas.map((cinema) => cinema._id);
+			data.manages = cinemasIds;
+		}
 		const status = await signIn("credentials", {
 			redirect: false,
 			email: data.email,
@@ -35,6 +60,7 @@ export function AddUser() {
 		console.log(status);
 		refreshData();
 		handleClose();
+		setSelectedCinemas([]);
 		//alert(`Room ${data.name} has been added.`)
 	};
 
@@ -82,12 +108,48 @@ export function AddUser() {
 						</Form.Group>
 						<Form.Group className="mb-3">
 							<Form.Label htmlFor="role">Role</Form.Label>
-							<Form.Select required {...register("role")}>
+							<Form.Select
+								required
+								{...register("role")}
+								onChange={(e) => {
+									if (e.target.value === "manager") {
+										setUserManager(true);
+									} else {
+										setUserManager(false);
+									}
+								}}
+							>
 								<option value="user">User</option>
 								<option value="manager">Manager</option>
 								<option value="admin">Admin</option>
 							</Form.Select>
 						</Form.Group>
+						{userManager && (
+							<Form.Group className="mb-3">
+								<Form.Label htmlFor="role">Assign cinemas</Form.Label>
+								<Typeahead
+									id="user-assign-cinemas"
+									labelKey="name"
+									multiple
+									options={cinemas}
+									placeholder="Choose cinema..."
+									onChange={(selected) => {
+										setSelectedCinemas(selected);
+										console.log(selected);
+									}}
+									selected={selectedCinemas}
+									clearButton
+									renderMenuItemChildren={(option) => (
+										<div>
+											{option.name}
+											<div>
+												<small>Location: {option.location}</small>
+											</div>
+										</div>
+									)}
+								/>
+							</Form.Group>
+						)}
 					</Form>
 				</Modal.Body>
 				<Modal.Footer>

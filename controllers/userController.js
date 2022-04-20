@@ -21,3 +21,13 @@ export async function createUser(req) {
 
 	return user;
 }
+
+export async function getUser(userId) {
+	const user = await User.findById(userId);
+	return user;
+}
+
+export async function getUsers() {
+	const users = await User.find({});
+	return users;
+}

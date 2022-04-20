@@ -7,26 +7,60 @@ import {
 	Row,
 	Table,
 } from "react-bootstrap";
+import {
+	ButtonToolbar,
+	Typeahead,
+	TypeaheadMenu,
+} from "react-bootstrap-typeahead";
+import { useEffect, useState } from "react";
 
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
-import { useState } from "react";
 
-export function EditUser({ user }) {
+export function EditUser({ user, cinemas }) {
 	// Model state
 	const [show, setShow] = useState(false);
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
 
-	const { register, handleSubmit } = useForm();
-
 	// Refreshing page after updating data
 	const router = useRouter();
-	const refreshData = () => {
-		router.replace(router.asPath);
+	const refreshData = () => router.replace(router.asPath);
+
+	const { register, handleSubmit } = useForm();
+
+	const [userManager, setUserManager] = useState(user.role === "manager");
+	const [selectedCinemas, setSelectedCinemas] = useState([]);
+
+	const sortCinemas = () => {
+		return cinemas.sort((a, b) => {
+			if (a.name < b.name) return -1;
+			if (a.name > b.name) return 1;
+			return 0;
+		});
 	};
 
+	useEffect(() => {
+		sortCinemas();
+		if (user.role === "manager") {
+			setUserManager(true);
+			if (user.manages) {
+				const filteredCinemas = cinemas.filter((cinema) => {
+					return user.manages.includes(cinema._id);
+				});
+				setSelectedCinemas(filteredCinemas);
+			}
+		} else {
+			setSelectedCinemas([]);
+		}
+	}, [user, userManager]);
+
 	const putData = async (data) => {
+		if (userManager) {
+			sortCinemas();
+			const cinemasIds = selectedCinemas.map((cinema) => cinema._id);
+			data.manages = cinemasIds;
+		}
 		const res = await fetch(`/api/users/${user._id}`, {
 			method: "PUT",
 			headers: {
@@ -34,8 +68,7 @@ export function EditUser({ user }) {
 			},
 			body: JSON.stringify(data),
 		});
-		// Check that our status code is in the 200s,
-		// meaning the request was successful.
+
 		if (res.status < 300) {
 			refreshData();
 		}
@@ -47,7 +80,6 @@ export function EditUser({ user }) {
 	const onSubmit = (data) => {
 		putData(data);
 		handleClose();
-		//console.log(data);
 		// alert(`Theater ${data.name} has been updated.`)
 	};
 	return (
@@ -96,12 +128,45 @@ export function EditUser({ user }) {
 								required
 								defaultValue={user.role}
 								{...register("role")}
+								onChange={(e) => {
+									if (e.target.value === "manager") {
+										setUserManager(true);
+									} else {
+										setUserManager(false);
+									}
+								}}
 							>
 								<option value="user">User</option>
 								<option value="manager">Manager</option>
 								<option value="admin">Admin</option>
 							</Form.Select>
 						</Form.Group>
+						{userManager && (
+							<Form.Group className="mb-3">
+								<Form.Label htmlFor="role">Assign cinemas</Form.Label>
+								<Typeahead
+									id="user-assign-cinemas"
+									labelKey="name"
+									multiple
+									options={cinemas}
+									placeholder="Choose cinema..."
+									onChange={(selected) => {
+										setSelectedCinemas(selected);
+										console.log(selected);
+									}}
+									selected={selectedCinemas}
+									clearButton
+									renderMenuItemChildren={(option) => (
+										<div>
+											{option.name}
+											<div>
+												<small>Location: {option.location}</small>
+											</div>
+										</div>
+									)}
+								/>
+							</Form.Group>
+						)}
 						{/* <Form.Group className="mb-3" >
               <Form.Label>Email Verified</Form.Label>
               <Form.Control type="text" placeholder="Enter if email is verified" defaultValue={user.emailVerified} {...register("emailVerified")}/>

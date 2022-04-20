@@ -2,6 +2,8 @@ import "../styles/globals.scss";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/scss/bootstrap.scss";
 import "react-datepicker/dist/react-datepicker.css";
+import "react-bootstrap-typeahead/css/Typeahead.css";
+import "react-bootstrap-typeahead/css/Typeahead.bs5.css";
 
 import {
 	RecoilRoot,
