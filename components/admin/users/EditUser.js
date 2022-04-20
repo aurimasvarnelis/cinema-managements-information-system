@@ -44,17 +44,15 @@ export function EditUser({ user, cinemas }) {
 		sortCinemas();
 		if (user.role === "manager") {
 			setUserManager(true);
-			// go through all cinemas and filter cinema if the user is a manager
 			const filteredCinemas = cinemas.filter((cinema) => {
 				return cinema.managers.includes(user._id);
 			});
 			setSelectedCinemas(filteredCinemas);
-		} else {
-			setSelectedCinemas([]);
 		}
 	}, [user, userManager]);
 
 	const updateCinemas = async (cinemasIds) => {
+		console.log("cinema ids", cinemasIds);
 		const response = await fetch(`/api/cinemas/update-managers`, {
 			method: "PUT",
 			headers: {
@@ -62,6 +60,10 @@ export function EditUser({ user, cinemas }) {
 			},
 			body: JSON.stringify({ userId: user._id, cinemasIds: cinemasIds }),
 		});
+		if (response.status < 300) refreshData();
+
+		const resData = await response.json();
+		console.log(resData);
 	};
 
 	const putData = async (data) => {

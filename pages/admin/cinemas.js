@@ -13,8 +13,8 @@ import { ViewCinema } from "../../components/admin/cinemas/ViewCinema";
 import { EditCinema } from "../../components/admin/cinemas/EditCinema";
 import { DeleteCinema } from "../../components/admin/cinemas/DeleteCinema";
 
-import { getCinemas } from "../../controllers/CinemaController";
-import { getUsers } from "../../controllers/UserController";
+import { getCinemas } from "../../controllers/cinemaController";
+import { getUsers } from "../../controllers/userController";
 
 // TODO: add managers and let edit them
 export default function cinemas({ cinemas, users }) {

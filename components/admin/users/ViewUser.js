@@ -73,8 +73,7 @@ export function ViewUser({ user, cinemas }) {
 									multiple
 									disabled
 									defaultSelected={selectedCinemas}
-									options={user.manages}
-									placeholder="Select cinemas"
+									options={selectedCinemas}
 								/>
 							</Form.Group>
 						)}

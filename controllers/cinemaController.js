@@ -31,12 +31,16 @@ export async function deleteCinema(req) {
 export async function updateCinemas(req) {
 	const { userId, cinemasIds } = req.body;
 
+	const removeManagersFromCinemas = await Cinema.find({});
+	removeManagersFromCinemas.forEach((cinema) => {
+		cinema.managers.pull(userId);
+		cinema.save();
+	});
+
 	const cinemas = await Cinema.find({ _id: { $in: cinemasIds } });
 	cinemas.forEach((cinema) => {
-		if (!cinema.managers.includes(userId)) {
-			cinema.managers.push(userId);
-			cinema.save();
-		}
+		cinema.managers.push(userId);
+		cinema.save();
 	});
 
 	return cinemas;
