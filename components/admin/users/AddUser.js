@@ -18,6 +18,7 @@ import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 
+// TODO: after creating account users signs in
 export function AddUser({ cinemas }) {
 	// Model state
 	const [show, setShow] = useState(false);
@@ -41,16 +42,21 @@ export function AddUser({ cinemas }) {
 		});
 	};
 
+	const updateCinemas = async (userId, cinemasIds) => {
+		const response = await fetch(`/api/cinemas/update-managers`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ userId, cinemasIds }),
+		});
+	};
+
 	useEffect(() => {
 		sortCinemas();
 	}, [userManager]);
 
 	const onSubmit = async (data) => {
-		if (userManager) {
-			sortCinemas();
-			const cinemasIds = selectedCinemas.map((cinema) => cinema._id);
-			data.manages = cinemasIds;
-		}
 		const status = await signIn("credentials", {
 			redirect: false,
 			email: data.email,
@@ -58,6 +64,13 @@ export function AddUser({ cinemas }) {
 			role: data.role,
 		});
 		console.log(status);
+
+		// if (userManager) {
+		// 	sortCinemas();
+		// 	const cinemasIds = selectedCinemas.map((cinema) => cinema._id);
+		// 	updateCinemas(cinemasIds);
+		// }
+
 		refreshData();
 		handleClose();
 		setSelectedCinemas([]);

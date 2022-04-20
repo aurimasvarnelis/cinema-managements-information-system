@@ -17,12 +17,6 @@ const UserSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	manages: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Cinema",
-		},
-	],
 	emailVerified: {
 		type: String,
 		default: null,

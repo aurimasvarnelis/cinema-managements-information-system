@@ -25,10 +25,8 @@ export function ViewUser({ user, cinemas }) {
 	let selectedCinemas = [];
 
 	if (user.role === "manager") {
-		cinemas.forEach((cinema) => {
-			if (user.manages.includes(cinema._id)) {
-				selectedCinemas.push(cinema);
-			}
+		selectedCinemas = cinemas.filter((cinema) => {
+			return cinema.managers.includes(user._id);
 		});
 	}
 

@@ -9,6 +9,28 @@ const CinemaSchema = new mongoose.Schema({
 		type: String,
 		required: [true, "Please provide a location for this cinema"],
 	},
+	city: {
+		type: String,
+		required: [false, "Please provide a city for this cinema"],
+	},
+	address: {
+		type: String,
+		required: [false, "Please provide an address for this cinema"],
+	},
+	phone: {
+		type: String,
+		required: [false, "Please provide a phone number for this cinema"],
+	},
+	email: {
+		type: String,
+		required: [false, "Please provide an email for this cinema"],
+	},
+	managers: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "User",
+		},
+	],
 });
 
 export default mongoose.models.Cinema || mongoose.model("Cinema", CinemaSchema);

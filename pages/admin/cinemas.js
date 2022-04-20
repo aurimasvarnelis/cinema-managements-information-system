@@ -1,61 +1,83 @@
-import dbConnect from '../../lib/dbConnect'
-import Cinema from '../../models/Cinema'
-import { Button, Col, Container, Row, Modal, Form, Table } from "react-bootstrap"
-import { AddCinema } from "../../components/admin/cinemas/AddCinema"
-import { ViewCinema } from "../../components/admin/cinemas/ViewCinema"
-import { EditCinema } from "../../components/admin/cinemas/EditCinema"
-import { DeleteCinema } from "../../components/admin/cinemas/DeleteCinema"
+import dbConnect from "../../lib/dbConnect";
+import {
+	Button,
+	Col,
+	Container,
+	Row,
+	Modal,
+	Form,
+	Table,
+} from "react-bootstrap";
+import { AddCinema } from "../../components/admin/cinemas/AddCinema";
+import { ViewCinema } from "../../components/admin/cinemas/ViewCinema";
+import { EditCinema } from "../../components/admin/cinemas/EditCinema";
+import { DeleteCinema } from "../../components/admin/cinemas/DeleteCinema";
 
-export default function cinemas({ cinemas }) {
-  return (
-    <>
-      <Container>
-        <AddCinema />
+import { getCinemas } from "../../controllers/CinemaController";
+import { getUsers } from "../../controllers/UserController";
 
-        <Table striped bordered hover>
-          <thead>
-            <tr>  
-              <th>Name</th>
-              <th>Location</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cinemas.map((cinema) => (
-              <tr key={cinema._id} className="item-row">
-                <td>{cinema.name}</td>
+// TODO: add managers and let edit them
+export default function cinemas({ cinemas, users }) {
+	return (
+		<>
+			<Container>
+				<AddCinema />
 
-                <td>
-                  {cinema.location}
-                </td>
+				<Table striped bordered hover>
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Location</th>
+							<th>Managers</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{cinemas.map((cinema) => (
+							<tr key={cinema._id} className="item-row">
+								<td>{cinema.name}</td>
 
-                <td>
-                  <ViewCinema cinema={cinema}/>
-                  <EditCinema cinema={cinema}/>
-                  <DeleteCinema cinema={cinema} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-        
-      </Container>
-    </>
-  )
+								<td>{cinema.location}</td>
+
+								<td>
+									{cinema.managers.map((manager, idx) => (
+										<li key={idx}>
+											{users.find((user) => user._id === manager).email}
+										</li>
+									))}
+									{/* {cinema.managers.map((manager) => {
+										return users.map((user) => {
+											if (user._id === manager) {
+												return user.email;
+											}
+										});
+									})} */}
+								</td>
+
+								<td>
+									<ViewCinema cinema={cinema} users={users} />
+									<EditCinema cinema={cinema} />
+									<DeleteCinema cinema={cinema} />
+								</td>
+							</tr>
+						))}
+					</tbody>
+				</Table>
+			</Container>
+		</>
+	);
 }
 
-/* Retrieves cinema(s) data from mongodb database */
 export async function getServerSideProps() {
-  await dbConnect()
+	await dbConnect();
 
-  /* find all the data in our database */
-  const result = await Cinema.find({})
-  const cinemas = result.map((doc) => {
-    const cinema = doc.toObject()
-    cinema._id = cinema._id.toString()
-    return cinema
-  })
+	const cinemas = await getCinemas();
+	const users = await getUsers();
 
-  return { props: { cinemas: cinemas } }
+	return {
+		props: {
+			cinemas: JSON.parse(JSON.stringify(cinemas)),
+			users: JSON.parse(JSON.stringify(users)),
+		},
+	};
 }
-

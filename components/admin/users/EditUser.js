@@ -44,24 +44,33 @@ export function EditUser({ user, cinemas }) {
 		sortCinemas();
 		if (user.role === "manager") {
 			setUserManager(true);
-			if (user.manages) {
-				const filteredCinemas = cinemas.filter((cinema) => {
-					return user.manages.includes(cinema._id);
-				});
-				setSelectedCinemas(filteredCinemas);
-			}
+			// go through all cinemas and filter cinema if the user is a manager
+			const filteredCinemas = cinemas.filter((cinema) => {
+				return cinema.managers.includes(user._id);
+			});
+			setSelectedCinemas(filteredCinemas);
 		} else {
 			setSelectedCinemas([]);
 		}
 	}, [user, userManager]);
 
+	const updateCinemas = async (cinemasIds) => {
+		const response = await fetch(`/api/cinemas/update-managers`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ userId: user._id, cinemasIds: cinemasIds }),
+		});
+	};
+
 	const putData = async (data) => {
 		if (userManager) {
 			sortCinemas();
 			const cinemasIds = selectedCinemas.map((cinema) => cinema._id);
-			data.manages = cinemasIds;
+			updateCinemas(cinemasIds);
 		}
-		const res = await fetch(`/api/users/${user._id}`, {
+		const response = await fetch(`/api/users/${user._id}`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
@@ -69,11 +78,9 @@ export function EditUser({ user, cinemas }) {
 			body: JSON.stringify(data),
 		});
 
-		if (res.status < 300) {
-			refreshData();
-		}
+		if (response.status < 300) refreshData();
 
-		const resData = await res.json();
+		const resData = await response.json();
 		console.log(resData);
 	};
 
