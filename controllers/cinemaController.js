@@ -45,3 +45,8 @@ export async function updateCinemas(req) {
 
 	return cinemas;
 }
+
+export async function getCinemasByManager(userId) {
+	const cinemas = await Cinema.find({ managers: userId });
+	return cinemas;
+}

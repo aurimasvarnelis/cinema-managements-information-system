@@ -1,11 +1,4 @@
-import {
-	Container,
-	Dropdown,
-	DropdownButton,
-	Nav,
-	NavDropdown,
-	Navbar,
-} from "react-bootstrap";
+import { Container, Dropdown, DropdownButton, Nav, NavDropdown, Navbar } from "react-bootstrap";
 import { getCookie, setCookies } from "cookies-next";
 import { useEffect, useState } from "react";
 
@@ -63,7 +56,7 @@ export default function Header() {
 			<Container>
 				<Navbar className="navbar-custom" expand="lg">
 					<Navbar.Brand>
-						<Image src={Logo} width="120" height="120" alt="filmCinemaLogo" />
+						<Image src={Logo} width="80" height="80" alt="filmCinemaLogo" />
 					</Navbar.Brand>
 					<Navbar.Toggle aria-controls="basic-navbar-nav" />
 					<Navbar.Collapse id="basic-navbar-nav">
@@ -71,16 +64,10 @@ export default function Header() {
 							{!session ? (
 								<>
 									<Link href="/" passHref>
-										<Nav.Link className={router.asPath == "/" ? "active" : ""}>
-											Home
-										</Nav.Link>
+										<Nav.Link className={router.asPath == "/" ? "active" : ""}>Home</Nav.Link>
 									</Link>
 									<Link href="/movies" passHref>
-										<Nav.Link
-											className={router.asPath == "/movies" ? "active" : ""}
-										>
-											Movies
-										</Nav.Link>
+										<Nav.Link className={router.asPath == "/movies" ? "active" : ""}>Movies</Nav.Link>
 									</Link>
 								</>
 							) : (
@@ -91,81 +78,39 @@ export default function Header() {
 												(session.user.role == "user" && (
 													<>
 														<Link href="/" passHref>
-															<Nav.Link
-																className={router.asPath == "/" ? "active" : ""}
-															>
-																Home
-															</Nav.Link>
+															<Nav.Link className={router.asPath == "/" ? "active" : ""}>Home</Nav.Link>
 														</Link>
 														<Link href="/movies" passHref>
-															<Nav.Link
-																className={
-																	router.asPath == "/movies" ? "active" : ""
-																}
-															>
-																Movies
-															</Nav.Link>
+															<Nav.Link className={router.asPath == "/movies" ? "active" : ""}>Movies</Nav.Link>
 														</Link>
 													</>
 												))}
 											{session.user.role == "manager" && (
 												<>
+													<Link href="/manager/dashboard" passHref>
+														<Nav.Link className={router.asPath == "/manager/dashboard" ? "active" : ""}>Dashboard</Nav.Link>
+													</Link>
+													<Link href="/manager/all-movies" passHref>
+														<Nav.Link className={router.asPath == "/manager/all-movies" ? "active" : ""}>All Movies</Nav.Link>
+													</Link>
 													<Link href="/manager/movies" passHref>
-														<Nav.Link
-															className={
-																router.asPath == "/manager/movies"
-																	? "active"
-																	: ""
-															}
-														>
-															(M)Movies
-														</Nav.Link>
+														<Nav.Link className={router.asPath == "/manager/movies" ? "active" : ""}>Movies</Nav.Link>
 													</Link>
 													<Link href="/manager/rooms" passHref>
-														<Nav.Link
-															className={
-																router.asPath == "/manager/rooms"
-																	? "active"
-																	: ""
-															}
-														>
-															(M)Rooms
-														</Nav.Link>
+														<Nav.Link className={router.asPath == "/manager/rooms" ? "active" : ""}>Rooms</Nav.Link>
 													</Link>
 													<Link href="/manager/sessions" passHref>
-														<Nav.Link
-															className={
-																router.asPath == "/manager/sessions"
-																	? "active"
-																	: ""
-															}
-														>
-															(M)Sessions
-														</Nav.Link>
+														<Nav.Link className={router.asPath == "/manager/sessions" ? "active" : ""}>Sessions</Nav.Link>
 													</Link>
 												</>
 											)}
 											{session.user.role == "admin" && (
 												<>
 													<Link href="/admin/cinemas" passHref>
-														<Nav.Link
-															className={
-																router.asPath == "/admin/cinemas"
-																	? "active"
-																	: ""
-															}
-														>
-															(A)Cinemas
-														</Nav.Link>
+														<Nav.Link className={router.asPath == "/admin/cinemas" ? "active" : ""}>Cinemas</Nav.Link>
 													</Link>
 													<Link href="/admin/users" passHref>
-														<Nav.Link
-															className={
-																router.asPath == "/admin/users" ? "active" : ""
-															}
-														>
-															(A)Users
-														</Nav.Link>
+														<Nav.Link className={router.asPath == "/admin/users" ? "active" : ""}>Users</Nav.Link>
 													</Link>
 												</>
 											)}
@@ -175,21 +120,20 @@ export default function Header() {
 							)}
 						</Nav>
 						<Nav className="nav-custom">
-							<DropdownButton
-								title={cinema}
-								className="cinema-dropdown-button"
-								onSelect={handleCinemaSelect}
-							>
-								{cinemas &&
-									cinemas.map((cinema) => (
-										<Dropdown.Item key={cinema._id} eventKey={cinema._id}>
-											{cinema.name} | {cinema.location}
-										</Dropdown.Item>
-									))}
-							</DropdownButton>
+							{session?.user.role !== "admin" ||
+								(session?.user.role !== "manager" && (
+									<DropdownButton title={cinema} className="cinema-dropdown-button" onSelect={handleCinemaSelect}>
+										{cinemas &&
+											cinemas.map((cinema) => (
+												<Dropdown.Item key={cinema._id} eventKey={cinema._id}>
+													{cinema.name} | {cinema.location}
+												</Dropdown.Item>
+											))}
+									</DropdownButton>
+								))}
 							{session ? (
 								<DropdownButton
-									title="Profile"
+									title={session.user.role === "admin" || session.user.role === "manager" ? session.user.role : "profile"}
 									className="profile-dropdown-button"
 								>
 									<Dropdown.Item eventKey="1">View profile</Dropdown.Item>
