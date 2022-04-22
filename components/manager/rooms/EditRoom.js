@@ -1,18 +1,4 @@
-import {
-	Button,
-	Col,
-	Container,
-	Dropdown,
-	DropdownButton,
-	Form,
-	FormControl,
-	Image,
-	InputGroup,
-	Modal,
-	Row,
-	Stack,
-	Table,
-} from "react-bootstrap";
+import { Button, Col, Container, Dropdown, DropdownButton, Form, FormControl, Image, InputGroup, Modal, Row, Stack, Table } from "react-bootstrap";
 
 import { getCookie } from "cookies-next";
 import { useForm } from "react-hook-form";
@@ -43,21 +29,21 @@ export function EditRoom({ room, cinemaId }) {
 		},
 	]);
 
-	const getRoomCapacity = () => {
-		let capacity = 0;
+	const getRoomTotalSeats = () => {
+		let totalSeats = 0;
 		rows.forEach((row) => {
 			row.columns.forEach((column) => {
 				if (column.status === 0) {
-					capacity++;
+					totalSeats++;
 				}
 			});
 		});
-		return capacity;
+		return totalSeats;
 	};
 
 	const putData = async (data) => {
 		data.rows = rows;
-		data.capacity = getRoomCapacity();
+		data.total_seats = getRoomTotalSeats();
 		const res = await fetch(`/api/cinemas/${cinemaId}/rooms/${room._id}`, {
 			method: "PUT",
 			headers: {
@@ -148,13 +134,7 @@ export function EditRoom({ room, cinemaId }) {
 	return (
 		<>
 			<Button variant="outline-warning" className="me-2" onClick={handleShow}>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="20"
-					height="20"
-					fill="currentColor"
-					viewBox="0 0 16 16"
-				>
+				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
 					<path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
 					<path d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
 				</svg>
@@ -174,21 +154,10 @@ export function EditRoom({ room, cinemaId }) {
 					<Modal.Title>Edit room</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<Form
-						noValidate
-						id="hook-form"
-						validated={validated}
-						onSubmit={handleSubmit(onSubmit)}
-					>
+					<Form noValidate id="hook-form" validated={validated} onSubmit={handleSubmit(onSubmit)}>
 						<Form.Group className="mb-3" controlId="validationName">
 							<Form.Label>Name</Form.Label>
-							<Form.Control
-								required
-								type="text"
-								placeholder="Room name"
-								defaultValue={room.name}
-								{...register("name")}
-							/>
+							<Form.Control required type="text" placeholder="Room name" defaultValue={room.name} {...register("name")} />
 						</Form.Group>
 					</Form>
 
@@ -209,9 +178,7 @@ export function EditRoom({ room, cinemaId }) {
 										<div>{idx + 1}</div>
 										{row.columns.map((column, idx) => (
 											<div key={idx}>
-												{row.id === rows.length - 1 && (
-													<div>{column.id + 1}</div>
-												)}
+												{row.id === rows.length - 1 && <div>{column.id + 1}</div>}
 												{/* {idx === 0 && <div>{column.id}</div>} */}
 
 												<div
@@ -226,25 +193,11 @@ export function EditRoom({ room, cinemaId }) {
 													}}
 												>
 													{row.columns[idx].status === -1 ? (
-														<svg
-															xmlns="http://www.w3.org/2000/svg"
-															width="24"
-															height="24"
-															fill="gray"
-															className="bi bi-circle-fill"
-															viewBox="0 0 24 24"
-														>
+														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="gray" className="bi bi-circle-fill" viewBox="0 0 24 24">
 															<circle cx="12" cy="12" r="12" />
 														</svg>
 													) : (
-														<svg
-															xmlns="http://www.w3.org/2000/svg"
-															width="24"
-															height="24"
-															fill="green"
-															className="bi bi-circle-fill"
-															viewBox="0 0 24 24"
-														>
+														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="green" className="bi bi-circle-fill" viewBox="0 0 24 24">
 															<circle cx="12" cy="12" r="12" />
 														</svg>
 													)}

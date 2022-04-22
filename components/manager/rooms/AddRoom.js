@@ -28,21 +28,22 @@ export function AddRoom({ cinemaId }) {
 		},
 	]);
 
-	const getRoomCapacity = () => {
-		let capacity = 0;
+	const getRoomTotalSeats = () => {
+		let totalSeats = 0;
 		rows.forEach((row) => {
 			row.columns.forEach((column) => {
 				if (column.status === 0) {
-					capacity++;
+					totalSeats++;
 				}
 			});
 		});
-		return capacity;
+		return totalSeats;
 	};
 
 	const postData = async (data) => {
 		data.rows = rows;
-		data.capacity = getRoomCapacity();
+		data.total_seats = getRoomTotalSeats();
+		data.occupied_seats = 0;
 		const res = await fetch(`/api/cinemas/${cinemaId}/rooms`, {
 			method: "POST",
 			headers: {

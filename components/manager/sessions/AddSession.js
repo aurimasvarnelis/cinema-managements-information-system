@@ -39,17 +39,15 @@ export function AddSession({ movies, rooms, cinemaId, ticketTypes }) {
 
 	const postData = async (data) => {
 		data.cinema_id = cinemaId;
-		data.display_time =
-			moment(data.start_time).format("HH:mm") +
-			" - " +
-			moment(data.end_time).format("HH:mm");
+		data.display_time = moment(data.start_time).format("HH:mm") + " - " + moment(data.end_time).format("HH:mm");
 
 		const room = await rooms.find((room) => room._id === data.room);
 
 		const customRoom = {
 			_id: room._id,
 			name: room.name,
-			capacity: room.capacity,
+			total_seats: room.total_seats,
+			occupied_seats: 0,
 			cinema_id: room.cinema_id,
 			rows: room.rows,
 		};
@@ -100,14 +98,7 @@ export function AddSession({ movies, rooms, cinemaId, ticketTypes }) {
 		<>
 			<Button className="my-3" variant="success" onClick={handleShow}>
 				<div className="p-1 d-inline">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="16"
-						height="16"
-						fill="currentColor"
-						className="bi bi-plus-square"
-						viewBox="0 0 16 16"
-					>
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-square" viewBox="0 0 16 16">
 						<path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
 						<path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
 					</svg>
@@ -128,12 +119,7 @@ export function AddSession({ movies, rooms, cinemaId, ticketTypes }) {
 					<Modal.Title>Add a session</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<Form
-						noValidate
-						id="hook-form"
-						validated={validated}
-						onSubmit={handleSubmit(onSubmit)}
-					>
+					<Form noValidate id="hook-form" validated={validated} onSubmit={handleSubmit(onSubmit)}>
 						<Row className="mb-3">
 							<Form.Group className="mb-3" as={Col}>
 								<Form.Label htmlFor="movie">Movie</Form.Label>
@@ -179,11 +165,7 @@ export function AddSession({ movies, rooms, cinemaId, ticketTypes }) {
 							</Form.Group>
 							<Form.Group className="mb-3" as={Col}>
 								<Form.Label>End time</Form.Label>
-								<Form.Control
-									disabled
-									type="datetime-local"
-									{...register("end_time")}
-								/>
+								<Form.Control disabled type="datetime-local" {...register("end_time")} />
 							</Form.Group>
 						</Row>
 						<Form.Group className="mb-3">
@@ -210,11 +192,7 @@ export function AddSession({ movies, rooms, cinemaId, ticketTypes }) {
 									setValue(`ticket_types[${idx}].ticket_type_name`, ticketType);
 									return (
 										<Form.Group key={idx} className="mb-3">
-											<Form.Control
-												disabled
-												value={ticketType}
-												{...register(`ticket_types[${idx}].ticket_type_name`)}
-											/>
+											<Form.Control disabled value={ticketType} {...register(`ticket_types[${idx}].ticket_type_name`)} />
 										</Form.Group>
 									);
 								})}
@@ -224,14 +202,7 @@ export function AddSession({ movies, rooms, cinemaId, ticketTypes }) {
 								ticket_type.price */}
 								{ticketTypes.map((ticketType, idx) => (
 									<Form.Group key={idx} className="mb-3">
-										<Form.Control
-											required
-											type="number"
-											min="0"
-											step=".01"
-											placeholder="Price"
-											{...register(`ticket_types[${idx}].price`)}
-										/>
+										<Form.Control required type="number" min="0" step=".01" placeholder="Price" {...register(`ticket_types[${idx}].price`)} />
 									</Form.Group>
 								))}
 							</Col>

@@ -26,7 +26,7 @@ export default function Rooms({ rooms, cinemas }) {
 									<tr>
 										<th>#</th>
 										<th>Name</th>
-										<th>Capacity</th>
+										<th>Total seats</th>
 
 										<th>Actions</th>
 									</tr>
@@ -37,7 +37,7 @@ export default function Rooms({ rooms, cinemas }) {
 											<td>{movieIdx + 1}</td>
 											<td>{room.name}</td>
 
-											<td>{room.capacity}</td>
+											<td>{room.total_seats}</td>
 
 											<td>
 												<ViewRoom room={room} />

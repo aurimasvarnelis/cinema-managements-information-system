@@ -1,15 +1,16 @@
-import Layout from "../components/layout"
-import { Card, Carousel, Container } from 'react-bootstrap';
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import { Card, Carousel, Container } from "react-bootstrap";
+
+import Head from "next/head";
+import Image from "next/image";
+import Layout from "../components/layout";
+import styles from "../styles/Home.module.css";
 
 export default function Home() {
-  // const card1 = require('./images/lalaland-slider.jpg'); 
-  // const card2 = require('./images/batman-slider.jpg'); 
-  return (
-    <>
-      <Container className="home-carousel">
+	// const card1 = require('./images/lalaland-slider.jpg');
+	// const card2 = require('./images/batman-slider.jpg');
+	return (
+		<>
+			{/* <Container className="home-carousel">
       <Carousel>
         <Carousel.Item interval={100000}>
           <Image
@@ -42,7 +43,7 @@ export default function Home() {
         
         
       </Carousel>
-    </Container>
-    </>  
-  )
+    </Container> */}
+		</>
+	);
 }

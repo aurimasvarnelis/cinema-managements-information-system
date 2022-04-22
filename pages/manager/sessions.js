@@ -1,4 +1,4 @@
-import { Button, Col, Container, Form, Modal, Row, Tab, Table, Tabs } from "react-bootstrap";
+import { Button, Col, Container, Form, Modal, ProgressBar, Row, Tab, Table, Tabs } from "react-bootstrap";
 
 import { AddSession } from "../../components/manager/sessions/AddSession";
 import { DeleteSession } from "../../components/manager/sessions/DeleteSession";
@@ -15,10 +15,7 @@ import { getTicketTypes } from "../../controllers/sessionController";
 import moment from "moment";
 import styles from "./movies.module.scss";
 
-//import { getRooms } from "../../controllers/roomController";
-
 export default function Sessions({ cinemas, sessions, movies, rooms, ticketTypes }) {
-	console.log(sessions);
 	return (
 		<>
 			<Container>
@@ -35,6 +32,7 @@ export default function Sessions({ cinemas, sessions, movies, rooms, ticketTypes
 										<th>Room</th>
 										<th>Date</th>
 										<th>Time</th>
+										<th>Occupied</th>
 										<th>Status</th>
 										<th>Action</th>
 									</tr>
@@ -50,6 +48,17 @@ export default function Sessions({ cinemas, sessions, movies, rooms, ticketTypes
 												<td>{session.room.name}</td>
 												<td>{moment(session.start_time).format("YYYY-MM-DD")}</td>
 												<td>{session.display_time}</td>
+
+												<td>
+													{/* // count percentage of seats occupied by comparing total seats to occupied seats */}
+													<ProgressBar
+														now={(session.room.occupied_seats / session.room.total_seats) * 100}
+														label={`${(session.room.occupied_seats / session.room.total_seats) * 100}%`}
+														variant="success"
+														striped
+														visuallyHidden
+													/>
+												</td>
 												<td>{session.status}</td>
 												<td>
 													<ViewSession session={session} movie={movie} />

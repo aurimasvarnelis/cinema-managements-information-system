@@ -32,26 +32,31 @@ const RowSchema = new mongoose.Schema(
 const RoomSchema = new mongoose.Schema({
 	cinema_id: {
 		type: Schema.Types.ObjectId,
+		ref: "Cinema",
 		required: true,
 	},
 	name: {
 		type: String,
 		required: true,
 	},
-	capacity: {
+	total_seats: {
 		type: Number,
 		required: true,
 	},
-	door_placement: {
-		type: String,
-		enum: ["left", "right", "both"],
-		required: false,
+	occupied_seats: {
+		type: Number,
+		default: 0,
 	},
-	staircase_placement: {
-		type: String,
-		enum: ["left", "right", "both"],
-		required: false,
-	},
+	// door_placement: {
+	// 	type: String,
+	// 	enum: ["left", "right", "both"],
+	// 	required: false,
+	// },
+	// staircase_placement: {
+	// 	type: String,
+	// 	enum: ["left", "right", "both"],
+	// 	required: false,
+	// },
 	rows: [RowSchema],
 });
 
