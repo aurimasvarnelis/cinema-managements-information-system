@@ -24,14 +24,10 @@ export async function postSession(req) {
 }
 
 export async function putSession(req) {
-	const session = await Session.findByIdAndUpdate(
-		req.query.sessionId,
-		req.body,
-		{
-			new: true,
-			runValidators: true,
-		}
-	);
+	const session = await Session.findByIdAndUpdate(req.query.sessionId, req.body, {
+		new: true,
+		runValidators: true,
+	});
 	return session;
 }
 
@@ -41,7 +37,22 @@ export async function deleteSession(req) {
 }
 
 export async function getTicketTypes() {
-	const ticketTypes = await Session.schema.path("ticket_types.ticket_type_name")
-		.options.enum;
+	const ticketTypes = await Session.schema.path("ticket_types.ticket_type_name").options.enum;
 	return ticketTypes;
+}
+
+export async function getSessionsByCinemas(cinemas) {
+	const filteredSessions = [];
+	for (let i = 0; i < cinemas.length; i++) {
+		// find sessions where session.room.cinema_id = cinemas[i]._id
+		const sessions = await Session.find({
+			// check room.cinema_id with cinemas[i]._id as string
+			"room.cinema_id": {
+				$in: [cinemas[i]._id.toString()],
+			},
+		});
+		filteredSessions.push(sessions);
+	}
+
+	return filteredSessions;
 }

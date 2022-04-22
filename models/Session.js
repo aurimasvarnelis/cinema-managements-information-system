@@ -4,6 +4,7 @@ const { Schema } = mongoose;
 
 const SessionSchema = new mongoose.Schema(
 	{
+		// room is embedded sub-document mimicking the structure of the room model
 		room: {
 			type: Schema.Types.Mixed,
 			ref: "Room",
@@ -49,5 +50,4 @@ const SessionSchema = new mongoose.Schema(
 	}
 );
 
-export default mongoose.models.Session ||
-	mongoose.model("Session", SessionSchema);
+export default mongoose.models.Session || mongoose.model("Session", SessionSchema);
