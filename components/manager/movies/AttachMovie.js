@@ -63,7 +63,7 @@ export function AttachMovie({ allMovies, cinemas }) {
 						<path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
 					</svg>
 				</div>
-				<div className="p-1 d-inline">Add movie</div>
+				<div className="p-1 d-inline">Attach movie</div>
 			</Button>
 
 			<Modal
@@ -76,7 +76,7 @@ export function AttachMovie({ allMovies, cinemas }) {
 				centered
 			>
 				<Modal.Header closeButton>
-					<Modal.Title>Add movie</Modal.Title>
+					<Modal.Title>Attach movie</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<Form noValidate id="hook-form" validated={validated} onSubmit={handleSubmit(onSubmit)}>

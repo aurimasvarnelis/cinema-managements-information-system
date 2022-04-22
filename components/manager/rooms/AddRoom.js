@@ -1,18 +1,4 @@
-import {
-	Button,
-	Col,
-	Container,
-	Dropdown,
-	DropdownButton,
-	Form,
-	FormControl,
-	Image,
-	InputGroup,
-	Modal,
-	Row,
-	Stack,
-	Table,
-} from "react-bootstrap";
+import { Button, Col, Container, Dropdown, DropdownButton, Form, FormControl, Image, InputGroup, Modal, Row, Stack, Table } from "react-bootstrap";
 
 import { getCookie } from "cookies-next";
 import { useForm } from "react-hook-form";
@@ -149,14 +135,7 @@ export function AddRoom({ cinemaId }) {
 		<>
 			<Button className="my-3" variant="success" onClick={handleShow}>
 				<div className="p-1 d-inline">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="16"
-						height="16"
-						fill="currentColor"
-						className="bi bi-plus-square"
-						viewBox="0 0 16 16"
-					>
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-square" viewBox="0 0 16 16">
 						<path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
 						<path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
 					</svg>
@@ -177,20 +156,10 @@ export function AddRoom({ cinemaId }) {
 					<Modal.Title>Add room</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<Form
-						noValidate
-						id="hook-form"
-						validated={validated}
-						onSubmit={handleSubmit(onSubmit)}
-					>
+					<Form noValidate id="hook-form" validated={validated} onSubmit={handleSubmit(onSubmit)}>
 						<Form.Group className="mb-3" controlId="validationName">
 							<Form.Label>Name</Form.Label>
-							<Form.Control
-								required
-								type="text"
-								placeholder="Room name"
-								{...register("name")}
-							/>
+							<Form.Control required type="text" placeholder="Room name" {...register("name")} />
 						</Form.Group>
 					</Form>
 
@@ -206,49 +175,33 @@ export function AddRoom({ cinemaId }) {
 
 						<Container>
 							{rows
-								.map((row, idx) => (
-									<Stack direction="horizontal" gap={2} key={idx}>
+								.map((row, rowIdx) => (
+									<Stack direction="horizontal" gap={2} key={rowIdx}>
 										<div className="mx-2" style={{ width: "20px" }}>
-											{idx + 1}
+											{rowIdx + 1}
 										</div>
-										{row.columns.map((column, idx) => (
+										{row.columns.map((column, columnIdx) => (
 											<>
-												<div key={idx}>
+												<div key={columnIdx}>
 													{/* {idx === 0 && <div>{column.id}</div>} */}
-													{row.id === rows.length - 1 && (
-														<div>{column.id + 1}</div>
-													)}
+													{row.id === rows.length - 1 && <div>{column.id + 1}</div>}
 													<div
 														onClick={() => {
 															if (column.status === 0) {
-																row.columns[idx].status = -1;
+																row.columns[columnIdx].status = -1;
 																setRows([...rows]);
 															} else {
-																row.columns[idx].status = 0;
+																row.columns[columnIdx].status = 0;
 																setRows([...rows]);
 															}
 														}}
 													>
-														{row.columns[idx].status === -1 ? (
-															<svg
-																xmlns="http://www.w3.org/2000/svg"
-																width="24"
-																height="24"
-																fill="gray"
-																className="bi bi-circle-fill"
-																viewBox="0 0 24 24"
-															>
+														{row.columns[columnIdx].status === -1 ? (
+															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="gray" className="bi bi-circle-fill" viewBox="0 0 24 24">
 																<circle cx="12" cy="12" r="12" />
 															</svg>
 														) : (
-															<svg
-																xmlns="http://www.w3.org/2000/svg"
-																width="24"
-																height="24"
-																fill="green"
-																className="bi bi-circle-fill"
-																viewBox="0 0 24 24"
-															>
+															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="green" className="bi bi-circle-fill" viewBox="0 0 24 24">
 																<circle cx="12" cy="12" r="12" />
 															</svg>
 														)}
