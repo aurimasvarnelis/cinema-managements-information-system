@@ -9,6 +9,10 @@ const SessionSchema = new mongoose.Schema(
 			type: Schema.Types.Mixed,
 			ref: "Room",
 		},
+		cinema_id: {
+			type: Schema.Types.ObjectId,
+			ref: "Cinema",
+		},
 		movie_id: {
 			type: Schema.Types.ObjectId,
 			required: true,
@@ -34,7 +38,7 @@ const SessionSchema = new mongoose.Schema(
 			{
 				ticket_type_name: {
 					type: String,
-					enum: ["Standard", "VIP"],
+					enum: ["Standard"],
 					default: "Standard",
 				},
 				price: {
@@ -46,7 +50,10 @@ const SessionSchema = new mongoose.Schema(
 		],
 	},
 	{
-		timestamps: true,
+		timestamps: {
+			createdAt: "created_at",
+			updatedAt: "updated_at",
+		},
 	}
 );
 

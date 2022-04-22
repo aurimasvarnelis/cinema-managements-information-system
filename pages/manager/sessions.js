@@ -16,6 +16,7 @@ import moment from "moment";
 import styles from "./movies.module.scss";
 
 export default function Sessions({ cinemas, sessions, movies, rooms, ticketTypes }) {
+	console.log(sessions);
 	return (
 		<>
 			<Container>
@@ -23,7 +24,7 @@ export default function Sessions({ cinemas, sessions, movies, rooms, ticketTypes
 					{/* // map through all cinemas and get movies for each cinema */}
 					{cinemas.map((cinema, cinemaIdx) => (
 						<Tab eventKey={cinema._id} title={cinema.name} key={cinema._id} className={styles.cinemaTab}>
-							<AddSession movies={movies[cinemaIdx]} rooms={rooms[cinemaIdx]} cinemaId={cinemaIdx} ticketTypes={ticketTypes} />
+							<AddSession movies={movies[cinemaIdx]} rooms={rooms[cinemaIdx]} cinemaId={cinema._id} ticketTypes={ticketTypes} />
 							<Table striped bordered hover>
 								<thead>
 									<tr>
@@ -67,7 +68,7 @@ export default function Sessions({ cinemas, sessions, movies, rooms, ticketTypes
 														movies={movies[cinemaIdx]}
 														rooms={rooms[cinemaIdx]}
 														movie={movie}
-														cinemaId={cinemaIdx}
+														cinemaId={cinema._id}
 														ticketTypes={ticketTypes}
 													/>
 													<DeleteSession session={session} />
@@ -92,8 +93,7 @@ export async function getServerSideProps(context) {
 
 	const { user } = await getSession(context);
 	const cinemas = await getCinemasByManager(user.id);
-	const sessions = await getSessionsByCinemas(cinemas);
-	//const sessions = await getSessionsByCinemas(cinemas.map((cinema) => cinema._id));
+	const sessions = await getSessionsByCinemas(cinemas.map((cinema) => cinema._id));
 	const movies = await getMoviesByCinemas(cinemas);
 	const rooms = await getRoomsByCinemas(cinemas);
 	const ticketTypes = await getTicketTypes();

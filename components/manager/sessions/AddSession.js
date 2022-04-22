@@ -48,7 +48,6 @@ export function AddSession({ movies, rooms, cinemaId, ticketTypes }) {
 			name: room.name,
 			total_seats: room.total_seats,
 			occupied_seats: 0,
-			cinema_id: room.cinema_id,
 			rows: room.rows,
 		};
 		data.room = customRoom;
@@ -60,9 +59,7 @@ export function AddSession({ movies, rooms, cinemaId, ticketTypes }) {
 			},
 			body: JSON.stringify(data),
 		});
-		if (res.status < 300) {
-			refreshData();
-		}
+		if (res.status < 300) refreshData();
 	};
 
 	const [movie, setMovie] = useState();

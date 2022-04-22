@@ -41,15 +41,11 @@ export async function getTicketTypes() {
 	return ticketTypes;
 }
 
-export async function getSessionsByCinemas(cinemas) {
+export async function getSessionsByCinemas(cinemasIds) {
 	const filteredSessions = [];
-	for (let i = 0; i < cinemas.length; i++) {
-		// find sessions where session.room.cinema_id = cinemas[i]._id
+	for (let i = 0; i < cinemasIds.length; i++) {
 		const sessions = await Session.find({
-			// check room.cinema_id with cinemas[i]._id as string
-			"room.cinema_id": {
-				$in: [cinemas[i]._id.toString()],
-			},
+			cinema_id: cinemasIds[i],
 		});
 		filteredSessions.push(sessions);
 	}

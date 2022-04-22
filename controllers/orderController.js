@@ -47,6 +47,7 @@ export async function addTicketToOrder(req) {
 		const newOrder = new Order({
 			user_id: user_id,
 			session_id: session_id,
+			cinema_id: session.cinema_id,
 			tickets: [ticket],
 			price_total: ticket.price,
 			status: "Reserved",
@@ -96,7 +97,7 @@ export async function removeTicketFromOrder(req) {
 	};
 }
 
-export async function getCurrentUserOrder(userId, sessionId) {
+export async function getCurrentUserOrder(userId, cinemaId, sessionId) {
 	const order = await Order.findOne({
 		user_id: userId,
 		session_id: sessionId,
@@ -109,6 +110,7 @@ export async function getCurrentUserOrder(userId, sessionId) {
 		const order = new Order({
 			user_id: userId,
 			session_id: sessionId,
+			cinema_id: cinemaId,
 			tickets: [],
 			price_total: 0,
 		});

@@ -120,7 +120,7 @@ export default function Header() {
 							)}
 						</Nav>
 						<Nav className="nav-custom">
-							{session?.user.role !== "admin" ||
+							{session?.user.role !== "admin" &&
 								(session?.user.role !== "manager" && (
 									<DropdownButton title={cinema} className="cinema-dropdown-button" onSelect={handleCinemaSelect}>
 										{cinemas &&
@@ -131,6 +131,17 @@ export default function Header() {
 											))}
 									</DropdownButton>
 								))}
+							{/* {session && (
+								<DropdownButton title={cinema} className="cinema-dropdown-button" onSelect={handleCinemaSelect}>
+									{cinemas &&
+										cinemas.map((cinema) => (
+											<Dropdown.Item key={cinema._id} eventKey={cinema._id}>
+												{cinema.name} | {cinema.location}
+											</Dropdown.Item>
+										))}
+								</DropdownButton>
+							)} */}
+
 							{session ? (
 								<DropdownButton
 									title={session.user.role === "admin" || session.user.role === "manager" ? session.user.role : "profile"}

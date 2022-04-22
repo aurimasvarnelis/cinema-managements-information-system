@@ -1,14 +1,4 @@
-import {
-	Button,
-	Card,
-	Col,
-	Container,
-	Form,
-	Modal,
-	Row,
-	Stack,
-	Table,
-} from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Modal, Row, Stack, Table } from "react-bootstrap";
 import { getSession, useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 
@@ -30,24 +20,10 @@ import { useRouter } from "next/router";
 
 export default function Session({ movieSession, movie, cinema, order }) {
 	const router = useRouter();
-	const refreshData = () => {
-		router.replace(router.asPath);
-	};
-
-	// async function fetchSession() {
-	// 	const response = await fetch(
-	// 		`${process.env.url}/api/sessions/${movieSession._id}`
-	// 	)
-	// 		.then((res) => res.json(res))
-	// 		.then((data) => {
-	// 			movieSession = data;
-	// 		});
-	// 	//refreshData();
-	// 	//console.log(movieSession);
-	// }
+	const refreshData = () => router.replace(router.asPath);
 
 	const addTicketToOrder = async (ticket) => {
-		const response = await fetch(`${process.env.url}/api/orders/select-seat`, {
+		const response = await fetch(`/api/orders/select-seat`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -74,20 +50,17 @@ export default function Session({ movieSession, movie, cinema, order }) {
 	};
 
 	const removeTicketFromOrder = async (ticket) => {
-		const response = await fetch(
-			`${process.env.url}/api/orders/deselect-seat`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					user_id: order.user_id,
-					session_id: movieSession._id,
-					ticket,
-				}),
-			}
-		)
+		const response = await fetch(`/api/orders/deselect-seat`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				user_id: order.user_id,
+				session_id: movieSession._id,
+				ticket,
+			}),
+		})
 			.then((res) => res.json(res))
 			.then((data) => {
 				console.log(data);
@@ -114,19 +87,15 @@ export default function Session({ movieSession, movie, cinema, order }) {
 	};
 
 	const handleDeselectTicket = async (rowIndex, columnIndex) => {
-		const removeTicket = order.tickets.find(
-			(ticket) =>
-				ticket.rowIndex === rowIndex && ticket.columnIndex === columnIndex
-		);
+		const removeTicket = order.tickets.find((ticket) => ticket.rowIndex === rowIndex && ticket.columnIndex === columnIndex);
 		await removeTicketFromOrder(removeTicket);
 	};
 
 	const handleSubmitOrder = async () => {
-		const response = await fetch(`${process.env.url}/api/orders/submit-order`, {
+		const response = await fetch(`/api/orders/submit-order`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
-				// Authorization: `Bearer ${getCookie("token")}`,
 			},
 			body: JSON.stringify({
 				orderId: order._id,
@@ -172,12 +141,7 @@ export default function Session({ movieSession, movie, cinema, order }) {
 								{row.columns.map((column, columnIndex) => (
 									<div className={styles.seatColumn} key={columnIndex}>
 										{column.status === -1 ? (
-											<Image
-												src={armchairEmpty}
-												width="100%"
-												height="100%"
-												alt="empty"
-											/>
+											<Image src={armchairEmpty} width="100%" height="100%" alt="empty" />
 										) : column.status === 0 ? (
 											<Image
 												src={armchairGreen}
@@ -186,11 +150,7 @@ export default function Session({ movieSession, movie, cinema, order }) {
 												alt="green"
 												onClick={() => {
 													// only works with standard ticket type
-													handleSelectTicket(
-														rowIndex,
-														columnIndex,
-														movieSession.ticket_types[0]
-													);
+													handleSelectTicket(rowIndex, columnIndex, movieSession.ticket_types[0]);
 												}}
 											/>
 										) : column.status === 1 ? (
@@ -204,12 +164,7 @@ export default function Session({ movieSession, movie, cinema, order }) {
 												}}
 											/>
 										) : (
-											<Image
-												src={armchairRed}
-												width="100%"
-												height="100%"
-												alt="red"
-											/>
+											<Image src={armchairRed} width="100%" height="100%" alt="red" />
 										)}
 									</div>
 								))}
@@ -218,14 +173,7 @@ export default function Session({ movieSession, movie, cinema, order }) {
 						.reverse()}
 				</div>
 			</Row>
-			<Row
-				xs={12}
-				sm={6}
-				md={3}
-				lg={3}
-				xl={3}
-				style={{ justifyContent: "center" }}
-			>
+			<Row xs={12} sm={6} md={3} lg={3} xl={3} style={{ justifyContent: "center" }}>
 				<Col className={styles.ticketTypeColumn}>
 					<ul className={styles.ticketTypesList}>
 						{/* // map through ticket_types and display each ticket type as <li> */}
@@ -237,12 +185,7 @@ export default function Session({ movieSession, movie, cinema, order }) {
 											{/* if index = 0 display Image */}
 											{index === 0 && (
 												<div className={styles.armchairType}>
-													<Image
-														src={armchairGreen}
-														width="100%"
-														height="100%"
-														alt="green"
-													/>
+													<Image src={armchairGreen} width="100%" height="100%" alt="green" />
 												</div>
 											)}
 											<div>
@@ -263,12 +206,7 @@ export default function Session({ movieSession, movie, cinema, order }) {
 						<li>
 							<div className={styles.armchairBlock}>
 								<div className={styles.armchairType}>
-									<Image
-										src={armchairYellow}
-										width="100%"
-										height="100%"
-										alt="yellow"
-									/>
+									<Image src={armchairYellow} width="100%" height="100%" alt="yellow" />
 								</div>
 								<div>Selected</div>
 							</div>
@@ -276,12 +214,7 @@ export default function Session({ movieSession, movie, cinema, order }) {
 						<li>
 							<div className={styles.armchairBlock}>
 								<div className={styles.armchairType}>
-									<Image
-										src={armchairRed}
-										width="100%"
-										height="100%"
-										alt="red"
-									/>
+									<Image src={armchairRed} width="100%" height="100%" alt="red" />
 								</div>
 								<div>Unavailable</div>
 							</div>
@@ -307,12 +240,8 @@ export default function Session({ movieSession, movie, cinema, order }) {
 						<div className={styles.ticketSeating}>
 							Row: {ticket.rowIndex + 1}, Seat: {ticket.columnIndex + 1}
 						</div>
-						<div className={styles.ticketType}>
-							Ticket type: {ticket.ticket_type_name}
-						</div>
-						<div className={styles.ticketPrice}>
-							${parseFloat(ticket.price).toFixed(2)}
-						</div>
+						<div className={styles.ticketType}>Ticket type: {ticket.ticket_type_name}</div>
+						<div className={styles.ticketPrice}>${parseFloat(ticket.price).toFixed(2)}</div>
 					</Col>
 				</Row>
 			))}
@@ -320,12 +249,7 @@ export default function Session({ movieSession, movie, cinema, order }) {
 			<Row className={styles.ticketRow}>
 				<Col xs={12} md={10} lg={8} xl={8} className={styles.ticketsTotal}>
 					<div className={styles.ticketTotal}>Total:</div>
-					<div className={styles.ticketPrice}>
-						$
-						{parseFloat(
-							movieSession.ticket_types[0].price * order.tickets.length
-						).toFixed(2)}
-					</div>
+					<div className={styles.ticketPrice}>${parseFloat(movieSession.ticket_types[0].price * order.tickets.length).toFixed(2)}</div>
 				</Col>
 			</Row>
 			<Row>
@@ -352,9 +276,9 @@ export async function getServerSideProps(context) {
 	// session.movie_id = session.movie_id.toString();
 
 	const movie = await getMovie(session.movie_id);
-	const cinema = await getCinema(session.room.cinema_id);
+	const cinema = await getCinema(session.cinema_id);
 	const userSession = await getSession(context);
-	const order = await getCurrentUserOrder(userSession.user.id, sessionId);
+	const order = await getCurrentUserOrder(userSession.user.id, session.cinema_id, sessionId);
 
 	return {
 		props: {

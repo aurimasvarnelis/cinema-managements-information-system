@@ -1,13 +1,4 @@
-import {
-	Button,
-	Card,
-	Col,
-	Container,
-	Form,
-	Modal,
-	Row,
-	Table,
-} from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Modal, Row, Table } from "react-bootstrap";
 import { forwardRef, useEffect, useState } from "react";
 
 import DatePicker from "react-datepicker";
@@ -30,12 +21,7 @@ export default function Movie({ movie, sessions }) {
 	};
 
 	// sort sessions by unique moment(session.start_time).format("YYYY-MM-DD") and group by date
-	const sortedSessions = sessions.sort((a, b) =>
-		moment(a.start_time).format("YYYY-MM-DD") >
-		moment(b.start_time).format("YYYY-MM-DD")
-			? 1
-			: -1
-	);
+	const sortedSessions = sessions.sort((a, b) => (moment(a.start_time).format("YYYY-MM-DD") > moment(b.start_time).format("YYYY-MM-DD") ? 1 : -1));
 	const groupedSessions = sortedSessions.reduce((r, a) => {
 		const date = moment(a.start_time).format("YYYY-MM-DD");
 		r[date] = [...(r[date] || []), a];
@@ -51,9 +37,7 @@ export default function Movie({ movie, sessions }) {
 		//console.log(firstDate);
 	}, []);
 
-	const [startDate, setStartDate] = useState(
-		moment(Object.keys(groupedSessions)[0]).toDate()
-	);
+	const [startDate, setStartDate] = useState(moment(Object.keys(groupedSessions)[0]).toDate());
 
 	const DateCustomInput = forwardRef(({ value, onClick }, ref) => {
 		return (
@@ -90,14 +74,7 @@ export default function Movie({ movie, sessions }) {
 			<Row>
 				<Col xs={0} md={5} lg={5} xl={5}>
 					<div>
-						<Image
-							className="movie-poster rounded-3"
-							src={movie.poster}
-							alt="First slide"
-							width="686px"
-							height="1016px"
-							layout="responsive"
-						/>
+						<Image className="movie-poster rounded-3" src={movie.poster} alt="First slide" width="686px" height="1016px" layout="responsive" />
 					</div>
 					<div className={styles.movieTags}></div>
 					<div className={styles.movieInfo}>
@@ -111,14 +88,8 @@ export default function Movie({ movie, sessions }) {
 						</dl>
 					</div>
 					<div className={styles.movieSynopsis}>
-						<span className={`${styles.movieSynopsisText} `}>
-							{!showMore ? synopsis.substring(0, 100) + "..." : synopsis}
-						</span>
-						<Button
-							className={styles.movieSynopsisButton}
-							variant="link"
-							onClick={handleShowMore}
-						>
+						<span className={`${styles.movieSynopsisText} `}>{!showMore ? synopsis.substring(0, 100) + "..." : synopsis}</span>
+						<Button className={styles.movieSynopsisButton} variant="link" onClick={handleShowMore}>
 							{showMore ? "Show less" : "Show more"}
 						</Button>
 					</div>
@@ -138,42 +109,28 @@ export default function Movie({ movie, sessions }) {
 									dateFormatCalendar="MMMM"
 									filterDate={(date) => {
 										//console.log(date);
-										return Object.keys(groupedSessions).includes(
-											moment(date).format("YYYY-MM-DD")
-										);
+										return Object.keys(groupedSessions).includes(moment(date).format("YYYY-MM-DD"));
 									}}
 								/>
 								<Button
 									className={styles.dateButton}
 									variant="link"
 									onClick={() => {
-										setStartDate(
-											moment(Object.keys(groupedSessions)[0]).toDate()
-										);
+										setStartDate(moment(Object.keys(groupedSessions)[0]).toDate());
 									}}
 								></Button>
 							</div>
 							<div className={styles.sessions}>
 								<ul>
-									{groupedSessions[moment(startDate).format("YYYY-MM-DD")].map(
-										(session) => (
-											<li key={session._id} className={styles.session}>
-												<span className={styles.sessionTime}>
-													{moment(session.start_time).format("HH:mm")}
-												</span>
-												<span className="mx-3">{session.room.name}</span>
-												<Link
-													href="/sessions/[sessionId]"
-													as={`/sessions/${session._id}`}
-													passHref
-												>
-													<Button className={styles.sessionBuy}>
-														Buy tickets
-													</Button>
-												</Link>
-											</li>
-										)
-									)}
+									{groupedSessions[moment(startDate).format("YYYY-MM-DD")]?.map((session) => (
+										<li key={session._id} className={styles.session}>
+											<span className={styles.sessionTime}>{moment(session.start_time).format("HH:mm")}</span>
+											<span className="mx-3">{session.room.name}</span>
+											<Link href="/sessions/[sessionId]" as={`/sessions/${session._id}`} passHref>
+												<Button className={styles.sessionBuy}>Buy tickets</Button>
+											</Link>
+										</li>
+									))}
 								</ul>
 							</div>
 						</div>

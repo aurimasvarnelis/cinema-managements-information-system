@@ -51,9 +51,7 @@ export function AddRoom({ cinemaId }) {
 			},
 			body: JSON.stringify(data),
 		});
-		if (res.status < 300) {
-			refreshData();
-		}
+		if (res.status < 300) refreshData();
 	};
 
 	const onSubmit = (data, event) => {
