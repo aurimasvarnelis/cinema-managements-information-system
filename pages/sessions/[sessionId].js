@@ -278,7 +278,7 @@ export async function getServerSideProps(context) {
 	const movie = await getMovie(session.movie_id);
 	const cinema = await getCinema(session.cinema_id);
 	const userSession = await getSession(context);
-	const order = await getCurrentUserOrder(userSession.user.id, session.cinema_id, sessionId);
+	const order = await getCurrentUserOrder(userSession.user.id, session.cinema_id, sessionId, session.movie_id);
 
 	return {
 		props: {

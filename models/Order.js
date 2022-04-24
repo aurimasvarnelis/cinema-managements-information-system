@@ -16,6 +16,10 @@ const OrderSchema = new Schema(
 			type: Schema.Types.ObjectId,
 			ref: "Cinema",
 		},
+		movie_id: {
+			type: Schema.Types.ObjectId,
+			ref: "Movie",
+		},
 		tickets: [
 			{
 				_id: false,
