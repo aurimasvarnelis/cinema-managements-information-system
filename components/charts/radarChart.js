@@ -1,8 +1,9 @@
 import { Chart as ChartJS, Filler, Legend, LineElement, PointElement, RadialLinearScale, Tooltip } from "chart.js";
 
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import { Radar } from "react-chartjs-2";
 
-ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
+ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend, ChartDataLabels);
 
 export function RadarTimeChart({ chartData, cinemas, colors }) {
 	const options = {
@@ -19,7 +20,7 @@ export function RadarTimeChart({ chartData, cinemas, colors }) {
 		datasets: chartData?.map((cinema, idx) => {
 			return {
 				label: cinemas[idx].name,
-				data: cinema.map((month) => month.revenue),
+				data: cinema.map((month) => month.count),
 				backgroundColor: `rgba(${colors[idx]} , 0.5)`,
 				borderColor: `rgba(${colors[idx]} , 1)`,
 			};
@@ -44,7 +45,7 @@ export function RadarWeekdayChart({ chartData, cinemas, colors }) {
 		datasets: chartData?.map((cinema, idx) => {
 			return {
 				label: cinemas[idx].name,
-				data: cinema.map((month) => month.revenue),
+				data: cinema.map((month) => month.count),
 				backgroundColor: `rgba(${colors[idx]} , 0.5)`,
 				borderColor: `rgba(${colors[idx]} , 1)`,
 			};
@@ -69,7 +70,7 @@ export function RadarMonthChart({ chartData, cinemas, colors }) {
 		datasets: chartData?.map((cinema, idx) => {
 			return {
 				label: cinemas[idx].name,
-				data: cinema.map((month) => month.revenue),
+				data: cinema.map((month) => month.count),
 				backgroundColor: `rgba(${colors[idx]} , 0.5)`,
 				borderColor: `rgba(${colors[idx]} , 1)`,
 			};

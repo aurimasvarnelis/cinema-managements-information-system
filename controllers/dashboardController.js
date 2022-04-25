@@ -1,3 +1,5 @@
+import { getGenres, getRatings } from "./movieController";
+
 import Cinema from "../models/Cinema";
 import Movie from "../models/Movie";
 import Order from "../models/Order";
@@ -23,9 +25,7 @@ export async function getOrderRevenueThisMonth(cinemaIds) {
 
 	const orderRevenue = [];
 	for (let i = 0; i < cinemaIds.length; i++) {
-		const revenue = orders
-			.filter((order) => JSON.stringify(order.cinema_id) === JSON.stringify(cinemaIds[i]))
-			.reduce((acc, order) => acc + order.price_total, 0);
+		const revenue = orders.filter((order) => JSON.stringify(order.cinema_id) === JSON.stringify(cinemaIds[i])).reduce((acc, order) => acc + order.price_total, 0);
 
 		orderRevenue.push(revenue);
 	}
@@ -141,15 +141,20 @@ export async function getMostPopularTimes(cinemaId) {
 		status: {
 			$in: ["Confirmed"],
 		},
-	}).exec();
+	}).lean();
 
 	const mostPopularTimes = [];
 	for (let i = 0; i < 24; i++) {
-		const times = orders.filter((order) => order.created_at.getHours() === i).reduce((acc, order) => acc + order.price_total, 0);
-
+		const count = orders.reduce((acc, order) => {
+			if (order.created_at.getHours() === i) {
+				return acc + order.tickets.length;
+			} else {
+				return acc;
+			}
+		}, 0);
 		mostPopularTimes.push({
 			time: i,
-			revenue: times,
+			count: count,
 		});
 	}
 
@@ -164,15 +169,21 @@ export async function getMostPopularWeekdays(cinemaId) {
 		status: {
 			$in: ["Confirmed"],
 		},
-	}).exec();
+	}).lean();
 
 	const mostPopularWeekdays = [];
 	for (let i = 0; i < 7; i++) {
-		const weekdays = orders.filter((order) => order.created_at.getDay() === i).reduce((acc, order) => acc + order.price_total, 0);
+		const count = orders.reduce((acc, order) => {
+			if (order.created_at.getDay() === i) {
+				return acc + order.tickets.length;
+			} else {
+				return acc;
+			}
+		}, 0);
 
 		mostPopularWeekdays.push({
 			weekday: i,
-			revenue: weekdays,
+			count: count,
 		});
 	}
 
@@ -187,19 +198,93 @@ export async function getMostPopularMonths(cinemaId) {
 		status: {
 			$in: ["Confirmed"],
 		},
-	}).exec();
+	}).lean();
 
 	const mostPopularMonths = [];
 	for (let i = 0; i < 12; i++) {
-		const months = orders.filter((order) => order.created_at.getMonth() === i).reduce((acc, order) => acc + order.price_total, 0);
+		//const months = orders.filter((order) => order.created_at.getMonth() === i).reduce((acc, order) => acc + order.price_total, 0);
+
+		const count = orders.reduce((acc, order) => {
+			if (order.created_at.getMonth() === i) {
+				return acc + order.tickets.length;
+			} else {
+				return acc;
+			}
+		}, 0);
 
 		mostPopularMonths.push({
 			month: i,
-			revenue: months,
+			count: count,
 		});
 	}
 
 	mostPopularMonths.sort((a, b) => b.revenue - a.revenue);
 
 	return mostPopularMonths;
+}
+
+export async function getGenresPopularity(cinemaId) {
+	const orders = await Order.find({
+		cinema_id: cinemaId,
+		status: {
+			$in: ["Confirmed"],
+		},
+	})
+		.lean()
+		.populate("movie_id", "genre");
+
+	const genres = await getGenres();
+
+	const genresPopularity = [];
+	for (let i = 0; i < genres.length; i++) {
+		const genre = genres[i];
+
+		const count = orders.reduce((acc, order) => {
+			if (order.movie_id.genre.toString() === genre.toString()) {
+				return acc + order.tickets.length;
+			} else {
+				return acc;
+			}
+		}, 0);
+
+		genresPopularity.push({
+			name: genre,
+			count: count,
+		});
+	}
+
+	return genresPopularity;
+}
+
+export async function getRatingsPopularity(cinemaId) {
+	const orders = await Order.find({
+		cinema_id: cinemaId,
+		status: {
+			$in: ["Confirmed"],
+		},
+	})
+		.lean()
+		.populate("movie_id", "rating");
+
+	const ratings = await getRatings();
+
+	const ratingsPopularity = [];
+	for (let i = 0; i < ratings.length; i++) {
+		const rating = ratings[i];
+
+		const count = orders.reduce((acc, order) => {
+			if (order.movie_id.rating.toString() === rating.toString()) {
+				return acc + order.tickets.length;
+			} else {
+				return acc;
+			}
+		}, 0);
+
+		ratingsPopularity.push({
+			name: rating,
+			count: count,
+		});
+	}
+
+	return ratingsPopularity;
 }
