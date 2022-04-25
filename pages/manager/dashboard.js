@@ -1,13 +1,16 @@
-import { ArcElement, CategoryScale, Chart as ChartJS, Legend, LineElement, LinearScale, PointElement, Title, Tooltip } from "chart.js";
+import { ArcElement, CategoryScale, Chart as ChartJS, Legend, LineElement, LinearScale, Plugin, PointElement, Title, Tooltip } from "chart.js";
 import { Button, Card, Col, Container, Form, Modal, ProgressBar, Row, Tab, Table, Tabs } from "react-bootstrap";
 import { Doughnut, Line } from "react-chartjs-2";
-import { getOrderRevenueOfAllMonths, getTopTotalRevenueOfAllMovies } from "../../controllers/dashboardController";
+import { RadarMonthChart, RadarTimeChart, RadarWeekdayChart } from "../../components/charts/radarChart";
+import { getMostPopularMonths, getMostPopularTimes, getMostPopularWeekdays, getOrderRevenueOfAllMonths, getTopTotalRevenueOfAllMovies } from "../../controllers/dashboardController";
 
+import { DoughnutChart } from "../../components/charts/doughnutChart";
+import { LineChart } from "../../components/charts/lineChart";
 import dbConnect from "../../lib/dbConnect";
 import { getCinemasByManager } from "../../controllers/cinemaController";
 import { getSession } from "next-auth/react";
 import styles from "./movies.module.scss";
-import { useTable } from "react-table";
+import { useEffect } from "react";
 
 //const { faker } = require("@faker-js/faker");
 
@@ -18,92 +21,87 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 // card for revenue by month of all cinemas
 // card for revenue by month of selected cinema
 // top 10 total revenue of all movies
-export default function dashboard({ cinemas, orderRevenueOfAllMonths, topTotalRevenueOfAllMovies }) {
-	console.log(topTotalRevenueOfAllMovies);
+// most popular genres
+export default function dashboard({ cinemas, orderRevenueOfAllMonths, topTotalRevenueOfAllMovies, mostPopularTimes, mostPopularWeekdays, mostPopularMonths }) {
+	console.log(orderRevenueOfAllMonths);
 
-	const dynamicOptions = (titleText) => {
-		return {
-			responsive: true,
-			plugins: {
-				legend: {
-					position: "top",
-				},
-				title: {
-					display: true,
-					text: titleText,
-				},
-			},
-		};
+	const dynamicColors = () => {
+		var r = Math.floor(Math.random() * 255);
+		var g = Math.floor(Math.random() * 255);
+		var b = Math.floor(Math.random() * 255);
+		return r + "," + g + "," + b;
 	};
 
-	const dynamicData = (data) => {
-		const labels = data.map((month) => month.month);
-		const datasets = data.map((month) => month.revenue);
-		return {
-			labels,
-			datasets: [
-				{
-					label: "Dataset 1",
-					data: datasets,
-					borderColor: "rgb(255, 99, 132)",
-					backgroundColor: "rgba(255, 99, 132, 0.5)",
-				},
-			],
-		};
-	};
-
-	const doughnutData = (data) => {
-		const labels = data.map((movie) => movie.name);
-		const datasets = data.map((movie) => movie.revenue);
-		return {
-			labels,
-			datasets: [
-				{
-					label: "Top 10 total revenue of all movies",
-					data: datasets,
-					backgroundColor: ["rgba(255, 99, 132, 0.5)", "rgba(54, 162, 235, 0.5)", "rgba(255, 206, 86, 0.5)"],
-				},
-			],
-			borderWidth: 1,
-		};
-	};
+	const colors = cinemas.map((cinema, idx) => {
+		return dynamicColors();
+	});
 
 	return (
 		<>
 			<Container>
 				{/* // dashboard tab for each cinema and one tab for all cinemas */}
-				<Tabs defaultActiveKey={cinemas[0]._id} id="cinema-tabs" className={styles.cinemaTabs}>
-					<Tab eventKey="all" title="All Cinemas" className={styles.cinemaTab}></Tab>
 
-					{cinemas.map((cinema, cinemaIdx) => (
-						<Tab eventKey={cinema._id} title={cinema.name} key={cinema._id} className={styles.cinemaTab}>
-							<Row className={styles.row}>
-								{/* display card with line graph of sold tickets this month */}
-								<Col className={styles.col}>
-									<Card className={styles.card}>
-										<Card.Header className={styles.cardHeader}>
-											<h3>Order revenue by month</h3>
-										</Card.Header>
-										<Card.Body className={styles.cardBody}>
-											{/* display orderRevenueOfAllMonths by line graph  */}
-											<Line data={dynamicData(orderRevenueOfAllMonths[cinemaIdx])} options={dynamicOptions("Order revenue by month")} />
-										</Card.Body>
-									</Card>
-								</Col>
-								<Col className={styles.col}>
-									<Card className={styles.card}>
-										<Card.Header className={styles.cardHeader}>
-											<h3>Top 10 total revenue of all movies</h3>
-										</Card.Header>
-										<Card.Body className={styles.cardBody}>
-											<Doughnut data={doughnutData(topTotalRevenueOfAllMovies[cinemaIdx])} />
-										</Card.Body>
-									</Card>
-								</Col>
-							</Row>
-						</Tab>
-					))}
-				</Tabs>
+				<Row className={styles.row}>
+					{/* display card with line graph of sold tickets this month */}
+					<Col className={styles.col}>
+						<Card className={styles.card}>
+							<Card.Header className={styles.cardHeader}>
+								<h3>Order revenue by month</h3>
+							</Card.Header>
+							<Card.Body className={styles.cardBody}>
+								<LineChart chartData={orderRevenueOfAllMonths} cinemas={cinemas} colors={colors} />
+							</Card.Body>
+						</Card>
+					</Col>
+					{/* <Col className={styles.col}>
+						<Card className={styles.card}>
+							<Card.Header className={styles.cardHeader}>
+								<h3>Top 10 total revenue of all movies</h3>
+							</Card.Header>
+							<Card.Body className={styles.cardBody}> <DoughnutChart cinemasRevenueDataFromMovies={topTotalRevenueOfAllMovies} cinemas={cinemas} /></Card.Body>
+						</Card>
+					</Col> */}
+					<Col className={styles.col}>
+						<Card className={styles.card}>
+							<Card.Header className={styles.cardHeader}>
+								<h3>Most popular times</h3>
+							</Card.Header>
+							<Card.Body className={styles.cardBody}>
+								<RadarTimeChart chartData={mostPopularTimes} cinemas={cinemas} colors={colors} />
+							</Card.Body>
+						</Card>
+					</Col>
+					<Col className={styles.col}>
+						<Card className={styles.card}>
+							<Card.Header className={styles.cardHeader}>
+								<h3>Most popular weekdays</h3>
+							</Card.Header>
+							<Card.Body className={styles.cardBody}>
+								<RadarWeekdayChart chartData={mostPopularWeekdays} cinemas={cinemas} colors={colors} />
+							</Card.Body>
+						</Card>
+					</Col>
+					<Col className={styles.col}>
+						<Card className={styles.card}>
+							<Card.Header className={styles.cardHeader}>
+								<h3>Most popular months</h3>
+							</Card.Header>
+							<Card.Body className={styles.cardBody}>
+								<RadarMonthChart chartData={mostPopularMonths} cinemas={cinemas} colors={colors} />
+							</Card.Body>
+						</Card>
+					</Col>
+					{/* <Col className={styles.col}>
+						<Card className={styles.card}>
+							<Card.Header className={styles.cardHeader}>
+								<h3>Top 10 total revenue of all movies</h3>
+							</Card.Header>
+							<Card.Body className={styles.cardBody}>
+								<Doughnut data={doughnutData(topTotalRevenueOfAllMovies[0])} options={doughnutOptions} />
+							</Card.Body>
+						</Card>
+					</Col> */}
+				</Row>
 			</Container>
 		</>
 	);
@@ -135,11 +133,38 @@ export async function getServerSideProps(context) {
 		})
 	);
 
+	// getMostPopularTimes
+	const mostPopularTimes = await Promise.all(
+		cinemas.map(async (cinema) => {
+			const mostPopularTimes = await getMostPopularTimes(cinema._id);
+			return mostPopularTimes;
+		})
+	);
+
+	// getMostPopularWeekdays
+	const mostPopularWeekdays = await Promise.all(
+		cinemas.map(async (cinema) => {
+			const mostPopularWeekdays = await getMostPopularWeekdays(cinema._id);
+			return mostPopularWeekdays;
+		})
+	);
+
+	// getMostPopularMonths
+	const mostPopularMonths = await Promise.all(
+		cinemas.map(async (cinema) => {
+			const mostPopularMonths = await getMostPopularMonths(cinema._id);
+			return mostPopularMonths;
+		})
+	);
+
 	return {
 		props: {
 			cinemas: JSON.parse(JSON.stringify(cinemas)),
 			orderRevenueOfAllMonths: JSON.parse(JSON.stringify(orderRevenueOfAllMonths)),
 			topTotalRevenueOfAllMovies: JSON.parse(JSON.stringify(topTotalRevenueOfAllMovies)),
+			mostPopularTimes: JSON.parse(JSON.stringify(mostPopularTimes)),
+			mostPopularWeekdays: JSON.parse(JSON.stringify(mostPopularWeekdays)),
+			mostPopularMonths: JSON.parse(JSON.stringify(mostPopularMonths)),
 		},
 	};
 }

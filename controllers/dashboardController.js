@@ -3,6 +3,7 @@ import Movie from "../models/Movie";
 import Order from "../models/Order";
 import Room from "../models/Room";
 import Session from "../models/Session";
+import { isEmpty } from "lodash";
 
 // get order revenue this month from orders
 // where cinema_id is in cinemaIds
@@ -55,8 +56,28 @@ export async function getOrderRevenueOfAllMonths(cinemaId) {
 				month: monthNames[i],
 				revenue,
 			});
+		} else {
+			orderRevenueOfAllMonths.push({
+				month: monthNames[i],
+				revenue: 0,
+			});
 		}
 	}
+
+	// for (let i = 0; i < monthNames.length; i++) {
+	// 	for (let j = 0; j < orderRevenueOfAllMonths.length; j++) {
+	// 		let isEmpty = 0;
+	// 		// check if orderRevenueOfAllMonths[i][j] revenue is 0
+	// 		// if (orderRevenueOfAllMonths[j][i].revenue === 0) {
+	// 		// 	isEmpty += 1;
+	// 		// }
+	// 		console.log(orderRevenueOfAllMonths[j]);
+	// 	}
+	// 	if (isEmpty === orderRevenueOfAllMonths.length) {
+	// 		// remove
+	// 	}
+	// 	isEmpty = 0;
+	// }
 
 	return orderRevenueOfAllMonths;
 }
@@ -80,7 +101,6 @@ export async function getTopTotalRevenueOfAllMovies(cinemaId) {
 		const movieRevenue = orders.filter((order) => order.movie_id.toString() === movieId.toString()).reduce((acc, order) => acc + order.price_total, 0);
 
 		if (revenueOfEachMovie.find((movie) => movie.movie_id.toString() === movieId.toString())) {
-			console.log(movieId);
 			const movie = revenueOfEachMovie.find((movie) => movie.movie_id.toString() === movieId.toString());
 			movie.revenue += movieRevenue;
 		} else {
@@ -113,4 +133,73 @@ export async function getTopTotalRevenueOfAllMovies(cinemaId) {
 	}
 
 	return topTotalRevenueOfAllMovies;
+}
+
+export async function getMostPopularTimes(cinemaId) {
+	const orders = await Order.find({
+		cinema_id: cinemaId,
+		status: {
+			$in: ["Confirmed"],
+		},
+	}).exec();
+
+	const mostPopularTimes = [];
+	for (let i = 0; i < 24; i++) {
+		const times = orders.filter((order) => order.created_at.getHours() === i).reduce((acc, order) => acc + order.price_total, 0);
+
+		mostPopularTimes.push({
+			time: i,
+			revenue: times,
+		});
+	}
+
+	mostPopularTimes.sort((a, b) => b.revenue - a.revenue);
+
+	return mostPopularTimes;
+}
+
+export async function getMostPopularWeekdays(cinemaId) {
+	const orders = await Order.find({
+		cinema_id: cinemaId,
+		status: {
+			$in: ["Confirmed"],
+		},
+	}).exec();
+
+	const mostPopularWeekdays = [];
+	for (let i = 0; i < 7; i++) {
+		const weekdays = orders.filter((order) => order.created_at.getDay() === i).reduce((acc, order) => acc + order.price_total, 0);
+
+		mostPopularWeekdays.push({
+			weekday: i,
+			revenue: weekdays,
+		});
+	}
+
+	mostPopularWeekdays.sort((a, b) => b.revenue - a.revenue);
+
+	return mostPopularWeekdays;
+}
+
+export async function getMostPopularMonths(cinemaId) {
+	const orders = await Order.find({
+		cinema_id: cinemaId,
+		status: {
+			$in: ["Confirmed"],
+		},
+	}).exec();
+
+	const mostPopularMonths = [];
+	for (let i = 0; i < 12; i++) {
+		const months = orders.filter((order) => order.created_at.getMonth() === i).reduce((acc, order) => acc + order.price_total, 0);
+
+		mostPopularMonths.push({
+			month: i,
+			revenue: months,
+		});
+	}
+
+	mostPopularMonths.sort((a, b) => b.revenue - a.revenue);
+
+	return mostPopularMonths;
 }
