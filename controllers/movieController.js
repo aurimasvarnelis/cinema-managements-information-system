@@ -7,6 +7,7 @@ export async function getMovies() {
 
 export async function getMovie(movieId) {
 	const movie = await Movie.findById(movieId);
+
 	return movie;
 }
 
@@ -44,13 +45,17 @@ export async function getMoviesByCinemas(cinemas) {
 	// if yes, add movie to filteredMovies[index]
 	const filteredMovies = [];
 	for (let i = 0; i < cinemas.length; i++) {
+		// select _id name genre rating premiere_date
 		const movies = await Movie.find({
 			cinemas: {
 				$in: [cinemas[i]._id],
 			},
-		});
+		}).select("_id name genre rating premiere_date");
+
 		filteredMovies.push(movies);
 	}
+
+	console.log(filteredMovies);
 
 	return filteredMovies;
 }
@@ -77,4 +82,10 @@ export async function removeCinemaFromMovie(req) {
 	movie.save();
 
 	return movie;
+}
+
+export async function getMoviesWithMainInfo() {
+	const movies = await Movie.find({}).select("_id name genre rating premiere_date");
+
+	return movies;
 }

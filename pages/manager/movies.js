@@ -1,5 +1,5 @@
 import { Button, Col, Container, Form, Modal, Row, Tab, Table, Tabs } from "react-bootstrap";
-import { getMovies, getMoviesByCinemas } from "../../controllers/movieController";
+import { getMoviesByCinemas, getMoviesWithMainInfo } from "../../controllers/movieController";
 
 import { AttachMovie } from "../../components/manager/movies/AttachMovie";
 import { DetachMovie } from "../../components/manager/movies/DetachMovie";
@@ -94,7 +94,7 @@ export async function getServerSideProps(context) {
 	const { user } = await getSession(context);
 	const cinemas = await getCinemasByManager(user.id);
 	const movies = await getMoviesByCinemas(cinemas);
-	const allMovies = await getMovies();
+	const allMovies = await getMoviesWithMainInfo();
 
 	return {
 		props: {
