@@ -34,6 +34,27 @@ const options = {
 				return context.dataset.data[context.dataIndex] !== 0;
 			},
 		},
+		tooltip: {
+			callbacks: {
+				label: function (context) {
+					var hiddens = context.chart._hiddenIndices;
+					var total = 0;
+					var datapoints = context.dataset.data;
+					datapoints.forEach((val, i) => {
+						if (hiddens[i] != undefined) {
+							if (!hiddens[i]) {
+								total += val;
+							}
+						} else {
+							total += val;
+						}
+					});
+					var percentage = ((context.parsed / total) * 100).toFixed(0) + "%";
+					var out = "(" + context.dataset.label + ") " + context.chart.data.labels[context.dataIndex] + "\n" + percentage;
+					return out;
+				},
+			},
+		},
 	},
 };
 

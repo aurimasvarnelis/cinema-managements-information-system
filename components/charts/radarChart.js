@@ -5,16 +5,30 @@ import { Radar } from "react-chartjs-2";
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend, ChartDataLabels);
 
-export function RadarTimeChart({ chartData, cinemas, colors }) {
-	const options = {
-		responsive: true,
-		plugins: {
-			legend: {
-				position: "bottom",
+const options = {
+	responsive: true,
+	plugins: {
+		legend: {
+			position: "bottom",
+		},
+		tooltip: {
+			callbacks: {
+				label: function (context) {
+					let label = context.dataset.label || "";
+					if (label) {
+						label += ": ";
+					}
+					if (context.parsed !== null) {
+						label += context.raw + " tickets";
+					}
+					return label;
+				},
 			},
 		},
-	};
+	},
+};
 
+export function RadarTimeChart({ chartData, cinemas, colors }) {
 	const data = {
 		labels: [...Array(24).keys()],
 		datasets: chartData?.map((cinema, idx) => {
@@ -31,15 +45,6 @@ export function RadarTimeChart({ chartData, cinemas, colors }) {
 }
 
 export function RadarWeekdayChart({ chartData, cinemas, colors }) {
-	const options = {
-		responsive: true,
-		plugins: {
-			legend: {
-				position: "bottom",
-			},
-		},
-	};
-
 	const data = {
 		labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
 		datasets: chartData?.map((cinema, idx) => {
@@ -56,15 +61,6 @@ export function RadarWeekdayChart({ chartData, cinemas, colors }) {
 }
 
 export function RadarMonthChart({ chartData, cinemas, colors }) {
-	const options = {
-		responsive: true,
-		plugins: {
-			legend: {
-				position: "bottom",
-			},
-		},
-	};
-
 	const data = {
 		labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
 		datasets: chartData?.map((cinema, idx) => {

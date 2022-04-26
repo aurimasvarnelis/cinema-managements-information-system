@@ -10,54 +10,135 @@ import { isEmpty } from "lodash";
 // get order revenue this month from orders
 // where cinema_id is in cinemaIds
 // group by index
-export async function getOrderRevenueThisMonth(cinemaIds) {
+// export async function getOrderRevenueThisMonth(cinemaIds) {
+// 	const orders = await Order.find({
+// 		cinema_id: {
+// 			$in: cinemaIds,
+// 		},
+// 		status: {
+// 			$in: ["Confirmed"],
+// 		},
+// 		created_at: {
+// 			$gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+// 		},
+// 	});
+
+// 	const orderRevenue = [];
+// 	for (let i = 0; i < cinemaIds.length; i++) {
+// 		const revenue = orders.filter((order) => JSON.stringify(order.cinema_id) === JSON.stringify(cinemaIds[i])).reduce((acc, order) => acc + order.price_total, 0);
+
+// 		orderRevenue.push(revenue);
+// 	}
+
+// 	return orderRevenue;
+// }
+
+// get different users this month from orders and compare to previous month
+// return number of users and change percent compared to previous month
+export async function getUsersThisMonth(cinemaId) {
 	const orders = await Order.find({
-		cinema_id: {
-			$in: cinemaIds,
-		},
+		cinema_id: cinemaId,
 		status: {
 			$in: ["Confirmed"],
 		},
 		created_at: {
 			$gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
 		},
-	}).exec();
+	});
 
-	const orderRevenue = [];
-	for (let i = 0; i < cinemaIds.length; i++) {
-		const revenue = orders.filter((order) => JSON.stringify(order.cinema_id) === JSON.stringify(cinemaIds[i])).reduce((acc, order) => acc + order.price_total, 0);
+	const users = orders.map((order) => order.user_id);
 
-		orderRevenue.push(revenue);
-	}
+	const uniqueUsers = [...new Set(users)];
 
-	return orderRevenue;
+	const usersThisMonth = uniqueUsers.length;
+
+	const prevMonth = new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1);
+
+	const prevMonthOrders = await Order.find({
+		cinema_id: cinemaId,
+		status: {
+			$in: ["Confirmed"],
+		},
+		created_at: {
+			$gte: prevMonth,
+		},
+	});
+
+	const prevMonthUsers = prevMonthOrders.map((order) => order.user_id);
+
+	const uniquePrevMonthUsers = [...new Set(prevMonthUsers)];
+
+	const prevMonthUsersThisMonth = uniquePrevMonthUsers.length;
+
+	const changePercent = ((usersThisMonth - prevMonthUsersThisMonth) / prevMonthUsersThisMonth) * 100;
+
+	return {
+		usersThisMonth,
+		changePercent: changePercent ? changePercent : 0,
+	};
 }
 
-// month names const
-const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-// get order revenue of all months from orders
-// group revenue by month name and revenue of that month
-// if revenue of that month is 0, then don't display that month
-export async function getOrderRevenueOfAllMonths(cinemaId) {
+// get orders this week and compare to previous week
+// return number of orders and change percent compared to previous week
+export async function getOrdersThisWeek(cinemaId) {
 	const orders = await Order.find({
 		cinema_id: cinemaId,
 		status: {
 			$in: ["Confirmed"],
 		},
-	}).exec();
+		created_at: {
+			$gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7),
+		},
+	});
 
-	const orderRevenueOfAllMonths = [];
+	const ordersThisWeek = orders.length;
+
+	const prevWeek = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7);
+
+	const prevWeekOrders = await Order.find({
+		cinema_id: cinemaId,
+		status: {
+			$in: ["Confirmed"],
+		},
+		created_at: {
+			$gte: prevWeek,
+		},
+	});
+
+	const prevWeekOrdersThisWeek = prevWeekOrders.length;
+
+	const changePercent = ((ordersThisWeek - prevWeekOrdersThisWeek) / prevWeekOrdersThisWeek) * 100;
+
+	return {
+		ordersThisWeek,
+		changePercent: changePercent ? changePercent : 0,
+	};
+}
+
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+// get order revenue of all months from orders
+// group revenue by month name and revenue of that month
+// if revenue of that month is 0, then don't display that month
+export async function getRevenueOfAllMonths(cinemaId) {
+	const orders = await Order.find({
+		cinema_id: cinemaId,
+		status: {
+			$in: ["Confirmed"],
+		},
+	});
+
+	const revenueOfAllMonths = [];
 	for (let i = 0; i < monthNames.length; i++) {
 		const revenue = orders.filter((order) => order.created_at.getMonth() === i).reduce((acc, order) => acc + order.price_total, 0);
 
 		if (revenue !== 0) {
-			orderRevenueOfAllMonths.push({
+			revenueOfAllMonths.push({
 				month: monthNames[i],
 				revenue,
 			});
 		} else {
-			orderRevenueOfAllMonths.push({
+			revenueOfAllMonths.push({
 				month: monthNames[i],
 				revenue: 0,
 			});
@@ -65,21 +146,24 @@ export async function getOrderRevenueOfAllMonths(cinemaId) {
 	}
 
 	// for (let i = 0; i < monthNames.length; i++) {
-	// 	for (let j = 0; j < orderRevenueOfAllMonths.length; j++) {
-	// 		let isEmpty = 0;
-	// 		// check if orderRevenueOfAllMonths[i][j] revenue is 0
-	// 		// if (orderRevenueOfAllMonths[j][i].revenue === 0) {
-	// 		// 	isEmpty += 1;
-	// 		// }
-	// 		console.log(orderRevenueOfAllMonths[j]);
-	// 	}
-	// 	if (isEmpty === orderRevenueOfAllMonths.length) {
+	// 	// for (let j = 0; j < revenueOfAllMonths.length; j++) {
+	// 	// 	let isEmpty = 0;
+	// 	// 	// check if revenueOfAllMonths[j][i] revenue is 0
+	// 	// 	// if (revenueOfAllMonths[j][i].revenue === 0) {
+	// 	// 	// 	isEmpty += 1;
+	// 	// 	// }
+	// 	// 	console.log(revenueOfAllMonths[j][i]);
+	// 	// }
+
+	// 	//map trough revenueOfAllMonths[j]
+
+	// 	if (isEmpty === revenueOfAllMonths.length) {
 	// 		// remove
 	// 	}
 	// 	isEmpty = 0;
 	// }
 
-	return orderRevenueOfAllMonths;
+	return revenueOfAllMonths;
 }
 
 // get top 10 total revenue of all movies and last one is other
@@ -92,7 +176,7 @@ export async function getTopTotalRevenueOfAllMovies(cinemaId) {
 		status: {
 			$in: ["Confirmed"],
 		},
-	}).exec();
+	});
 
 	// get revenue only of each unique movie
 	const revenueOfEachMovie = [];
@@ -105,7 +189,7 @@ export async function getTopTotalRevenueOfAllMovies(cinemaId) {
 			movie.revenue += movieRevenue;
 		} else {
 			// look up movie name by movieId
-			const movie = await Movie.findById(movieId).exec();
+			const movie = await Movie.findById(movieId);
 			revenueOfEachMovie.push({
 				movie_id: movieId,
 				name: movie.name,
@@ -287,4 +371,35 @@ export async function getRatingsPopularity(cinemaId) {
 	}
 
 	return ratingsPopularity;
+}
+
+export async function getTicketsSoldByMovieDuration(cinemaId) {
+	const orders = await Order.find({
+		cinema_id: cinemaId,
+		status: {
+			$in: ["Confirmed"],
+		},
+	})
+		.lean()
+		.populate("movie_id", "duration");
+
+	const ticketsSoldByMovieDuration = [];
+	for (let i = 0; i < orders.length; i++) {
+		const order = orders[i];
+		const count = order.tickets.length;
+
+		if (ticketsSoldByMovieDuration.find((movieDuration) => movieDuration.x === order.movie_id.duration)) {
+			const index = ticketsSoldByMovieDuration.findIndex((movieDuration) => movieDuration.x === order.movie_id.duration);
+			ticketsSoldByMovieDuration[index].y += count;
+		} else {
+			ticketsSoldByMovieDuration.push({
+				x: order.movie_id.duration,
+				y: count,
+			});
+		}
+	}
+
+	ticketsSoldByMovieDuration.sort((a, b) => a.x - b.x);
+
+	return ticketsSoldByMovieDuration;
 }

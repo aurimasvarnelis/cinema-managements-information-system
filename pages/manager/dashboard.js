@@ -1,17 +1,20 @@
 import { Button, Card, Col, Container, Form, Modal, ProgressBar, Row, Tab, Table, Tabs } from "react-bootstrap";
 import { GenresDoughnutChart, RatingsDoughnutChart } from "../../components/charts/doughnutChart";
+import { MonthlyRevenueLineChart, TicketsSoldByMovieDurationLineChart } from "../../components/charts/lineChart";
 import { RadarMonthChart, RadarTimeChart, RadarWeekdayChart } from "../../components/charts/radarChart";
 import {
 	getGenresPopularity,
 	getMostPopularMonths,
 	getMostPopularTimes,
 	getMostPopularWeekdays,
-	getOrderRevenueOfAllMonths,
+	getOrdersThisWeek,
 	getRatingsPopularity,
+	getRevenueOfAllMonths,
+	getTicketsSoldByMovieDuration,
 	getTopTotalRevenueOfAllMovies,
+	getUsersThisMonth,
 } from "../../controllers/dashboardController";
 
-import { LineChart } from "../../components/charts/lineChart";
 import dbConnect from "../../lib/dbConnect";
 import { getCinemasByManager } from "../../controllers/cinemaController";
 import { getSession } from "next-auth/react";
@@ -22,13 +25,22 @@ import { useEffect } from "react";
 
 //const { faker } = require("@faker-js/faker");
 
-// dashboard page
-// card for revenue by month of all cinemas
-// card for revenue by month of selected cinema
 // top 10 total revenue of all movies
-// most popular genres
-export default function dashboard({ cinemas, orderRevenueOfAllMonths, topTotalRevenueOfAllMovies, mostPopularTimes, mostPopularWeekdays, mostPopularMonths, genresPopularity, ratingsPopularity }) {
-	console.log(genresPopularity);
+export default function dashboard({
+	cinemas,
+	usersThisMonth,
+	ordersThisWeek,
+	revenueOfAllMonths,
+	topTotalRevenueOfAllMovies,
+	mostPopularTimes,
+	mostPopularWeekdays,
+	mostPopularMonths,
+	genresPopularity,
+	ratingsPopularity,
+	ticketsSoldByMovieDuration,
+}) {
+	console.log(usersThisMonth);
+	console.log(ordersThisWeek);
 
 	const dynamicColors = () => {
 		var r = Math.floor(Math.random() * 255);
@@ -51,10 +63,36 @@ export default function dashboard({ cinemas, orderRevenueOfAllMonths, topTotalRe
 					<Col className={styles.col}>
 						<Card className={styles.card}>
 							<Card.Header className={styles.cardHeader}>
+								<h3>Orders this week</h3>
+							</Card.Header>
+							<Card.Body className={styles.cardBody}>{ordersThisWeek[0].ordersThisWeek}</Card.Body>
+						</Card>
+					</Col>
+					<Col className={styles.col}>
+						<Card className={styles.card}>
+							<Card.Header className={styles.cardHeader}>
+								<h3>Users this month</h3>
+							</Card.Header>
+							<Card.Body className={styles.cardBody}>{usersThisMonth[0].usersThisMonth}</Card.Body>
+						</Card>
+					</Col>
+					<Col className={styles.col}>
+						<Card className={styles.card}>
+							<Card.Header className={styles.cardHeader}>
 								<h3>Order revenue by month</h3>
 							</Card.Header>
 							<Card.Body className={styles.cardBody}>
-								<LineChart chartData={orderRevenueOfAllMonths} cinemas={cinemas} colors={colors} />
+								<MonthlyRevenueLineChart chartData={revenueOfAllMonths} cinemas={cinemas} colors={colors} />
+							</Card.Body>
+						</Card>
+					</Col>
+					<Col className={styles.col}>
+						<Card className={styles.card}>
+							<Card.Header className={styles.cardHeader}>
+								<h3>Tickets sold and movie duration</h3>
+							</Card.Header>
+							<Card.Body className={styles.cardBody}>
+								<TicketsSoldByMovieDurationLineChart chartData={ticketsSoldByMovieDuration} cinemas={cinemas} colors={colors} />
 							</Card.Body>
 						</Card>
 					</Col>
@@ -140,13 +178,26 @@ export async function getServerSideProps(context) {
 	//const movies = await getMovies();
 	const { user } = await getSession(context);
 	const cinemas = await getCinemasByManager(user.id);
-	//const orderRevenueOfAllMonths = await getOrderRevenueOfAllMonths(cinemas.map((cinema) => cinema._id));
+	//const revenueOfAllMonths = await getRevenueOfAllMonths(cinemas.map((cinema) => cinema._id));
 
-	// get order revenue array of all months for each cinema in a array
-	const orderRevenueOfAllMonths = await Promise.all(
+	const usersThisMonth = await Promise.all(
 		cinemas.map(async (cinema) => {
-			const orderRevenueOfAllMonths = await getOrderRevenueOfAllMonths(cinema._id);
-			return orderRevenueOfAllMonths;
+			const usersThisMonth = await getUsersThisMonth(cinema._id);
+			return usersThisMonth;
+		})
+	);
+
+	const ordersThisWeek = await Promise.all(
+		cinemas.map(async (cinema) => {
+			const ordersThisWeek = await getOrdersThisWeek(cinema._id);
+			return ordersThisWeek;
+		})
+	);
+
+	const revenueOfAllMonths = await Promise.all(
+		cinemas.map(async (cinema) => {
+			const revenueOfAllMonths = await getRevenueOfAllMonths(cinema._id);
+			return revenueOfAllMonths;
 		})
 	);
 
@@ -178,7 +229,6 @@ export async function getServerSideProps(context) {
 		})
 	);
 
-	// getGenresPopularity
 	const genresPopularity = await Promise.all(
 		cinemas.map(async (cinema) => {
 			const genresPopularity = await getGenresPopularity(cinema._id);
@@ -186,7 +236,6 @@ export async function getServerSideProps(context) {
 		})
 	);
 
-	// getRatingsPopularity
 	const ratingsPopularity = await Promise.all(
 		cinemas.map(async (cinema) => {
 			const ratingsPopularity = await getRatingsPopularity(cinema._id);
@@ -194,16 +243,26 @@ export async function getServerSideProps(context) {
 		})
 	);
 
+	const ticketsSoldByMovieDuration = await Promise.all(
+		cinemas.map(async (cinema) => {
+			const ticketsSoldByMovieDuration = await getTicketsSoldByMovieDuration(cinema._id);
+			return ticketsSoldByMovieDuration;
+		})
+	);
+
 	return {
 		props: {
 			cinemas: JSON.parse(JSON.stringify(cinemas)),
-			orderRevenueOfAllMonths: JSON.parse(JSON.stringify(orderRevenueOfAllMonths)),
+			usersThisMonth: JSON.parse(JSON.stringify(usersThisMonth)),
+			ordersThisWeek: JSON.parse(JSON.stringify(ordersThisWeek)),
+			revenueOfAllMonths: JSON.parse(JSON.stringify(revenueOfAllMonths)),
 			topTotalRevenueOfAllMovies: JSON.parse(JSON.stringify(topTotalRevenueOfAllMovies)),
 			mostPopularTimes: JSON.parse(JSON.stringify(mostPopularTimes)),
 			mostPopularWeekdays: JSON.parse(JSON.stringify(mostPopularWeekdays)),
 			mostPopularMonths: JSON.parse(JSON.stringify(mostPopularMonths)),
 			genresPopularity: JSON.parse(JSON.stringify(genresPopularity)),
 			ratingsPopularity: JSON.parse(JSON.stringify(ratingsPopularity)),
+			ticketsSoldByMovieDuration: JSON.parse(JSON.stringify(ticketsSoldByMovieDuration)),
 		},
 	};
 }
