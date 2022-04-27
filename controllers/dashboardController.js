@@ -115,6 +115,41 @@ export async function getOrdersThisWeek(cinemaId) {
 	};
 }
 
+export async function getRevenueThisWeek(cinemaId) {
+	const orders = await Order.find({
+		cinema_id: cinemaId,
+		status: {
+			$in: ["Confirmed"],
+		},
+		created_at: {
+			$gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7),
+		},
+	});
+
+	const revenueThisWeek = orders.reduce((acc, order) => acc + order.price_total, 0);
+
+	const prevWeek = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7);
+
+	const prevWeekOrders = await Order.find({
+		cinema_id: cinemaId,
+		status: {
+			$in: ["Confirmed"],
+		},
+		created_at: {
+			$gte: prevWeek,
+		},
+	});
+
+	const prevWeekRevenue = prevWeekOrders.reduce((acc, order) => acc + order.price_total, 0);
+
+	const changePercent = ((revenueThisWeek - prevWeekRevenue) / prevWeekRevenue) * 100;
+
+	return {
+		revenueThisWeek,
+		changePercent: changePercent ? changePercent : 0,
+	};
+}
+
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 // get order revenue of all months from orders
@@ -286,8 +321,6 @@ export async function getMostPopularMonths(cinemaId) {
 
 	const mostPopularMonths = [];
 	for (let i = 0; i < 12; i++) {
-		//const months = orders.filter((order) => order.created_at.getMonth() === i).reduce((acc, order) => acc + order.price_total, 0);
-
 		const count = orders.reduce((acc, order) => {
 			if (order.created_at.getMonth() === i) {
 				return acc + order.tickets.length;

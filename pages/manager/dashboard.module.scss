@@ -1,0 +1,38 @@
+.cinemaList {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	margin-bottom: 0.3rem;
+}
+
+.cinemaNumbers {
+	font-weight: bold;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.red {
+	color: red;
+	// same size from left to right
+	width: 4rem;
+	padding-left: 0.5rem;
+}
+
+.green {
+	color: green;
+	width: 4rem;
+	padding-left: 0.5rem;
+}
+
+.grey {
+	color: grey;
+	width: 4rem;
+	padding-left: 0.5rem;
+	//margin-left: 0.5rem;
+}
+
+.card {
+	height: calc(100% - 15px);
+	margin-bottom: 15px;
+}

@@ -10,6 +10,7 @@ import {
 	getOrdersThisWeek,
 	getRatingsPopularity,
 	getRevenueOfAllMonths,
+	getRevenueThisWeek,
 	getTicketsSoldByMovieDuration,
 	getTopTotalRevenueOfAllMovies,
 	getUsersThisMonth,
@@ -18,8 +19,10 @@ import {
 import dbConnect from "../../lib/dbConnect";
 import { getCinemasByManager } from "../../controllers/cinemaController";
 import { getSession } from "next-auth/react";
-import styles from "./movies.module.scss";
+import styles from "./dashboard.module.scss";
 import { useEffect } from "react";
+
+//import styles from "./movies.module.scss";
 
 // import { getGenres, getMovies, getRatings } from "../controllers/movieController";
 
@@ -30,6 +33,7 @@ export default function dashboard({
 	cinemas,
 	usersThisMonth,
 	ordersThisWeek,
+	revenueThisWeek,
 	revenueOfAllMonths,
 	topTotalRevenueOfAllMovies,
 	mostPopularTimes,
@@ -39,8 +43,7 @@ export default function dashboard({
 	ratingsPopularity,
 	ticketsSoldByMovieDuration,
 }) {
-	console.log(usersThisMonth);
-	console.log(ordersThisWeek);
+	console.log(ticketsSoldByMovieDuration);
 
 	const dynamicColors = () => {
 		var r = Math.floor(Math.random() * 255);
@@ -59,37 +62,101 @@ export default function dashboard({
 				{/* // dashboard tab for each cinema and one tab for all cinemas */}
 
 				<Row className={styles.row}>
-					{/* display card with line graph of sold tickets this month */}
 					<Col className={styles.col}>
 						<Card className={styles.card}>
 							<Card.Header className={styles.cardHeader}>
-								<h3>Orders this week</h3>
-							</Card.Header>
-							<Card.Body className={styles.cardBody}>{ordersThisWeek[0].ordersThisWeek}</Card.Body>
-						</Card>
-					</Col>
-					<Col className={styles.col}>
-						<Card className={styles.card}>
-							<Card.Header className={styles.cardHeader}>
-								<h3>Users this month</h3>
-							</Card.Header>
-							<Card.Body className={styles.cardBody}>{usersThisMonth[0].usersThisMonth}</Card.Body>
-						</Card>
-					</Col>
-					<Col className={styles.col}>
-						<Card className={styles.card}>
-							<Card.Header className={styles.cardHeader}>
-								<h3>Order revenue by month</h3>
+								<h4>Orders this week</h4>
 							</Card.Header>
 							<Card.Body className={styles.cardBody}>
-								<MonthlyRevenueLineChart chartData={revenueOfAllMonths} cinemas={cinemas} colors={colors} />
+								{ordersThisWeek.map((order, idx) => {
+									return (
+										<div key={idx} className={styles.cinemaList}>
+											<div>{cinemas[idx].name}</div>
+											<div className={styles.cinemaNumbers}>
+												{order.ordersThisWeek}
+												{order.changePercent > 0 ? (
+													<div className={styles.green}>+{order.changePercent}%</div>
+												) : order.changePercent < 0 ? (
+													<div className={styles.red}>{order.changePercent}%</div>
+												) : (
+													<div className={styles.grey}>+{order.changePercent}%</div>
+												)}
+											</div>
+										</div>
+									);
+								})}
 							</Card.Body>
 						</Card>
 					</Col>
 					<Col className={styles.col}>
 						<Card className={styles.card}>
 							<Card.Header className={styles.cardHeader}>
-								<h3>Tickets sold and movie duration</h3>
+								<h4>Revenue this week</h4>
+							</Card.Header>
+							<Card.Body className={styles.cardBody}>
+								{revenueThisWeek.map((order, idx) => {
+									return (
+										<div key={idx} className={styles.cinemaList}>
+											<div>{cinemas[idx].name}</div>
+											<div className={styles.cinemaNumbers}>
+												${order.revenueThisWeek}
+												{order.changePercent > 0 ? (
+													<div className={styles.green}>+{order.changePercent}%</div>
+												) : order.changePercent < 0 ? (
+													<div className={styles.red}>{order.changePercent}%</div>
+												) : (
+													<div className={styles.grey}>+{order.changePercent}%</div>
+												)}
+											</div>
+										</div>
+									);
+								})}
+							</Card.Body>
+						</Card>
+					</Col>
+					<Col className={styles.col}>
+						<Card className={styles.card}>
+							<Card.Header className={styles.cardHeader}>
+								<h4>Users this month</h4>
+							</Card.Header>
+							<Card.Body className={styles.cardBody}>
+								{usersThisMonth.map((order, idx) => {
+									return (
+										<div key={idx} className={styles.cinemaList}>
+											<div>{cinemas[idx].name}</div>
+											<div className={styles.cinemaNumbers}>
+												{order.usersThisMonth}
+												{order.changePercent > 0 ? (
+													<div className={styles.green}>+{order.changePercent}%</div>
+												) : order.changePercent < 0 ? (
+													<div className={styles.red}>{order.changePercent}%</div>
+												) : (
+													<div className={styles.grey}>+{order.changePercent}%</div>
+												)}
+											</div>
+										</div>
+									);
+								})}
+							</Card.Body>
+						</Card>
+					</Col>
+				</Row>
+
+				<Row className={styles.row}>
+					<Col className={styles.col} sm={6} md={6} lg={4}>
+						<Card className={styles.card}>
+							<Card.Header className={styles.cardHeader}>
+								<h4>Revenue by month</h4>
+							</Card.Header>
+							<Card.Body className={styles.cardBody}>
+								<MonthlyRevenueLineChart chartData={revenueOfAllMonths} cinemas={cinemas} colors={colors} />
+							</Card.Body>
+						</Card>
+					</Col>
+					<Col className={styles.col} sm={6} md={6} lg={4}>
+						<Card className={styles.card}>
+							<Card.Header className={styles.cardHeader}>
+								<h4>Tickets sold by movie duration</h4>
 							</Card.Header>
 							<Card.Body className={styles.cardBody}>
 								<TicketsSoldByMovieDurationLineChart chartData={ticketsSoldByMovieDuration} cinemas={cinemas} colors={colors} />
@@ -99,55 +166,55 @@ export default function dashboard({
 					{/* <Col className={styles.col}>
 						<Card className={styles.card}>
 							<Card.Header className={styles.cardHeader}>
-								<h3>Top 10 total revenue of all movies</h3>
+								<h4>Top 10 total revenue of all movies</h4>
 							</Card.Header>
 							<Card.Body className={styles.cardBody}> <DoughnutChart cinemasRevenueDataFromMovies={topTotalRevenueOfAllMovies} cinemas={cinemas} /></Card.Body>
 						</Card>
 					</Col> */}
-					<Col className={styles.col}>
+					<Col className={styles.col} sm={6} md={6} lg={4}>
 						<Card className={styles.card}>
 							<Card.Header className={styles.cardHeader}>
-								<h3>Most popular times</h3>
+								<h4>Popular times</h4>
 							</Card.Header>
 							<Card.Body className={styles.cardBody}>
 								<RadarTimeChart chartData={mostPopularTimes} cinemas={cinemas} colors={colors} />
 							</Card.Body>
 						</Card>
 					</Col>
-					<Col className={styles.col}>
+					<Col className={styles.col} sm={6} md={6} lg={4}>
 						<Card className={styles.card}>
 							<Card.Header className={styles.cardHeader}>
-								<h3>Most popular weekdays</h3>
+								<h4>Popular weekdays</h4>
 							</Card.Header>
 							<Card.Body className={styles.cardBody}>
 								<RadarWeekdayChart chartData={mostPopularWeekdays} cinemas={cinemas} colors={colors} />
 							</Card.Body>
 						</Card>
 					</Col>
-					<Col className={styles.col}>
+					<Col className={styles.col} sm={6} md={6} lg={4}>
 						<Card className={styles.card}>
 							<Card.Header className={styles.cardHeader}>
-								<h3>Most popular months</h3>
+								<h4>Popular months</h4>
 							</Card.Header>
 							<Card.Body className={styles.cardBody}>
 								<RadarMonthChart chartData={mostPopularMonths} cinemas={cinemas} colors={colors} />
 							</Card.Body>
 						</Card>
 					</Col>
-					<Col className={styles.col}>
+					<Col className={styles.col} sm={6} md={6} lg={4}>
 						<Card className={styles.card}>
 							<Card.Header className={styles.cardHeader}>
-								<h3>Genres popularity</h3>
+								<h4>Genres popularity</h4>
 							</Card.Header>
 							<Card.Body className={styles.cardBody}>
 								<GenresDoughnutChart chartData={genresPopularity} cinemas={cinemas} />
 							</Card.Body>
 						</Card>
 					</Col>
-					<Col className={styles.col}>
+					<Col className={styles.col} sm={6} md={6} lg={4}>
 						<Card className={styles.card}>
 							<Card.Header className={styles.cardHeader}>
-								<h3>Ratings popularity</h3>
+								<h4>Ratings popularity</h4>
 							</Card.Header>
 							<Card.Body className={styles.cardBody}>
 								<GenresDoughnutChart chartData={ratingsPopularity} cinemas={cinemas} />
@@ -157,7 +224,7 @@ export default function dashboard({
 					{/* <Col className={styles.col}>
 						<Card className={styles.card}>
 							<Card.Header className={styles.cardHeader}>
-								<h3>Top 10 total revenue of all movies</h3>
+								<h4>Top 10 total revenue of all movies</h4>
 							</Card.Header>
 							<Card.Body className={styles.cardBody}>
 								<Doughnut data={doughnutData(topTotalRevenueOfAllMovies[0])} options={doughnutOptions} />
@@ -191,6 +258,13 @@ export async function getServerSideProps(context) {
 		cinemas.map(async (cinema) => {
 			const ordersThisWeek = await getOrdersThisWeek(cinema._id);
 			return ordersThisWeek;
+		})
+	);
+
+	const revenueThisWeek = await Promise.all(
+		cinemas.map(async (cinema) => {
+			const revenueThisWeek = await getRevenueThisWeek(cinema._id);
+			return revenueThisWeek;
 		})
 	);
 
@@ -255,6 +329,7 @@ export async function getServerSideProps(context) {
 			cinemas: JSON.parse(JSON.stringify(cinemas)),
 			usersThisMonth: JSON.parse(JSON.stringify(usersThisMonth)),
 			ordersThisWeek: JSON.parse(JSON.stringify(ordersThisWeek)),
+			revenueThisWeek: JSON.parse(JSON.stringify(revenueThisWeek)),
 			revenueOfAllMonths: JSON.parse(JSON.stringify(revenueOfAllMonths)),
 			topTotalRevenueOfAllMovies: JSON.parse(JSON.stringify(topTotalRevenueOfAllMovies)),
 			mostPopularTimes: JSON.parse(JSON.stringify(mostPopularTimes)),

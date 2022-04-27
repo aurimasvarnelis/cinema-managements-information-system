@@ -10,6 +10,7 @@ export function MonthlyRevenueLineChart({ chartData, cinemas, colors }) {
 
 	const options = {
 		responsive: true,
+		maintainAspectRatio: false,
 		plugins: {
 			legend: {
 				position: "bottom",
@@ -78,8 +79,11 @@ export function TicketsSoldByMovieDurationLineChart({ chartData, cinemas, colors
 		return cinemaData;
 	});
 
+	//console.log(linearChartData);
+
 	const options = {
 		responsive: true,
+		maintainAspectRatio: false,
 		plugins: {
 			legend: {
 				position: "bottom",
@@ -105,13 +109,6 @@ export function TicketsSoldByMovieDurationLineChart({ chartData, cinemas, colors
 			},
 		},
 		scales: {
-			x: {
-				ticks: {
-					callback: function (value, index, ticks) {
-						return value + " min";
-					},
-				},
-			},
 			y: {
 				ticks: {
 					callback: function (value, index, ticks) {
@@ -125,14 +122,24 @@ export function TicketsSoldByMovieDurationLineChart({ chartData, cinemas, colors
 				radius: 0,
 			},
 		},
+		spanGaps: false,
 	};
 
 	const data = {
-		labels: linearChartData[0].map((ticket) => ticket.x),
+		labels: linearChartData[0].map((x) => x.x.toString() + " min"),
 		datasets: linearChartData?.map((cinema, idx) => {
 			return {
 				label: cinemas[idx].name,
-				data: cinema.map((ticket) => ticket.y),
+				data: cinema.map((ticket) => {
+					if (ticket.y === 0) {
+						return Number.NaN;
+					} else {
+						return ticket.y;
+					}
+				}),
+				spanGaps: true,
+				cubicInterpolationMode: "monotone",
+				tension: 0.4,
 				backgroundColor: `rgba(${colors[idx]} , 0.5)`,
 				borderColor: `rgba(${colors[idx]} , 1)`,
 			};

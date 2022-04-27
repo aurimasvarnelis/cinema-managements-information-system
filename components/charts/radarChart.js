@@ -30,7 +30,7 @@ const options = {
 
 export function RadarTimeChart({ chartData, cinemas, colors }) {
 	const data = {
-		labels: [...Array(24).keys()],
+		labels: Array.from(Array(24).keys()).map((h) => `${h} h`),
 		datasets: chartData?.map((cinema, idx) => {
 			return {
 				label: cinemas[idx].name,
