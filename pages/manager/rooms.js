@@ -27,7 +27,6 @@ export default function Rooms({ rooms, cinemas }) {
 										<th>#</th>
 										<th>Name</th>
 										<th>Total seats</th>
-
 										<th>Actions</th>
 									</tr>
 								</thead>
@@ -36,7 +35,6 @@ export default function Rooms({ rooms, cinemas }) {
 										<tr key={room._id} className="item-row">
 											<td>{movieIdx + 1}</td>
 											<td>{room.name}</td>
-
 											<td>{room.total_seats}</td>
 
 											<td>

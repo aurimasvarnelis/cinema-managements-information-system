@@ -16,14 +16,11 @@ export function AddRoom({ cinemaId }) {
 	const { register, handleSubmit, reset } = useForm();
 
 	const router = useRouter();
-	const refreshData = () => {
-		router.replace(router.asPath);
-	};
+	const refreshData = () => router.replace(router.asPath);
 
 	const [rows, setRows] = useState([]);
 	const [columns, setColumns] = useState([
 		{
-			// id: 0,
 			status: 0,
 		},
 	]);
@@ -73,9 +70,7 @@ export function AddRoom({ cinemaId }) {
 		setRows([
 			...rows,
 			{
-				// id: rows.length,
 				columns: columns.map((column) => ({
-					// id: column.id,
 					status: 0,
 				})),
 			},
@@ -86,7 +81,6 @@ export function AddRoom({ cinemaId }) {
 		setColumns([
 			...columns,
 			{
-				// id: columns.length,
 				status: 0,
 			},
 		]);
@@ -110,7 +104,6 @@ export function AddRoom({ cinemaId }) {
 					columns: [
 						...row.columns,
 						{
-							id: row.columns.length,
 							status: 0,
 						},
 					],
@@ -143,7 +136,7 @@ export function AddRoom({ cinemaId }) {
 			</Button>
 
 			<Modal
-				size="lg"
+				size="xl"
 				show={show}
 				onHide={() => {
 					handleClose();
@@ -162,62 +155,60 @@ export function AddRoom({ cinemaId }) {
 						</Form.Group>
 					</Form>
 
-					<Container fluid>
-						<Button onClick={handleAddRow}>Add row</Button>
-
-						<Button onClick={handleRemoveRow}>Remove row</Button>
-
-						<Button onClick={handleAddColumn}>Add column</Button>
-
-						<Button onClick={handleRemoveColumn}>Remove column</Button>
-
-						<Container>
-							{rows
-								.map((row, rowIdx) => (
-									<Stack direction="horizontal" gap={2} key={rowIdx}>
-										<div className="mx-2" style={{ width: "20px" }}>
-											{rowIdx + 1}
+					<Container fluid className="overflow-auto">
+						{rows
+							.map((row, rowIdx) => (
+								<Stack direction="horizontal" gap={2} key={rowIdx}>
+									<div style={{ width: "2rem" }}>{rowIdx + 1}</div>
+									{row.columns.map((column, columnIdx) => (
+										<div key={columnIdx}>
+											{rowIdx === rows.length - 1 && <div>{columnIdx + 1}</div>}
+											<div
+												onClick={() => {
+													if (column.status === 0) {
+														row.columns[columnIdx].status = -1;
+														setRows([...rows]);
+													} else {
+														row.columns[columnIdx].status = 0;
+														setRows([...rows]);
+													}
+												}}
+											>
+												{row.columns[columnIdx].status === -1 ? (
+													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="gray" className="bi bi-circle-fill" viewBox="0 0 24 24">
+														<circle cx="12" cy="12" r="12" />
+													</svg>
+												) : (
+													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="green" className="bi bi-circle-fill" viewBox="0 0 24 24">
+														<circle cx="12" cy="12" r="12" />
+													</svg>
+												)}
+											</div>
 										</div>
-										{row.columns.map((column, columnIdx) => (
-											<>
-												<div key={columnIdx}>
-													{/* {idx === 0 && <div>{column.id}</div>} */}
-													{row.id === rows.length - 1 && <div>{column.id + 1}</div>}
-													<div
-														onClick={() => {
-															if (column.status === 0) {
-																row.columns[columnIdx].status = -1;
-																setRows([...rows]);
-															} else {
-																row.columns[columnIdx].status = 0;
-																setRows([...rows]);
-															}
-														}}
-													>
-														{row.columns[columnIdx].status === -1 ? (
-															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="gray" className="bi bi-circle-fill" viewBox="0 0 24 24">
-																<circle cx="12" cy="12" r="12" />
-															</svg>
-														) : (
-															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="green" className="bi bi-circle-fill" viewBox="0 0 24 24">
-																<circle cx="12" cy="12" r="12" />
-															</svg>
-														)}
-													</div>
-													{/* <Image
-                      className="d-block w-100"
-                      src="/armchair-seat.svg"
-                      alt="seat"
-                      width="30px"
-                      height="30px"
-                    /> */}
-												</div>
-											</>
-										))}
-									</Stack>
-								))
-								.reverse()}
-						</Container>
+									))}
+								</Stack>
+							))
+							.reverse()}
+
+						<div className="m-3 d-flex justify-content-center">
+							<Button variant="success" className="me-5" onClick={handleAddRow} style={{ width: "10rem" }}>
+								Add row
+							</Button>
+
+							<Button variant="success" onClick={handleAddColumn} style={{ width: "10rem" }}>
+								Add column
+							</Button>
+						</div>
+
+						<div className="m-3 d-flex justify-content-center">
+							<Button variant="danger" className="me-5" onClick={handleRemoveRow} style={{ width: "10rem" }}>
+								Remove row
+							</Button>
+
+							<Button variant="danger" onClick={handleRemoveColumn} style={{ width: "10rem" }}>
+								Remove column
+							</Button>
+						</div>
 					</Container>
 				</Modal.Body>
 				<Modal.Footer>

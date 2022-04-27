@@ -18,7 +18,7 @@ export function ViewRoom({ room }) {
 				</svg>
 			</Button>
 
-			<Modal size="lg" show={show} onHide={handleClose} centered>
+			<Modal size="xl" show={show} onHide={handleClose} centered>
 				<Modal.Header closeButton>
 					<Modal.Title>View room</Modal.Title>
 				</Modal.Header>
@@ -28,18 +28,16 @@ export function ViewRoom({ room }) {
 						<Form.Control disabled defaultValue={room.name} />
 					</Form.Group>
 
-					<Container>
+					<Container fluid className="overflow-auto">
 						{room.rows
-							.map((row, idx) => (
-								<Stack direction="horizontal" gap={2} key={idx}>
-									<div>{idx + 1}</div>
-									{row.columns.map((column, idx) => (
-										<div key={idx}>
-											{/* {row.id === 0 && <div>{idx + 1}</div>}
+							.map((row, rowIdx) => (
+								<Stack direction="horizontal" gap={2} key={rowIdx}>
+									<div>{rowIdx + 1}</div>
+									{row.columns.map((column, columnIdx) => (
+										<div key={columnIdx}>
+											{rowIdx === room.rows.length - 1 && <div>{columnIdx + 1}</div>}
 
-                    {room.rows.length === 5 && <div>{idx}</div>} */}
-
-											{row.columns[idx].status === -1 ? (
+											{row.columns[columnIdx].status === -1 ? (
 												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="gray" className="bi bi-circle-fill" viewBox="0 0 24 24">
 													<circle cx="12" cy="12" r="12" />
 												</svg>
@@ -48,32 +46,12 @@ export function ViewRoom({ room }) {
 													<circle cx="12" cy="12" r="12" />
 												</svg>
 											)}
-
-											{/* <Image
-                      className="d-block w-100"
-                      src="/armchair-seat.svg"
-                      alt="seat"
-                      width="30px"
-                      height="30px"
-                    /> */}
 										</div>
 									))}
 								</Stack>
 							))
 							.reverse()}
 					</Container>
-
-					{/* <Form id="hook-form" >         
-            <Form.Group className="mb-3" >
-              <Form.Label>Poster</Form.Label>
-              <Form.Group><embed src={room.poster}></embed></Form.Group>
-            </Form.Group>      
-            <Form.Group className="mb-3" >
-              <Form.Label>Name</Form.Label>
-              <Form.Control disabled defaultValue={room.name}/>
-            </Form.Group>
-            
-          </Form> */}
 				</Modal.Body>
 			</Modal>
 		</>

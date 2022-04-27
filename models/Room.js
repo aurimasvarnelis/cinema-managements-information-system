@@ -14,10 +14,10 @@ const ColumnSchema = new mongoose.Schema(
 			],
 			default: 1,
 		},
-		ticket_id: {
-			type: Schema.Types.ObjectId,
-			default: null,
-		},
+		// ticket_id: {
+		// 	type: Schema.Types.ObjectId,
+		// 	default: null,
+		// },
 	},
 	{ _id: false }
 );
@@ -47,16 +47,6 @@ const RoomSchema = new mongoose.Schema({
 		type: Number,
 		default: 0,
 	},
-	// door_placement: {
-	// 	type: String,
-	// 	enum: ["left", "right", "both"],
-	// 	required: false,
-	// },
-	// staircase_placement: {
-	// 	type: String,
-	// 	enum: ["left", "right", "both"],
-	// 	required: false,
-	// },
 	rows: [RowSchema],
 });
 
