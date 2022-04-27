@@ -23,7 +23,7 @@ export function AddRoom({ cinemaId }) {
 	const [rows, setRows] = useState([]);
 	const [columns, setColumns] = useState([
 		{
-			id: 0,
+			// id: 0,
 			status: 0,
 		},
 	]);
@@ -73,9 +73,9 @@ export function AddRoom({ cinemaId }) {
 		setRows([
 			...rows,
 			{
-				id: rows.length,
+				// id: rows.length,
 				columns: columns.map((column) => ({
-					id: column.id,
+					// id: column.id,
 					status: 0,
 				})),
 			},
@@ -86,7 +86,7 @@ export function AddRoom({ cinemaId }) {
 		setColumns([
 			...columns,
 			{
-				id: columns.length,
+				// id: columns.length,
 				status: 0,
 			},
 		]);
@@ -163,7 +163,6 @@ export function AddRoom({ cinemaId }) {
 					</Form>
 
 					<Container fluid>
-						{/* <AddRow rows={rows} setRows={setRows} /> */}
 						<Button onClick={handleAddRow}>Add row</Button>
 
 						<Button onClick={handleRemoveRow}>Remove row</Button>
@@ -229,12 +228,4 @@ export function AddRoom({ cinemaId }) {
 			</Modal>
 		</>
 	);
-}
-
-function AddRow({ rows, setRows }) {
-	return <Button onClick={handleAddRow}>Add row</Button>;
-}
-
-function AddColumn() {
-	return <Button>Add column</Button>;
 }

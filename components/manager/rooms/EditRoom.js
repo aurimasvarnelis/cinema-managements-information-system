@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-// TODO: Update room edit form
 export function EditRoom({ room, cinemaId }) {
 	// Model state
 	const [show, setShow] = useState(false);
@@ -22,12 +21,14 @@ export function EditRoom({ room, cinemaId }) {
 	};
 
 	const [rows, setRows] = useState(room.rows);
-	const [columns, setColumns] = useState([
-		{
-			id: 0,
-			status: 0,
-		},
-	]);
+	// const [columns, setColumns] = useState([
+	// 	{
+	// 		id: 0,
+	// 		status: 0,
+	// 	},
+	// ]);
+	console.log(room.rows[0].columns);
+	const [columns, setColumns] = useState(room.rows[0].columns);
 
 	const getRoomTotalSeats = () => {
 		let totalSeats = 0;
@@ -51,9 +52,7 @@ export function EditRoom({ room, cinemaId }) {
 			},
 			body: JSON.stringify(data),
 		});
-		if (res.status < 300) {
-			refreshData();
-		}
+		if (res.status < 300) refreshData();
 	};
 
 	const onSubmit = (data, event) => {
@@ -74,9 +73,9 @@ export function EditRoom({ room, cinemaId }) {
 		setRows([
 			...rows,
 			{
-				id: rows.length,
+				//id: rows.length,
 				columns: columns.map((column) => ({
-					id: column.id,
+					//id: column.id,
 					status: 0,
 				})),
 			},
@@ -87,7 +86,7 @@ export function EditRoom({ room, cinemaId }) {
 		setColumns([
 			...columns,
 			{
-				id: columns.length,
+				//id: columns.length,
 				status: 0,
 			},
 		]);
@@ -111,7 +110,7 @@ export function EditRoom({ room, cinemaId }) {
 					columns: [
 						...row.columns,
 						{
-							id: row.columns.length,
+							//id: row.columns.length,
 							status: 0,
 						},
 					],
@@ -147,6 +146,7 @@ export function EditRoom({ room, cinemaId }) {
 					handleClose();
 					setValidated(false);
 					setRows(room.rows);
+					setColumns(room.rows[0].columns);
 				}}
 				centered
 			>
@@ -162,7 +162,6 @@ export function EditRoom({ room, cinemaId }) {
 					</Form>
 
 					<Container fluid>
-						{/* <AddRow rows={rows} setRows={setRows} /> */}
 						<Button onClick={handleAddRow}>Add row</Button>
 
 						<Button onClick={handleRemoveRow}>Remove row</Button>
@@ -223,6 +222,7 @@ export function EditRoom({ room, cinemaId }) {
 						onClick={() => {
 							handleClose();
 							setRows(room.rows);
+							setColumns(room.rows[0].columns);
 						}}
 					>
 						Cancel
