@@ -30,10 +30,6 @@ const SessionSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		status: {
-			type: String,
-			required: false,
-		},
 		ticket_types: [
 			{
 				ticket_type_name: {

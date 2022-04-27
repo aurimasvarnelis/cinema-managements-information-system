@@ -1,19 +1,4 @@
-import {
-	Button,
-	Col,
-	Container,
-	Dropdown,
-	DropdownButton,
-	FloatingLabel,
-	Form,
-	FormControl,
-	Image,
-	InputGroup,
-	Modal,
-	Row,
-	Stack,
-	Table,
-} from "react-bootstrap";
+import { Button, Col, Container, Dropdown, DropdownButton, FloatingLabel, Form, FormControl, Image, InputGroup, Modal, Row, Stack, Table } from "react-bootstrap";
 
 import { getCookie } from "cookies-next";
 import moment from "moment";
@@ -58,18 +43,18 @@ export function EditSession({ session, movies, rooms, movie, cinemaId, ticketTyp
 			},
 			body: JSON.stringify(data),
 		});
-		if (res.status < 300) {
-			refreshData();
-		}
+		if (res.status < 300) refreshData();
 	};
 
 	const onMovieChange = (e) => {
 		//console.log(movies.find((movie) => movie._id === e.target.value));
 		movie = movies.find((movie) => movie._id === e.target.value);
+		// force date change
+		onStartDateTimeChange(session.start_time);
 	};
 
-	const onStartDateTimeChange = (e) => {
-		var date = moment(e.target.value);
+	const onStartDateTimeChange = (startTime) => {
+		var date = moment(startTime);
 		date.add(movie.duration, "m");
 		setValue("end_time", date.format("YYYY-MM-DDTHH:mm"));
 	};
@@ -116,8 +101,7 @@ export function EditSession({ session, movies, rooms, movie, cinemaId, ticketTyp
 								<Form.Label htmlFor="movie">Movie</Form.Label>
 								<Form.Select defaultValue={session.movie_id} {...register("movie_id")} onChange={onMovieChange}>
 									<option key="blankMovie" hidden value>
-										{" "}
-										Select movie{" "}
+										Select movie
 									</option>
 									{movies.map((movie) => (
 										<option key={movie._id} value={movie._id}>
@@ -130,8 +114,7 @@ export function EditSession({ session, movies, rooms, movie, cinemaId, ticketTyp
 								<Form.Label htmlFor="movie">Room</Form.Label>
 								<Form.Select defaultValue={session.room._id} {...register("room")}>
 									<option key="blankRoom" hidden value>
-										{" "}
-										Select room{" "}
+										Select room
 									</option>
 									{rooms.map((room) => (
 										<option key={room._id} value={room._id}>
@@ -143,13 +126,13 @@ export function EditSession({ session, movies, rooms, movie, cinemaId, ticketTyp
 						</Row>
 						<Row className="mb-3">
 							<Form.Group className="mb-3" as={Col}>
-								<Form.Label>Start time </Form.Label>
+								<Form.Label>Start time</Form.Label>
 								<Form.Control
 									required
 									type="datetime-local"
 									min={moment(new Date()).format("YYYY-MM-DDTHH:mm")}
 									placeholder="Start time"
-									onSelect={onStartDateTimeChange}
+									onChangeCapture={(e) => onStartDateTimeChange(e.target.value)}
 									defaultValue={moment(session.start_time).format("YYYY-MM-DDTHH:mm")}
 									{...register("start_time")}
 								/>
@@ -159,21 +142,6 @@ export function EditSession({ session, movies, rooms, movie, cinemaId, ticketTyp
 								<Form.Control disabled type="datetime-local" defaultValue={moment(session.end_time).format("YYYY-MM-DDTHH:mm")} {...register("end_time")} />
 							</Form.Group>
 						</Row>
-						<Form.Group className="mb-3">
-							<Form.Label htmlFor="census">Status</Form.Label>
-							<Form.Select placeholder="Actors" defaultValue={session.status} {...register("status")}>
-								<option key="blankChoice" hidden value>
-									{" "}
-									Select status{" "}
-								</option>
-								<option key="public" value="public">
-									Public
-								</option>
-								<option key="private" value="private">
-									Private
-								</option>
-							</Form.Select>
-						</Form.Group>
 						<Row>
 							<Form.Group>
 								<Form.Label>Tickets</Form.Label>

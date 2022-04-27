@@ -33,8 +33,7 @@ export default function Sessions({ cinemas, sessions, movies, rooms, ticketTypes
 										<th>Room</th>
 										<th>Date</th>
 										<th>Time</th>
-										<th>Occupied</th>
-										<th>Status</th>
+										<th>Occupation</th>
 										<th>Action</th>
 									</tr>
 								</thead>
@@ -60,17 +59,9 @@ export default function Sessions({ cinemas, sessions, movies, rooms, ticketTypes
 														visuallyHidden
 													/>
 												</td>
-												<td>{session.status}</td>
 												<td>
 													<ViewSession session={session} movie={movie} />
-													<EditSession
-														session={session}
-														movies={movies[cinemaIdx]}
-														rooms={rooms[cinemaIdx]}
-														movie={movie}
-														cinemaId={cinema._id}
-														ticketTypes={ticketTypes}
-													/>
+													<EditSession session={session} movies={movies[cinemaIdx]} rooms={rooms[cinemaIdx]} movie={movie} cinemaId={cinema._id} ticketTypes={ticketTypes} />
 													<DeleteSession session={session} />
 												</td>
 											</tr>

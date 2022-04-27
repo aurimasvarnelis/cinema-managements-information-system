@@ -1,19 +1,4 @@
-import {
-	Button,
-	Col,
-	Container,
-	Dropdown,
-	DropdownButton,
-	FloatingLabel,
-	Form,
-	FormControl,
-	Image,
-	InputGroup,
-	Modal,
-	Row,
-	Stack,
-	Table,
-} from "react-bootstrap";
+import { Button, Col, Container, Dropdown, DropdownButton, FloatingLabel, Form, FormControl, Image, InputGroup, Modal, Row, Stack, Table } from "react-bootstrap";
 
 import { getCookie } from "cookies-next";
 import moment from "moment";
@@ -31,7 +16,7 @@ export function AddSession({ movies, rooms, cinemaId, ticketTypes }) {
 	// Validation
 	const [validated, setValidated] = useState(false);
 	// Form hook
-	const { register, handleSubmit, reset, setValue } = useForm();
+	const { register, handleSubmit, reset, setValue, getValues } = useForm();
 
 	// Refreshing page after updating data
 	const router = useRouter();
@@ -67,11 +52,12 @@ export function AddSession({ movies, rooms, cinemaId, ticketTypes }) {
 
 	const onMovieChange = (e) => {
 		setMovie(movies.find((movie) => movie._id === e.target.value));
+		if (getValues().start_time) onStartDateTimeChange(getValues().start_time);
 		setDisabled(false);
 	};
 
-	const onStartDateTimeChange = (e) => {
-		var date = moment(e.target.value);
+	const onStartDateTimeChange = (startTime) => {
+		var date = moment(startTime);
 		date.add(movie.duration, "m");
 		setValue("end_time", date.format("YYYY-MM-DDTHH:mm"));
 	};
@@ -122,8 +108,7 @@ export function AddSession({ movies, rooms, cinemaId, ticketTypes }) {
 								<Form.Label htmlFor="movie">Movie</Form.Label>
 								<Form.Select {...register("movie_id")} onChange={onMovieChange}>
 									<option key="blankMovie" hidden value>
-										{" "}
-										Select movie{" "}
+										Select movie
 									</option>
 									{movies.map((movie) => (
 										<option key={movie._id} value={movie._id}>
@@ -136,8 +121,7 @@ export function AddSession({ movies, rooms, cinemaId, ticketTypes }) {
 								<Form.Label htmlFor="movie">Room</Form.Label>
 								<Form.Select {...register("room")}>
 									<option key="blankRoom" hidden value>
-										{" "}
-										Select room{" "}
+										Select room
 									</option>
 									{rooms.map((room) => (
 										<option key={room._id} value={room._id}>
@@ -156,7 +140,7 @@ export function AddSession({ movies, rooms, cinemaId, ticketTypes }) {
 									type="datetime-local"
 									min={moment(new Date()).format("YYYY-MM-DDTHH:mm")}
 									placeholder="Start time"
-									onSelect={onStartDateTimeChange}
+									onChangeCapture={(e) => onStartDateTimeChange(e.target.value)}
 									{...register("start_time")}
 								/>
 							</Form.Group>
@@ -165,21 +149,6 @@ export function AddSession({ movies, rooms, cinemaId, ticketTypes }) {
 								<Form.Control disabled type="datetime-local" {...register("end_time")} />
 							</Form.Group>
 						</Row>
-						<Form.Group className="mb-3">
-							<Form.Label htmlFor="census">Status</Form.Label>
-							<Form.Select placeholder="Actors" {...register("status")}>
-								<option key="blankStatus" hidden value>
-									{" "}
-									Select status{" "}
-								</option>
-								<option key="public" value="public">
-									Public
-								</option>
-								<option key="private" value="private">
-									Private
-								</option>
-							</Form.Select>
-						</Form.Group>
 						<Row>
 							<Form.Group>
 								<Form.Label>Tickets</Form.Label>

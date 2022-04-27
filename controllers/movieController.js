@@ -40,17 +40,15 @@ export async function getRatings() {
 }
 
 export async function getMoviesByCinemas(cinemas) {
-	// loop trough cinemas
-	// find movies that contain cinema._id in movie.cinemas
-	// if yes, add movie to filteredMovies[index]
 	const filteredMovies = [];
 	for (let i = 0; i < cinemas.length; i++) {
-		// select _id name genre rating premiere_date
 		const movies = await Movie.find({
 			cinemas: {
 				$in: [cinemas[i]._id],
 			},
-		}).select("_id name genre rating premiere_date");
+		})
+			.lean()
+			.select("_id name genre rating premiere_date duration");
 
 		filteredMovies.push(movies);
 	}
