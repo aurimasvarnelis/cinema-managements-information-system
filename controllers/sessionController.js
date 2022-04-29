@@ -1,7 +1,7 @@
 import Session from "../models/Session";
 
 export async function getSessions(cinemaId) {
-	const sessions = await Session.find({ cinema_id: cinemaId }).exec();
+	const sessions = await Session.find({ cinema_id: cinemaId }).lean();
 	return sessions;
 }
 
@@ -9,7 +9,8 @@ export async function getSessionsByMovie(cinemaId, movieId) {
 	const sessions = await Session.find({
 		cinema_id: cinemaId,
 		movie_id: movieId,
-	}).exec();
+	}).lean();
+
 	return sessions;
 }
 
@@ -41,14 +42,19 @@ export async function getTicketTypes() {
 	return ticketTypes;
 }
 
-export async function getSessionsByCinemas(cinemasIds) {
-	const filteredSessions = [];
-	for (let i = 0; i < cinemasIds.length; i++) {
-		const sessions = await Session.find({
-			cinema_id: cinemasIds[i],
-		});
-		filteredSessions.push(sessions);
-	}
+export async function getSessionsByCinema(cinemaId) {
+	//const filteredSessions = [];
 
-	return filteredSessions;
+	const sessions = await Session.find({
+		cinema_id: cinemaId,
+	})
+		.lean()
+		.populate("movie_id", "name duration");
+	// filteredSessions.push(sessions);
+
+	sessions.sort((a, b) => {
+		return new Date(a.start_time) - new Date(b.start_time);
+	});
+
+	return sessions;
 }

@@ -1,13 +1,12 @@
 import { Button, Col, Container, Dropdown, DropdownButton, FloatingLabel, Form, FormControl, Image, InputGroup, Modal, Row, Stack, Table } from "react-bootstrap";
 
-import { getCookie } from "cookies-next";
 import moment from "moment";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-export function EditSession({ session, movies, rooms, movie, cinemaId, ticketTypes }) {
+export function EditSession({ sessions, session, movies, rooms, movie, cinemaId, ticketTypes }) {
 	// Model state
 	const [show, setShow] = useState(false);
 	const handleClose = () => setShow(false);
@@ -17,9 +16,19 @@ export function EditSession({ session, movies, rooms, movie, cinemaId, ticketTyp
 	// Form hook
 	const { register, handleSubmit, setValue } = useForm();
 
+	const [error, setError] = useState(false);
+	const [schedule, setSchedule] = useState(sessions);
+
 	// Refreshing page after updating data
 	const router = useRouter();
 	const refreshData = () => router.replace(router.asPath);
+
+	useEffect(() => {
+		const filteredSessions = sessions.filter(
+			(roomSession) => roomSession.room._id === session.room._id && roomSession._id !== session._id && roomSession.start_time.slice(0, 10) === session.start_time.slice(0, 10)
+		);
+		setSchedule(filteredSessions);
+	}, [sessions, session]);
 
 	const putData = async (data) => {
 		data.cinema_id = cinemaId;
@@ -28,6 +37,7 @@ export function EditSession({ session, movies, rooms, movie, cinemaId, ticketTyp
 		const room = await rooms.find((room) => room._id === data.room);
 
 		const customRoom = {
+			_id: room._id,
 			name: room.name,
 			total_seats: room.total_seats,
 			occupied_seats: room.occupied_seats,
@@ -47,16 +57,50 @@ export function EditSession({ session, movies, rooms, movie, cinemaId, ticketTyp
 	};
 
 	const onMovieChange = (e) => {
-		//console.log(movies.find((movie) => movie._id === e.target.value));
 		movie = movies.find((movie) => movie._id === e.target.value);
-		// force date change
 		onStartDateTimeChange(session.start_time);
+	};
+
+	const onRoomChange = (e) => {
+		const filteredSessions = sessions.filter(
+			(roomSession) => roomSession.room._id === e.target.value && roomSession._id !== session._id && roomSession.start_time.slice(0, 10) === session.start_time.slice(0, 10)
+		);
+		setSchedule(filteredSessions);
 	};
 
 	const onStartDateTimeChange = (startTime) => {
 		var date = moment(startTime);
 		date.add(movie.duration, "m");
 		setValue("end_time", date.format("YYYY-MM-DDTHH:mm"));
+		isOverlapping(startTime, date.format("YYYY-MM-DDTHH:mm"), session.room._id);
+		const filteredSessions = sessions.filter((roomSession) => roomSession.room._id === session.room._id && roomSession.start_time.slice(0, 10) === startTime.slice(0, 10));
+		setSchedule(filteredSessions);
+	};
+
+	const isOverlapping = (startTime, endTime, room) => {
+		const newSession = {
+			start_time: startTime,
+			end_time: endTime,
+			room: room,
+		};
+
+		const overlappingSessions = sessions.filter((filterSession) => {
+			if (filterSession.room._id === newSession.room) {
+				if (
+					moment(newSession.start_time).isBetween(filterSession.start_time, filterSession.end_time) ||
+					moment(newSession.end_time).isBetween(filterSession.start_time, filterSession.end_time)
+				) {
+					return true;
+				}
+			}
+			return false;
+		});
+
+		if (overlappingSessions.length > 0) {
+			setError(true);
+		} else {
+			setError(false);
+		}
 	};
 
 	const onSubmit = (data, event) => {
@@ -66,9 +110,11 @@ export function EditSession({ session, movies, rooms, movie, cinemaId, ticketTyp
 			event.stopPropagation();
 			setValidated(true);
 		} else {
-			putData(data);
-			handleClose();
-			setValidated(false);
+			if (!error) {
+				putData(data);
+				handleClose();
+				setValidated(false);
+			}
 		}
 		//alert(`Session ${data.name} has been added.`)
 	};
@@ -99,7 +145,7 @@ export function EditSession({ session, movies, rooms, movie, cinemaId, ticketTyp
 						<Row className="mb-3">
 							<Form.Group className="mb-3" as={Col}>
 								<Form.Label htmlFor="movie">Movie</Form.Label>
-								<Form.Select defaultValue={session.movie_id} {...register("movie_id")} onChange={onMovieChange}>
+								<Form.Select defaultValue={session.movie_id._id} onChangeCapture={onMovieChange} {...register("movie_id")}>
 									<option key="blankMovie" hidden value>
 										Select movie
 									</option>
@@ -112,7 +158,7 @@ export function EditSession({ session, movies, rooms, movie, cinemaId, ticketTyp
 							</Form.Group>
 							<Form.Group className="mb-3" as={Col}>
 								<Form.Label htmlFor="movie">Room</Form.Label>
-								<Form.Select defaultValue={session.room._id} {...register("room")}>
+								<Form.Select defaultValue={session.room._id} onChangeCapture={onRoomChange} {...register("room")}>
 									<option key="blankRoom" hidden value>
 										Select room
 									</option>
@@ -130,12 +176,15 @@ export function EditSession({ session, movies, rooms, movie, cinemaId, ticketTyp
 								<Form.Control
 									required
 									type="datetime-local"
+									format="yyyy/mm/dd"
 									min={moment(new Date()).format("YYYY-MM-DDTHH:mm")}
 									placeholder="Start time"
 									onChangeCapture={(e) => onStartDateTimeChange(e.target.value)}
 									defaultValue={moment(session.start_time).format("YYYY-MM-DDTHH:mm")}
+									isInvalid={error}
 									{...register("start_time")}
 								/>
+								{error && <Form.Control.Feedback type="invalid">Selected time is overlapping with others</Form.Control.Feedback>}
 							</Form.Group>
 							<Form.Group className="mb-3" as={Col}>
 								<Form.Label>End time</Form.Label>
@@ -157,8 +206,6 @@ export function EditSession({ session, movies, rooms, movie, cinemaId, ticketTyp
 								})}
 							</Col>
 							<Col>
-								{/* // map form input ticket_types with ticket_type.type and
-								ticket_type.price */}
 								{ticketTypes.map((ticketType, idx) => (
 									<Form.Group key={idx} className="mb-3">
 										<Form.Control
@@ -173,6 +220,41 @@ export function EditSession({ session, movies, rooms, movie, cinemaId, ticketTyp
 									</Form.Group>
 								))}
 							</Col>
+						</Row>
+						<Row>
+							<Form.Group>
+								<Form.Label>Sessions</Form.Label>
+								<Table>
+									<thead>
+										<tr>
+											<th>Movie</th>
+											<th>Room</th>
+											<th>Start time</th>
+											<th>End time</th>
+										</tr>
+									</thead>
+									<tbody>
+										{schedule.map((roomSession) => {
+											if (roomSession.room._id === session.room._id && roomSession._id !== session._id && roomSession.start_time.slice(0, 10) === session.start_time.slice(0, 10)) {
+												return (
+													<tr key={roomSession._id}>
+														<td>{roomSession.movie_id.name}</td>
+														<td>{roomSession.room.name}</td>
+														<td>{moment(roomSession.start_time).format("DD/MM/YYYY HH:mm")}</td>
+														<td>{moment(roomSession.end_time).format("DD/MM/YYYY HH:mm")}</td>
+													</tr>
+												);
+											}
+											return null;
+										})}
+										{schedule.length === 0 && (
+											<tr>
+												<td colSpan="4">No sessions</td>
+											</tr>
+										)}
+									</tbody>
+								</Table>
+							</Form.Group>
 						</Row>
 					</Form>
 				</Modal.Body>

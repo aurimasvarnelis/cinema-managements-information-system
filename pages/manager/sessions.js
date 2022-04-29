@@ -10,7 +10,7 @@ import { getCookie } from "cookies-next";
 import { getMoviesByCinemas } from "../../controllers/movieController";
 import { getRoomsByCinemas } from "../../controllers/roomController";
 import { getSession } from "next-auth/react";
-import { getSessionsByCinemas } from "../../controllers/sessionController";
+import { getSessionsByCinema } from "../../controllers/sessionController";
 import { getTicketTypes } from "../../controllers/sessionController";
 import moment from "moment";
 import styles from "./movies.module.scss";
@@ -24,7 +24,7 @@ export default function Sessions({ cinemas, sessions, movies, rooms, ticketTypes
 					{/* // map through all cinemas and get movies for each cinema */}
 					{cinemas.map((cinema, cinemaIdx) => (
 						<Tab eventKey={cinema._id} title={cinema.name} key={cinema._id} className={styles.cinemaTab}>
-							<AddSession movies={movies[cinemaIdx]} rooms={rooms[cinemaIdx]} cinemaId={cinema._id} ticketTypes={ticketTypes} />
+							<AddSession sessions={sessions[cinemaIdx]} movies={movies[cinemaIdx]} rooms={rooms[cinemaIdx]} cinemaId={cinema._id} ticketTypes={ticketTypes} />
 							<Table striped bordered hover>
 								<thead>
 									<tr>
@@ -39,12 +39,14 @@ export default function Sessions({ cinemas, sessions, movies, rooms, ticketTypes
 								</thead>
 								<tbody>
 									{sessions[cinemaIdx].map((session, sessionIdx) => {
-										const movie = movies[cinemaIdx].find((movie) => movie._id === session.movie_id);
-										const room = movies[cinemaIdx].find((room) => room._id === session.room_id);
+										{
+											/* const movie = movies[cinemaIdx].find((movie) => movie._id === session.movie_id);
+										const room = movies[cinemaIdx].find((room) => room._id === session.room_id); */
+										}
 										return (
 											<tr key={session._id} className="item-row">
 												<td>{sessionIdx + 1}</td>
-												<td>{movie.name}</td>
+												<td>{session.movie_id.name}</td>
 												<td>{session.room.name}</td>
 												<td>{moment(session.start_time).format("YYYY-MM-DD")}</td>
 												<td>{session.display_time}</td>
@@ -60,8 +62,16 @@ export default function Sessions({ cinemas, sessions, movies, rooms, ticketTypes
 													/>
 												</td>
 												<td>
-													<ViewSession session={session} movie={movie} />
-													<EditSession session={session} movies={movies[cinemaIdx]} rooms={rooms[cinemaIdx]} movie={movie} cinemaId={cinema._id} ticketTypes={ticketTypes} />
+													<ViewSession session={session} movie={session.movie_id} />
+													<EditSession
+														sessions={sessions[cinemaIdx]}
+														session={session}
+														movies={movies[cinemaIdx]}
+														rooms={rooms[cinemaIdx]}
+														movie={session.movie_id}
+														cinemaId={cinema._id}
+														ticketTypes={ticketTypes}
+													/>
 													<DeleteSession session={session} />
 												</td>
 											</tr>
@@ -84,7 +94,12 @@ export async function getServerSideProps(context) {
 
 	const { user } = await getSession(context);
 	const cinemas = await getCinemasByManager(user.id);
-	const sessions = await getSessionsByCinemas(cinemas.map((cinema) => cinema._id));
+	const sessions = await Promise.all(
+		cinemas.map(async (cinema) => {
+			const session = await getSessionsByCinema(cinema._id);
+			return session;
+		})
+	);
 	const movies = await getMoviesByCinemas(cinemas);
 	const rooms = await getRoomsByCinemas(cinemas);
 	const ticketTypes = await getTicketTypes();

@@ -4,13 +4,14 @@ import { forwardRef, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import Image from "next/image";
 import Link from "next/link";
-import ReactPlayer from "react-player";
 import dbConnect from "../../lib/dbConnect";
 import { getCookie } from "cookies-next";
 import { getMovie } from "../../controllers/movieController";
 import { getSessionsByMovie } from "../../controllers/sessionController";
 import moment from "moment";
 import styles from "./[movieId].module.scss";
+
+// import ReactPlayer from "react-player";
 
 export default function Movie({ movie, sessions }) {
 	const [showMore, setShowMore] = useState(false);
@@ -108,7 +109,6 @@ export default function Movie({ movie, sessions }) {
 									customInput={<DateCustomInput />}
 									dateFormatCalendar="MMMM"
 									filterDate={(date) => {
-										//console.log(date);
 										return Object.keys(groupedSessions).includes(moment(date).format("YYYY-MM-DD"));
 									}}
 								/>
@@ -147,17 +147,6 @@ export default function Movie({ movie, sessions }) {
 					</div>
 				</Col>
 			</Row>
-
-			{/* <h1>{movie.title}</h1>
-      <p>{movie.description}</p>
-      <p>{movie.genre}</p>
-      <p>{movie.rating}</p>
-      <p>{movie.releaseDate}</p>
-      <p>{movie.duration}</p>
-      <p>{movie.director}</p>
-      <p>{movie.cast}</p>
-      <p>{movie.trailer}</p>
-      <p>{movie.image}</p> */}
 		</Container>
 	);
 }
