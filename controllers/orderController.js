@@ -1,11 +1,6 @@
 import Order from "../models/Order";
 import Session from "../models/Session";
 
-// export async function getOrders() {
-//   const orders = await Order.find({});
-//   return orders;
-// }
-
 export async function getOrder(orderId) {
 	const order = await Order.findById(orderId);
 	return order;
@@ -15,8 +10,8 @@ export async function addTicketToOrder(req) {
 	const { user_id, session_id, ticket } = req.body;
 	const session = await Session.findById(session_id);
 
-	if (session.room.rows[ticket.rowIndex].columns[ticket.columnIndex].status === 0) {
-		session.room.rows[ticket.rowIndex].columns[ticket.columnIndex].status = 1;
+	if (session.room.rows[ticket.row_index].columns[ticket.column_index].status === 0) {
+		session.room.rows[ticket.row_index].columns[ticket.column_index].status = 1;
 		session.markModified("room");
 		await session.save();
 	} else {
@@ -67,8 +62,8 @@ export async function removeTicketFromOrder(req) {
 	const { user_id, session_id, ticket } = req.body;
 	const session = await Session.findById(session_id);
 
-	if (session.room.rows[ticket.rowIndex].columns[ticket.columnIndex].status === 1) {
-		session.room.rows[ticket.rowIndex].columns[ticket.columnIndex].status = 0;
+	if (session.room.rows[ticket.row_index].columns[ticket.column_index].status === 1) {
+		session.room.rows[ticket.row_index].columns[ticket.column_index].status = 0;
 		session.markModified("room");
 		await session.save();
 	} else {
@@ -86,7 +81,7 @@ export async function removeTicketFromOrder(req) {
 	if (order) {
 		// update order
 		order.tickets = order.tickets.filter((t) => {
-			return t.rowIndex !== ticket.rowIndex || t.columnIndex !== ticket.columnIndex;
+			return t.row_index !== ticket.row_index || t.column_index !== ticket.column_index;
 		});
 		order.price_total = order.price_total - ticket.price;
 		await order.save();
@@ -129,7 +124,7 @@ export async function submitOrder(req) {
 	const session = await Session.findById(order.session_id);
 
 	order.tickets.forEach((ticket) => {
-		session.room.rows[ticket.rowIndex].columns[ticket.columnIndex].status = 2;
+		session.room.rows[ticket.row_index].columns[ticket.column_index].status = 2;
 		console.log(ticket);
 	});
 	session.room.occupied_seats = session.room.occupied_seats + order.tickets.length;

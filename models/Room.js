@@ -12,12 +12,8 @@ const ColumnSchema = new mongoose.Schema(
 				1, // Reserved
 				2, // Occupied
 			],
-			default: 1,
+			default: 0,
 		},
-		// ticket_id: {
-		// 	type: Schema.Types.ObjectId,
-		// 	default: null,
-		// },
 	},
 	{ _id: false }
 );

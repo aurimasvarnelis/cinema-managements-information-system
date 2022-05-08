@@ -1,20 +1,11 @@
 import mongoose from "mongoose";
 
-// var MovieSchema = require("./MovieSchema");
-
 const MovieSchema = new mongoose.Schema({
 	poster: {
-		//data: Buffer,
-		//contentType: String,
 		type: String,
 	},
-	// cover: {
-	//   data: Buffer,
-	//   contentType: String,
-	// },
 	name: {
 		type: String,
-		//required: [true, 'Please provide a name for this movie'],
 	},
 	director: {
 		type: String,
@@ -22,7 +13,6 @@ const MovieSchema = new mongoose.Schema({
 	actors: {
 		type: String,
 	},
-
 	rating: {
 		type: String,
 		enum: ["G", "PG", "PG-13", "R", "NC-17"],
@@ -58,9 +48,6 @@ const MovieSchema = new mongoose.Schema({
 		type: String,
 	},
 	synopsis: {
-		type: String,
-	},
-	trailer: {
 		type: String,
 	},
 	cinemas: [

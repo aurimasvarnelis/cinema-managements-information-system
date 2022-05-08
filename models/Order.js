@@ -23,8 +23,8 @@ const OrderSchema = new Schema(
 		tickets: [
 			{
 				_id: false,
-				rowIndex: Number,
-				columnIndex: Number,
+				row_index: Number,
+				column_index: Number,
 				ticket_type_name: String,
 				price: Number,
 			},

@@ -87,7 +87,7 @@ export default function Session({ movieSession, movie, cinema, order }) {
 	};
 
 	const handleDeselectTicket = async (rowIndex, columnIndex) => {
-		const removeTicket = order.tickets.find((ticket) => ticket.rowIndex === rowIndex && ticket.columnIndex === columnIndex);
+		const removeTicket = order.tickets.find((ticket) => ticket.row_index === rowIndex && ticket.column_index === columnIndex);
 		await removeTicketFromOrder(removeTicket);
 	};
 
@@ -238,7 +238,7 @@ export default function Session({ movieSession, movie, cinema, order }) {
 				<Row key={ticketIndex} className={styles.ticketRow}>
 					<Col xs={12} md={10} lg={8} xl={8} className={styles.ticketColumn}>
 						<div className={styles.ticketSeating}>
-							Row: {ticket.rowIndex + 1}, Seat: {ticket.columnIndex + 1}
+							Row: {ticket.row_index + 1}, Seat: {ticket.column_index + 1}
 						</div>
 						<div className={styles.ticketType}>Ticket type: {ticket.ticket_type_name}</div>
 						<div className={styles.ticketPrice}>${parseFloat(ticket.price).toFixed(2)}</div>
