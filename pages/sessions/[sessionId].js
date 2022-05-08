@@ -78,8 +78,8 @@ export default function Session({ movieSession, movie, cinema, order }) {
 
 	const handleSelectTicket = async (rowIndex, columnIndex, ticketType) => {
 		const newTicket = {
-			rowIndex,
-			columnIndex,
+			row_index: rowIndex,
+			column_index: columnIndex,
 			ticket_type_name: ticketType.ticket_type_name,
 			price: ticketType.price,
 		};

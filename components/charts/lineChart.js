@@ -117,12 +117,6 @@ export function TicketsSoldByMovieDurationLineChart({ chartData, cinemas, colors
 				},
 			},
 		},
-		elements: {
-			point: {
-				radius: 0,
-			},
-		},
-		spanGaps: false,
 	};
 
 	const data = {

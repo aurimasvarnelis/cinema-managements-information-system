@@ -53,7 +53,7 @@ export function AddCinema() {
 					<Modal.Title>Add cinema</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<Form id="hook-form" onSubmit={handleSubmit(onSubmit)}>
+					<Form noValidate id="hook-form" onSubmit={handleSubmit(onSubmit)}>
 						<Form.Group className="mb-3">
 							<Form.Label htmlFor="name">Name</Form.Label>
 							<Form.Control required type="text" placeholder="Movie name" {...register("name")} />

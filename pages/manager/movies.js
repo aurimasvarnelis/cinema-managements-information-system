@@ -35,7 +35,7 @@ export default function movies({ cinemas, movies, allMovies }) {
 								<tbody>
 									{movies[cinemaIdx].map((movie, movieIdx) => (
 										<tr key={movie._id}>
-											<td>{movieIdx}</td>
+											<td>{movieIdx + 1}</td>
 											<td>{movie.name}</td>
 											<td>{movie.duration} min.</td>
 											<td>{movie.rating}</td>

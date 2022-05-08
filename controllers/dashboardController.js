@@ -43,30 +43,33 @@ export async function getUsersThisMonth(cinemaId) {
 
 	const prevMonthUsersThisMonth = uniquePrevMonthUsers.length;
 
-	const changePercent = ((usersThisMonth - prevMonthUsersThisMonth) / prevMonthUsersThisMonth) * 100;
+	const changePercent = prevMonthUsersThisMonth === 0 ? 0 : ((usersThisMonth - prevMonthUsersThisMonth) / prevMonthUsersThisMonth) * 100;
 
 	return {
 		usersThisMonth,
-		changePercent: changePercent ? changePercent : 0,
+		changePercent: changePercent ? changePercent.toFixed(0) : 0,
 	};
 }
 
 // get orders this week and compare to previous week
 // return number of orders and change percent compared to previous week
 export async function getOrdersThisWeek(cinemaId) {
+	const currentWeek = new Date();
+	currentWeek.setDate(currentWeek.getDate() - 7);
+
 	const orders = await Order.find({
 		cinema_id: cinemaId,
 		status: {
 			$in: ["Confirmed"],
 		},
 		created_at: {
-			$gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7),
+			$gte: currentWeek,
 		},
 	});
+	const ordersCountThisWeek = orders.length;
 
-	const ordersThisWeek = orders.length;
-
-	const prevWeek = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7);
+	const previousWeek = new Date();
+	previousWeek.setDate(previousWeek.getDate() - 14);
 
 	const prevWeekOrders = await Order.find({
 		cinema_id: cinemaId,
@@ -74,34 +77,39 @@ export async function getOrdersThisWeek(cinemaId) {
 			$in: ["Confirmed"],
 		},
 		created_at: {
-			$gte: prevWeek,
+			$gte: previousWeek,
+			$lte: currentWeek,
 		},
 	});
 
-	const prevWeekOrdersThisWeek = prevWeekOrders.length;
+	const ordersCountPreviousWeek = prevWeekOrders.length;
 
-	const changePercent = ((ordersThisWeek - prevWeekOrdersThisWeek) / prevWeekOrdersThisWeek) * 100;
+	const changePercent = ordersCountPreviousWeek === 0 ? 0 : ((ordersCountThisWeek - ordersCountPreviousWeek) / ordersCountPreviousWeek) * 100;
 
 	return {
-		ordersThisWeek,
-		changePercent: changePercent ? changePercent : 0,
+		ordersCountThisWeek,
+		changePercent: changePercent ? changePercent.toFixed(0) : 0,
 	};
 }
 
 export async function getRevenueThisWeek(cinemaId) {
+	const currentWeek = new Date();
+	currentWeek.setDate(currentWeek.getDate() - 7);
+
 	const orders = await Order.find({
 		cinema_id: cinemaId,
 		status: {
 			$in: ["Confirmed"],
 		},
 		created_at: {
-			$gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7),
+			$gte: currentWeek,
 		},
 	});
 
 	const revenueThisWeek = orders.reduce((acc, order) => acc + order.price_total, 0);
 
-	const prevWeek = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7);
+	const previousWeek = new Date();
+	previousWeek.setDate(previousWeek.getDate() - 14);
 
 	const prevWeekOrders = await Order.find({
 		cinema_id: cinemaId,
@@ -109,17 +117,18 @@ export async function getRevenueThisWeek(cinemaId) {
 			$in: ["Confirmed"],
 		},
 		created_at: {
-			$gte: prevWeek,
+			$gte: previousWeek,
+			$lte: currentWeek,
 		},
 	});
 
 	const prevWeekRevenue = prevWeekOrders.reduce((acc, order) => acc + order.price_total, 0);
 
-	const changePercent = ((revenueThisWeek - prevWeekRevenue) / prevWeekRevenue) * 100;
+	const changePercent = prevWeekRevenue === 0 ? 0 : ((revenueThisWeek - prevWeekRevenue) / prevWeekRevenue) * 100;
 
 	return {
 		revenueThisWeek,
-		changePercent: changePercent ? changePercent : 0,
+		changePercent: changePercent ? changePercent.toFixed(0) : 0,
 	};
 }
 

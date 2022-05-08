@@ -76,9 +76,9 @@ export default function Header() {
 											{!session ||
 												(session.user.role == "user" && (
 													<>
-														<Link href="/" passHref>
+														{/* <Link href="/" passHref>
 															<Nav.Link className={router.asPath == "/" ? "active" : ""}>Home</Nav.Link>
-														</Link>
+														</Link> */}
 														<Link href="/movies" passHref>
 															<Nav.Link className={router.asPath == "/movies" ? "active" : ""}>Movies</Nav.Link>
 														</Link>

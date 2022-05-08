@@ -73,14 +73,14 @@ export function AddUser({ cinemas }) {
 					<Modal.Title>Add user</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<Form id="hook-form" onSubmit={handleSubmit(onSubmit)}>
+					<Form noValidate id="hook-form" onSubmit={handleSubmit(onSubmit)}>
 						<Form.Group className="mb-3">
 							<Form.Label htmlFor="name">Email Address</Form.Label>
 							<Form.Control required type="email" placeholder="Email Address" {...register("email")} />
 						</Form.Group>
 						<Form.Group className="mb-3">
 							<Form.Label htmlFor="name">Password</Form.Label>
-							<Form.Control type="password" placeholder="Password" {...register("password")} />
+							<Form.Control required type="password" placeholder="Password" {...register("password")} />
 						</Form.Group>
 						<Form.Group className="mb-3">
 							<Form.Label htmlFor="role">Role</Form.Label>

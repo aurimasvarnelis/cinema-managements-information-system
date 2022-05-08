@@ -53,7 +53,7 @@ export function EditCinema({ cinema }) {
 					<Modal.Title>Edit cinema</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<Form id="hook-form" onSubmit={handleSubmit(onSubmit)}>
+					<Form noValidate id="hook-form" onSubmit={handleSubmit(onSubmit)}>
 						<Form.Group className="mb-3">
 							<Form.Label>Name</Form.Label>
 							<Form.Control required type="text" placeholder="Enter name" defaultValue={cinema.name} {...register("name")} />
