@@ -29,7 +29,7 @@ export default function Header() {
 
 	async function fetchCinemas() {
 		//const MONGODB_URI = process.env.NODE_ENV.MONGODB_URI;
-		const response = await fetch(`http://localhost:3000/api/cinemas`)
+		const response = await fetch(`/api/cinemas`)
 			.then((res) => res.json(res))
 			.then((data) => {
 				setCinemas(data);
@@ -120,17 +120,16 @@ export default function Header() {
 							)}
 						</Nav>
 						<Nav className="nav-custom">
-							{session?.user.role !== "admin" &&
-								(session?.user.role !== "manager" && (
-									<DropdownButton title={cinema} className="cinema-dropdown-button" onSelect={handleCinemaSelect}>
-										{cinemas &&
-											cinemas.map((cinema) => (
-												<Dropdown.Item key={cinema._id} eventKey={cinema._id}>
-													{cinema.name} | {cinema.location}
-												</Dropdown.Item>
-											))}
-									</DropdownButton>
-								))}
+							{session?.user.role !== "admin" && session?.user.role !== "manager" && (
+								<DropdownButton title={cinema} className="cinema-dropdown-button" onSelect={handleCinemaSelect}>
+									{cinemas &&
+										cinemas.map((cinema) => (
+											<Dropdown.Item key={cinema._id} eventKey={cinema._id}>
+												{cinema.name} | {cinema.location}
+											</Dropdown.Item>
+										))}
+								</DropdownButton>
+							)}
 							{/* {session && (
 								<DropdownButton title={cinema} className="cinema-dropdown-button" onSelect={handleCinemaSelect}>
 									{cinemas &&
@@ -143,10 +142,7 @@ export default function Header() {
 							)} */}
 
 							{session ? (
-								<DropdownButton
-									title={session.user.role === "admin" || session.user.role === "manager" ? session.user.role : "profile"}
-									className="profile-dropdown-button"
-								>
+								<DropdownButton title={session.user.role === "admin" || session.user.role === "manager" ? session.user.role : "profile"} className="profile-dropdown-button">
 									<Dropdown.Item eventKey="1">View profile</Dropdown.Item>
 									<Logout router={router} />
 								</DropdownButton>
