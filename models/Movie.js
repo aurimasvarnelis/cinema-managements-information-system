@@ -44,9 +44,6 @@ const MovieSchema = new mongoose.Schema({
 	duration: {
 		type: Number,
 	},
-	premiere_date: {
-		type: String,
-	},
 	synopsis: {
 		type: String,
 	},

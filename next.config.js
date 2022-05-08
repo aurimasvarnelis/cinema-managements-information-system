@@ -20,8 +20,8 @@ module.exports = {
   `,
 	},
 	env: {
-		//url: "http://localhost:3000",
-		url: "https://cinema-managements-information-system.vercel.app/",
+		url: "http://localhost:3000",
+		//url: "https://cinema-managements-information-system.vercel.app/",
 	},
 	nextConfig,
 };

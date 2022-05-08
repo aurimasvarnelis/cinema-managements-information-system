@@ -18,7 +18,8 @@ export default function movies({ movies, genres, ratings }) {
 						<tr>
 							<th>Poster</th>
 							<th>Name</th>
-							<th>Premiere date</th>
+							<th>Duration</th>
+							<th>Age rating</th>
 							<th>Genre</th>
 							<th>Actions</th>
 						</tr>
@@ -30,7 +31,8 @@ export default function movies({ movies, genres, ratings }) {
 									<embed src={movie.poster} height="100px"></embed>
 								</td>
 								<td>{movie.name}</td>
-								<td>{movie.premiere_date}</td>
+								<td>{movie.duration} min.</td>
+								<td>{movie.rating}</td>
 								<td>{movie.genre}</td>
 
 								<td>

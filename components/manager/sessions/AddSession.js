@@ -130,7 +130,6 @@ export function AddSession({ sessions, movies, rooms, cinemaId, ticketTypes }) {
 				setValidated(false);
 			}
 		}
-		//alert(`Session ${data.name} has been added.`)
 	};
 
 	return (

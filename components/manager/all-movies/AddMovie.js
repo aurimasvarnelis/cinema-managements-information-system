@@ -54,7 +54,6 @@ export function AddMovie({ genres, ratings }) {
 			setPoster();
 		}
 		const resData = await res.json();
-		//console.log(resData)
 	};
 
 	const onSubmit = (data, event) => {
@@ -69,7 +68,6 @@ export function AddMovie({ genres, ratings }) {
 			reset();
 			setValidated(false);
 		}
-		//alert(`Room ${data.name} has been added.`)
 	};
 
 	return (
@@ -106,41 +104,31 @@ export function AddMovie({ genres, ratings }) {
 									{poster && <Image className="mt-3" src={poster} alt="poster" width="200px" height="300px" layout="fixed" />}
 								</Form.Group>
 							</Col>
-							{/* <Col>
-								<Form.Group className="mb-3">
-									<Form.Label htmlFor="cover">Cover</Form.Label>
-									<Form.Control type="file" {...register("cover")} />
-									{cover && <Image className="mt-3" src={cover} alt="poster" width="200px" height="300px" layout="fixed" />}
-								</Form.Group>
-							</Col> */}
 						</Row>
-
 						<Row>
 							<Col>
 								<Form.Group className="mb-3" controlId="validationName">
 									<Form.Label>Name</Form.Label>
 									<Form.Control required type="text" placeholder="Movie name" {...register("name")} />
-									{/* <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback> */}
-									{/* <Form.Control.Feedback type="invalid">Please choose a movie name.</Form.Control.Feedback> */}
 								</Form.Group>
 							</Col>
 							<Col>
 								<Form.Group className="mb-3">
 									<Form.Label htmlFor="director">Director</Form.Label>
-									<Form.Control type="text" placeholder="Director" {...register("director")} />
+									<Form.Control required type="text" placeholder="Director" {...register("director")} />
 								</Form.Group>
 							</Col>
 						</Row>
 
 						<Form.Group className="mb-3">
 							<Form.Label htmlFor="actors">Actors</Form.Label>
-							<Form.Control type="text" placeholder="Actors" {...register("actors")} />
+							<Form.Control required type="text" placeholder="Actors" {...register("actors")} />
 						</Form.Group>
 						<Row>
 							<Col>
 								<Form.Group className="mb-3">
 									<Form.Label htmlFor="rating">Age rating</Form.Label>
-									<Form.Select {...register("rating")}>
+									<Form.Select required {...register("rating")}>
 										<option key="blankChoice" hidden value="">
 											Select age rating
 										</option>
@@ -173,13 +161,7 @@ export function AddMovie({ genres, ratings }) {
 							<Col>
 								<Form.Group className="mb-3">
 									<Form.Label htmlFor="duration">Duration</Form.Label>
-									<Form.Control type="number" placeholder="Duration" {...register("duration")} />
-								</Form.Group>
-							</Col>
-							<Col>
-								<Form.Group className="mb-3">
-									<Form.Label htmlFor="premiere_date">Premiere date</Form.Label>
-									<Form.Control required type="date" placeholder="Premiere" {...register("premiere_date")} />
+									<Form.Control required type="number" placeholder="Duration" {...register("duration")} />
 								</Form.Group>
 							</Col>
 						</Row>

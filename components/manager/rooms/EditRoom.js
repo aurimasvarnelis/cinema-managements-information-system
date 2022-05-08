@@ -57,7 +57,6 @@ export function EditRoom({ room, cinemaId }) {
 			handleClose();
 			setValidated(false);
 		}
-		//alert(`Room ${data.name} has been added.`)
 	};
 
 	const handleAddRow = () => {

@@ -26,9 +26,9 @@ export default function movies({ cinemas, movies, allMovies }) {
 									<tr>
 										<th>#</th>
 										<th>Name</th>
+										<th>Duration</th>
+										<th>Age rating</th>
 										<th>Genre</th>
-										<th>Rating</th>
-										<th>Premiere date</th>
 										<th>Actions</th>
 									</tr>
 								</thead>
@@ -37,9 +37,9 @@ export default function movies({ cinemas, movies, allMovies }) {
 										<tr key={movie._id}>
 											<td>{movieIdx}</td>
 											<td>{movie.name}</td>
-											<td>{movie.genre}</td>
+											<td>{movie.duration} min.</td>
 											<td>{movie.rating}</td>
-											<td>{movie.premiere_date}</td>
+											<td>{movie.genre}</td>
 											<td>
 												<DetachMovie cinemaId={cinema._id} movieId={movie._id} />
 											</td>
@@ -50,38 +50,6 @@ export default function movies({ cinemas, movies, allMovies }) {
 						</Tab>
 					))}
 				</Tabs>
-
-				{/* <AddMovie genres={genres} ratings={ratings} />
-
-				<Table striped bordered hover>
-					<thead>
-						<tr>
-							<th>Poster</th>
-							<th>Name</th>
-							<th>Premiere date</th>
-							<th>Genre</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					<tbody>
-						{movies.map((movie) => (
-							<tr key={movie._id} className="item-row">
-								<td>
-									<embed src={movie.poster} height="100px"></embed>
-								</td>
-								<td>{movie.name}</td>
-								<td>{movie.premiere_date}</td>
-								<td>{movie.genre}</td>
-
-								<td>
-									<ViewMovie movie={movie} />
-									<EditMovie movie={movie} genres={genres} ratings={ratings} />
-									<DeleteMovie movie={movie} />
-								</td>
-							</tr>
-						))}
-					</tbody>
-				</Table> */}
 			</Container>
 		</>
 	);

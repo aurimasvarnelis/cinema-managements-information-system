@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Login from "./auth/login";
-import Logo from "../public/sus-cinema-2.png";
+import Logo from "../public/cinema_logo.png";
 import Logout from "./auth/logout";
 import { cinemaState } from "../atoms/cinemaAtom";
 import { useRecoilState } from "recoil";
@@ -28,7 +28,6 @@ export default function Header() {
 	}, []);
 
 	async function fetchCinemas() {
-		//const MONGODB_URI = process.env.NODE_ENV.MONGODB_URI;
 		const response = await fetch(`/api/cinemas`)
 			.then((res) => res.json(res))
 			.then((data) => {
@@ -130,20 +129,10 @@ export default function Header() {
 										))}
 								</DropdownButton>
 							)}
-							{/* {session && (
-								<DropdownButton title={cinema} className="cinema-dropdown-button" onSelect={handleCinemaSelect}>
-									{cinemas &&
-										cinemas.map((cinema) => (
-											<Dropdown.Item key={cinema._id} eventKey={cinema._id}>
-												{cinema.name} | {cinema.location}
-											</Dropdown.Item>
-										))}
-								</DropdownButton>
-							)} */}
 
 							{session ? (
 								<DropdownButton title={session.user.role === "admin" || session.user.role === "manager" ? session.user.role : "profile"} className="profile-dropdown-button">
-									<Dropdown.Item eventKey="1">View profile</Dropdown.Item>
+									{/* <Dropdown.Item eventKey="1">View profile</Dropdown.Item> */}
 									<Logout router={router} />
 								</DropdownButton>
 							) : (

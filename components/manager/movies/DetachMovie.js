@@ -42,7 +42,7 @@ export function DetachMovie({ cinemaId, movieId }) {
 					<Modal.Title>Remove movie</Modal.Title>
 				</Modal.Header>
 
-				<Modal.Footer>
+				<Modal.Footer className="d-flex justify-content-center">
 					<Button variant="secondary" onClick={handleClose}>
 						Cancel
 					</Button>

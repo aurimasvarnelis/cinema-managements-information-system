@@ -63,7 +63,6 @@ export function AddRoom({ cinemaId }) {
 			//reset();
 			setValidated(false);
 		}
-		//alert(`Room ${data.name} has been added.`)
 	};
 
 	const handleAddRow = () => {

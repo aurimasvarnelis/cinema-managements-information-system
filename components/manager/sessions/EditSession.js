@@ -116,7 +116,6 @@ export function EditSession({ sessions, session, movies, rooms, movie, cinemaId,
 				setValidated(false);
 			}
 		}
-		//alert(`Session ${data.name} has been added.`)
 	};
 
 	return (

@@ -1,13 +1,8 @@
-import {
-	deleteSession,
-	getMovieSession,
-	putSession,
-} from "../../../controllers/sessionController";
+import { deleteSession, getMovieSession, putSession } from "../../../controllers/sessionController";
 
 import { dbMiddleware } from "../../../middlewares/dbMiddleware";
 import nextConnect from "next-connect";
 
-// TODO: finish this
 const handler = nextConnect({
 	onError: (err, req, res, next) => {
 		console.error(err.stack);
@@ -31,15 +26,6 @@ const handler = nextConnect({
 	.delete(async (req, res) => {
 		const result = await deleteSession(req);
 		res.send(result);
-		// try {
-		//   const deletedSession = await deleteSession(req);
-		//   if (!deletedSession) {
-		//     return res.status(400).end()
-		//   }
-		//   res.send(result);
-		// } catch (error) {
-		//   res.status(400).end()
-		// }
 	});
 
 export default handler;

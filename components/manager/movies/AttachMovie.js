@@ -51,7 +51,6 @@ export function AttachMovie({ allMovies, cinemas }) {
 			//reset();
 			setValidated(false);
 		}
-		//alert(`Room ${data.name} has been added.`)
 	};
 
 	return (

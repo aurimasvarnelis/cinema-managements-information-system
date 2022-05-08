@@ -89,7 +89,6 @@ export function EditUser({ user, cinemas }) {
 	const onSubmit = (data) => {
 		putData(data);
 		handleClose();
-		// alert(`Theater ${data.name} has been updated.`)
 	};
 	return (
 		<>

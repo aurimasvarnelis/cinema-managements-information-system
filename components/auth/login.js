@@ -1,4 +1,4 @@
-import { Alert, Button, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
@@ -35,7 +35,7 @@ export default function Login() {
 			console.log(status);
 		}
 	};
-	
+
 	const onGoogleSignIn = (e) => {
 		signIn("google");
 	};
@@ -70,11 +70,7 @@ export default function Login() {
 							{" "}
 							Sign in with <b>Facebook</b>
 						</a> */}
-								<a
-									href="#"
-									className="btn btn-danger btn-block w-100"
-									onClick={() => signIn("google")}
-								>
+								<a href="#" className="btn btn-danger btn-block w-100" onClick={() => signIn("google")}>
 									{" "}
 									Sign in with <b>Google</b>
 								</a>
@@ -82,29 +78,16 @@ export default function Login() {
 							<div className="or my-2">or</div>
 							<Form id="login-hook-form" onSubmit={handleSubmit(onSubmit)}>
 								<Form.Group className="mb-3">
-									<Form.Control
-										required
-										type="email"
-										placeholder="Email Address"
-										{...register("loginEmail")}
-									/>
+									<Form.Control required type="email" placeholder="Email" {...register("loginEmail")} />
 								</Form.Group>
 								<Form.Group className="mb-3">
-									<Form.Control
-										type="password"
-										placeholder="Password"
-										{...register("loginPassword")}
-									/>
+									<Form.Control type="password" placeholder="Password" {...register("loginPassword")} />
 								</Form.Group>
 							</Form>
 							{/* <div className="forgot-password w-100 d-flex small">
 						<Button variant="link">Forgot password?</Button>
 					</div> */}
-							<Button
-								variant="primary w-100"
-								type="submit"
-								form="login-hook-form"
-							>
+							<Button variant="primary w-100" type="submit" form="login-hook-form">
 								Log in
 							</Button>
 							<div className="sign-up-link">
@@ -129,26 +112,13 @@ export default function Login() {
 						<Modal.Body>
 							<Form id="register-hook-form" onSubmit={handleSubmit(onSubmit)}>
 								<Form.Group className="mb-3">
-									<Form.Control
-										required
-										type="email"
-										placeholder="Email"
-										{...register("registerEmail")}
-									/>
+									<Form.Control required type="email" placeholder="Email" {...register("registerEmail")} />
 								</Form.Group>
 								<Form.Group className="mb-3">
-									<Form.Control
-										type="password"
-										placeholder="Password"
-										{...register("registerPassword")}
-									/>
+									<Form.Control type="password" placeholder="Password" {...register("registerPassword")} />
 								</Form.Group>
 								<Form.Group className="mb-3">
-									<Form.Control
-										type="password"
-										placeholder="Repeat Password"
-										{...register("registerPasswordConfirm")}
-									/>
+									<Form.Control type="password" placeholder="Repeat Password" {...register("registerPasswordConfirm")} />
 								</Form.Group>
 							</Form>
 							<Button
