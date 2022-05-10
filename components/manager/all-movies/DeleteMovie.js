@@ -11,9 +11,7 @@ export function DeleteMovie({ movie }) {
 
 	// Refreshing page after updating data
 	const router = useRouter();
-	const refreshData = () => {
-		router.replace(router.asPath);
-	};
+	const refreshData = () => router.replace(router.asPath);
 
 	const deleteData = async () => {
 		const res = await fetch(`/api/movies/${movie._id}`, {
@@ -21,9 +19,7 @@ export function DeleteMovie({ movie }) {
 		});
 		// Check that our status code is in the 200s,
 		// meaning the request was successful.
-		if (res.status < 300) {
-			refreshData();
-		}
+		if (res.status < 300) refreshData();
 
 		const resData = await res.json();
 		console.log(resData);

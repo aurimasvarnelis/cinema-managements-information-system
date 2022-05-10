@@ -108,12 +108,6 @@ a {
 	padding: 0 !important;
 }
 
-// .btn-close {
-//   position: absolute;
-//   right: -1rem;
-//   top: -1rem;
-// }
-
 .modal-login .modal-header {
 	border-bottom: none;
 	position: relative;
@@ -173,10 +167,8 @@ a {
 
 /* Tabs */
 .nav-tabs .nav-link {
-	// border-bottom: none;
 	font-size: 0.9rem;
 	background-color: $dark-accent !important;
-	// on hover change background color
 }
 
 .nav-tabs .nav-link:hover {
@@ -186,84 +178,3 @@ a {
 .nav-tabs .nav-link.active {
 	background-color: $dark-shade !important;
 }
-
-// .movie-info {
-//   background-color: transparent !important;
-// }
-
-// .movie-title {
-//   font-size: 5rem;
-// }
-
-/* Items */
-
-// .item-header {
-//   margin-bottom: 1rem;
-// }
-
-// .item-row {
-//   margin-top: 1rem;
-//   margin-bottom: 1rem;
-//   border-radius: 0.5rem;
-//   box-shadow: 0rem .3rem 1rem rgba($light-accent, 0.1);
-
-// }
-
-// .item-row .col {
-//   display:flex;
-//   align-items:center;
-
-// }
-
-// .col:nth-child(odd) {
-//   padding-top: 10px;
-//   padding-bottom: 10px;
-//   background-color: rgba($light-accent, .3);
-// }
-
-// .col:nth-child(even) {
-//   padding-top: 10px;
-//   padding-bottom: 10px;
-//   background-color: rgba($light-accent, .2);
-// }
-
-// .col:first-child{
-//   padding-left: 1rem;
-//   border-top-left-radius: 0.5rem;
-//   border-bottom-left-radius: 0.5rem;
-// }
-
-// .col:last-child{
-//   padding-right: 1rem;
-//   border-top-right-radius: 0.5rem;
-//   border-bottom-right-radius: 0.5rem;
-// }
-
-// .sidebar {
-//   position: fixed;
-//   top: 0;
-//   bottom: 0;
-//   left: 0;
-//   min-height: 100vh !important;
-//   z-index: 100;
-//   padding: 48px 0 0;
-//   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-// }
-// #sidebar-wrapper{
-//   min-height: 100vh !important;
-//   width: 100vw;
-//   margin-left: -1rem;
-//   -webkit-transition: margin .25s ease-out;
-//   -moz-transition: margin .25s ease-out;
-//   -o-transition: margin .25s ease-out;
-//   transition: margin .25s ease-out;
-// }
-// #sidebar-wrapper .sidebar-heading {
-//   padding: 0.875rem 1.25rem;
-//   font-size: 1.2rem;
-// }
-
-// #page-content-wrapper {
-//   min-width: 0;
-//   width: 100%;
-// }

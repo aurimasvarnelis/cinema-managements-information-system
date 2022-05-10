@@ -17,9 +17,7 @@ export function DeleteSession({ session }) {
 		const res = await fetch(`/api/sessions/${session._id}`, {
 			method: "DELETE",
 		});
-		if (res.status < 300) {
-			refreshData();
-		}
+		if (res.status < 300) refreshData();
 	};
 
 	const onSubmit = () => {

@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-// TODO: set image max size to 5mb (5242880 bytes) and fix file select on canceling
 export function AddMovie({ genres, ratings }) {
 	// Model state
 	const [show, setShow] = useState(false);
@@ -18,9 +17,7 @@ export function AddMovie({ genres, ratings }) {
 
 	// Refreshing page after updating data
 	const router = useRouter();
-	const refreshData = () => {
-		router.replace(router.asPath);
-	};
+	const refreshData = () => router.replace(router.asPath);
 
 	const toBase64 = async (file) =>
 		new Promise((resolve, reject) => {
@@ -31,10 +28,9 @@ export function AddMovie({ genres, ratings }) {
 		});
 
 	const [poster, setPoster] = useState();
-	//const [cover, setCover] = useState();
+
 	const onUploadingPoster = async (e) => {
 		if (e.target.files[0]) setPoster(await toBase64(e.target.files[0]));
-		//console.log(e.target.files[0]);
 	};
 
 	const postData = async (data) => {

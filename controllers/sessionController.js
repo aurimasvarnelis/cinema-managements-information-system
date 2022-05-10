@@ -43,14 +43,11 @@ export async function getTicketTypes() {
 }
 
 export async function getSessionsByCinema(cinemaId) {
-	//const filteredSessions = [];
-
 	const sessions = await Session.find({
 		cinema_id: cinemaId,
 	})
 		.lean()
 		.populate("movie_id", "name duration");
-	// filteredSessions.push(sessions);
 
 	sessions.sort((a, b) => {
 		return new Date(a.start_time) - new Date(b.start_time);

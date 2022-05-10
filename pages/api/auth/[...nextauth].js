@@ -50,33 +50,22 @@ export default NextAuth({
 					return createdUser;
 				}
 
-				const checkPassword = await compare(
-					credentials.password,
-					user.password
-				);
+				const checkPassword = await compare(credentials.password, user.password);
 
 				if (!checkPassword) {
 					throw new Error("Password doesn't match");
 				}
 
 				return user;
-
-				//return { id: user._id, email: user.email, role: user.role };
 			},
 		}),
 	],
 	theme: {
 		colorScheme: "light",
 	},
-	// pages: {
-	//   signIn: '/auth/signin',
-	//   signOut: '/auth/signout',
-	//   error: '/auth/error', // Error code passed in query string as ?error=
-	//   verifyRequest: '/auth/verify-request', // (used for check email message)
-	//   newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
-	// },
+
 	callbacks: {
-		async jwt({ token, user, profile }) {
+		async jwt({ token, user }) {
 			if (user) {
 				token.user = {
 					id: user.id,
@@ -84,16 +73,10 @@ export default NextAuth({
 					role: user.role,
 				};
 			}
-
-			// console.log("JWT");
-			// console.log(token);
 			return token;
 		},
-		async session({ session, token, user }) {
+		async session({ session, token }) {
 			session.user = token.user;
-
-			// console.log("session");
-			// console.log(session);
 			return session;
 		},
 	},

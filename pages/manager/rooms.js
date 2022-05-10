@@ -10,14 +10,11 @@ import { getRoomsByCinemas } from "../../controllers/roomController";
 import { getSession } from "next-auth/react";
 import styles from "./movies.module.scss";
 
-//import { getCookie } from "cookies-next";
-
 export default function Rooms({ rooms, cinemas }) {
 	return (
 		<>
 			<Container>
 				<Tabs defaultActiveKey={cinemas[0]._id} id="cinema-tabs" className={styles.cinemaTabs}>
-					{/* // map through all cinemas and get movies for each cinema */}
 					{cinemas.map((cinema, cinemaIdx) => (
 						<Tab eventKey={cinema._id} title={cinema.name} key={cinema._id} className={styles.cinemaTab}>
 							<AddRoom cinemaId={cinema._id} />

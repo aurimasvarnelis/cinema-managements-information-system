@@ -1,22 +1,21 @@
-import dbConnect from "../../lib/dbConnect";
 import {
 	Button,
 	Col,
 	Container,
-	Row,
-	Modal,
 	Form,
+	Modal,
+	Row,
 	Table,
 } from "react-bootstrap";
-import { AddCinema } from "../../components/admin/cinemas/AddCinema";
-import { ViewCinema } from "../../components/admin/cinemas/ViewCinema";
-import { EditCinema } from "../../components/admin/cinemas/EditCinema";
-import { DeleteCinema } from "../../components/admin/cinemas/DeleteCinema";
 
+import { AddCinema } from "../../components/admin/cinemas/AddCinema";
+import { DeleteCinema } from "../../components/admin/cinemas/DeleteCinema";
+import { EditCinema } from "../../components/admin/cinemas/EditCinema";
+import { ViewCinema } from "../../components/admin/cinemas/ViewCinema";
+import dbConnect from "../../lib/dbConnect";
 import { getCinemas } from "../../controllers/cinemaController";
 import { getUsers } from "../../controllers/userController";
 
-// TODO: add managers and let edit them
 export default function cinemas({ cinemas, users }) {
 	return (
 		<>

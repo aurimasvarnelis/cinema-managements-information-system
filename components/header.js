@@ -12,8 +12,6 @@ import { useRecoilState } from "recoil";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 
-// import styles from "./header.module.css";
-
 export default function Header() {
 	const { data: session } = useSession();
 
@@ -32,10 +30,6 @@ export default function Header() {
 			.then((res) => res.json(res))
 			.then((data) => {
 				setCinemas(data);
-				// const selected = data.find((e) => {
-				//   return e._id === getCookie('cinema')
-				// })
-				// setCinema(selected.name)
 			});
 		return response;
 	}
@@ -76,9 +70,9 @@ export default function Header() {
 											{!session ||
 												(session.user.role == "user" && (
 													<>
-														{/* <Link href="/" passHref>
+														<Link href="/" passHref>
 															<Nav.Link className={router.asPath == "/" ? "active" : ""}>Home</Nav.Link>
-														</Link> */}
+														</Link>
 														<Link href="/movies" passHref>
 															<Nav.Link className={router.asPath == "/movies" ? "active" : ""}>Movies</Nav.Link>
 														</Link>

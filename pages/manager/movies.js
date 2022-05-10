@@ -8,17 +8,12 @@ import { getCinemasByManager } from "../../controllers/cinemaController";
 import { getSession } from "next-auth/react";
 import styles from "./movies.module.scss";
 
-// import { getGenres, getMovies, getRatings } from "../../controllers/movieController";
-// import { EditMovie } from "../../components/manager/movies/EditMovie";
-// import { ViewMovie } from "../../components/manager/movies/ViewMovie";
-
 export default function movies({ cinemas, movies, allMovies }) {
 	return (
 		<>
 			<Container>
 				<AttachMovie allMovies={allMovies} cinemas={cinemas} />
 				<Tabs defaultActiveKey={cinemas[0]._id} id="cinema-tabs" className={styles.cinemaTabs}>
-					{/* // map through all cinemas and get movies for each cinema */}
 					{cinemas.map((cinema, cinemaIdx) => (
 						<Tab eventKey={cinema._id} title={cinema.name} key={cinema._id} className={styles.cinemaTab}>
 							<Table striped bordered hover>
@@ -58,7 +53,6 @@ export default function movies({ cinemas, movies, allMovies }) {
 export async function getServerSideProps(context) {
 	await dbConnect();
 
-	// const userSession = await getSession(context);
 	const { user } = await getSession(context);
 	const cinemas = await getCinemasByManager(user.id);
 	const movies = await getMoviesByCinemas(cinemas);

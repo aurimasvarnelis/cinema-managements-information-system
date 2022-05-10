@@ -59,8 +59,8 @@ export function AddRoom({ cinemaId }) {
 			setValidated(true);
 		} else {
 			postData(data);
-			//handleClose();
-			//reset();
+			handleClose();
+			reset();
 			setValidated(false);
 		}
 	};

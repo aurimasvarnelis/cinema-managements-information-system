@@ -5,13 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import "react-bootstrap-typeahead/css/Typeahead.bs5.css";
 
-import {
-	RecoilRoot,
-	atom,
-	selector,
-	useRecoilState,
-	useRecoilValue,
-} from "recoil";
+import { RecoilRoot, atom, selector, useRecoilState, useRecoilValue } from "recoil";
 import { checkCookies, setCookies } from "cookies-next";
 
 import Head from "next/head";
@@ -19,7 +13,6 @@ import Layout from "../components/layout";
 import React from "react";
 import { SessionProvider } from "next-auth/react";
 
-// TODO: fix cinema cookies
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 	if (!checkCookies("cinema")) setCookies("cinema", "atlas cinema");
 	return (

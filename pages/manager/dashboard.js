@@ -12,7 +12,6 @@ import {
 	getRevenueOfAllMonths,
 	getRevenueThisWeek,
 	getTicketsSoldByMovieDuration,
-	getTopTotalRevenueOfAllMovies,
 	getUsersThisMonth,
 } from "../../controllers/dashboardController";
 
@@ -22,20 +21,12 @@ import { getSession } from "next-auth/react";
 import styles from "./dashboard.module.scss";
 import { useEffect } from "react";
 
-//import styles from "./movies.module.scss";
-
-// import { getGenres, getMovies, getRatings } from "../controllers/movieController";
-
-//const { faker } = require("@faker-js/faker");
-
-// top 10 total revenue of all movies
 export default function dashboard({
 	cinemas,
 	usersThisMonth,
 	ordersThisWeek,
 	revenueThisWeek,
 	revenueOfAllMonths,
-	topTotalRevenueOfAllMovies,
 	mostPopularTimes,
 	mostPopularWeekdays,
 	mostPopularMonths,
@@ -59,8 +50,6 @@ export default function dashboard({
 	return (
 		<>
 			<Container>
-				{/* // dashboard tab for each cinema and one tab for all cinemas */}
-
 				<Row className={styles.row}>
 					<Col className={styles.col}>
 						<Card className={styles.card}>
@@ -163,14 +152,6 @@ export default function dashboard({
 							</Card.Body>
 						</Card>
 					</Col>
-					{/* <Col className={styles.col}>
-						<Card className={styles.card}>
-							<Card.Header className={styles.cardHeader}>
-								<h4>Top 10 total revenue of all movies</h4>
-							</Card.Header>
-							<Card.Body className={styles.cardBody}> <DoughnutChart cinemasRevenueDataFromMovies={topTotalRevenueOfAllMovies} cinemas={cinemas} /></Card.Body>
-						</Card>
-					</Col> */}
 					<Col className={styles.col} sm={6} md={6} lg={4}>
 						<Card className={styles.card}>
 							<Card.Header className={styles.cardHeader}>
@@ -221,16 +202,6 @@ export default function dashboard({
 							</Card.Body>
 						</Card>
 					</Col>
-					{/* <Col className={styles.col}>
-						<Card className={styles.card}>
-							<Card.Header className={styles.cardHeader}>
-								<h4>Top 10 total revenue of all movies</h4>
-							</Card.Header>
-							<Card.Body className={styles.cardBody}>
-								<Doughnut data={doughnutData(topTotalRevenueOfAllMovies[0])} options={doughnutOptions} />
-							</Card.Body>
-						</Card>
-					</Col> */}
 				</Row>
 			</Container>
 		</>
@@ -240,12 +211,8 @@ export default function dashboard({
 export async function getServerSideProps(context) {
 	await dbConnect();
 
-	//setCookies("managing", { cinema: session.user.cinema_id });
-
-	//const movies = await getMovies();
 	const { user } = await getSession(context);
 	const cinemas = await getCinemasByManager(user.id);
-	//const revenueOfAllMonths = await getRevenueOfAllMonths(cinemas.map((cinema) => cinema._id));
 
 	const usersThisMonth = await Promise.all(
 		cinemas.map(async (cinema) => {
@@ -272,13 +239,6 @@ export async function getServerSideProps(context) {
 		cinemas.map(async (cinema) => {
 			const revenueOfAllMonths = await getRevenueOfAllMonths(cinema._id);
 			return revenueOfAllMonths;
-		})
-	);
-
-	const topTotalRevenueOfAllMovies = await Promise.all(
-		cinemas.map(async (cinema) => {
-			const topTotalRevenueOfAllMovies = await getTopTotalRevenueOfAllMovies(cinema._id);
-			return topTotalRevenueOfAllMovies;
 		})
 	);
 
@@ -331,7 +291,6 @@ export async function getServerSideProps(context) {
 			ordersThisWeek: JSON.parse(JSON.stringify(ordersThisWeek)),
 			revenueThisWeek: JSON.parse(JSON.stringify(revenueThisWeek)),
 			revenueOfAllMonths: JSON.parse(JSON.stringify(revenueOfAllMonths)),
-			topTotalRevenueOfAllMovies: JSON.parse(JSON.stringify(topTotalRevenueOfAllMovies)),
 			mostPopularTimes: JSON.parse(JSON.stringify(mostPopularTimes)),
 			mostPopularWeekdays: JSON.parse(JSON.stringify(mostPopularWeekdays)),
 			mostPopularMonths: JSON.parse(JSON.stringify(mostPopularMonths)),

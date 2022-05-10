@@ -133,7 +133,6 @@ export default function Session({ movieSession, movie, cinema, order }) {
 			</Row>
 			<Row className={styles.seating}>
 				<div>
-					{/* map through movieSession.room rows and columns and display armchair for each column*/}
 					{movieSession.room.rows
 						.map((row, rowIndex) => (
 							<div className={styles.seatRow} key={rowIndex}>
@@ -176,13 +175,11 @@ export default function Session({ movieSession, movie, cinema, order }) {
 			<Row xs={12} sm={6} md={3} lg={3} xl={3} style={{ justifyContent: "center" }}>
 				<Col className={styles.ticketTypeColumn}>
 					<ul className={styles.ticketTypesList}>
-						{/* // map through ticket_types and display each ticket type as <li> */}
 						{
 							movieSession.ticket_types
 								.map((ticketType, index) => (
 									<li key={index}>
 										<div className={styles.armchairBlock}>
-											{/* if index = 0 display Image */}
 											{index === 0 && (
 												<div className={styles.armchairType}>
 													<Image src={armchairGreen} width="100%" height="100%" alt="green" />
@@ -272,9 +269,6 @@ export async function getServerSideProps(context) {
 
 	const { sessionId } = context.query;
 	const session = await getMovieSession(sessionId);
-	// session._id = session._id.toString();
-	// session.movie_id = session.movie_id.toString();
-
 	const movie = await getMovie(session.movie_id);
 	const cinema = await getCinema(session.cinema_id);
 	const userSession = await getSession(context);

@@ -22,9 +22,7 @@ export function DeleteCinema({ cinema }) {
 		});
 		// Check that our status code is in the 200s,
 		// meaning the request was successful.
-		if (res.status < 300) {
-			refreshData();
-		}
+		if (res.status < 300) refreshData();
 
 		const resData = await res.json();
 		console.log(resData);

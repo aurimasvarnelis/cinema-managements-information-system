@@ -125,8 +125,8 @@ export function AddSession({ sessions, movies, rooms, cinemaId, ticketTypes }) {
 		} else {
 			if (!error) {
 				postData(data);
-				//handleClose();
-				//reset();
+				handleClose();
+				reset();
 				setValidated(false);
 			}
 		}
@@ -193,7 +193,6 @@ export function AddSession({ sessions, movies, rooms, cinemaId, ticketTypes }) {
 									required
 									disabled={disabled}
 									type="datetime-local"
-									min={moment(new Date()).format("YYYY-MM-DDTHH:mm")}
 									placeholder="Start time"
 									onChangeCapture={(e) => onStartDateTimeChange(e.target.value)}
 									isInvalid={error}

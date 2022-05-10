@@ -47,8 +47,8 @@ export function AttachMovie({ allMovies, cinemas }) {
 			setValidated(true);
 		} else {
 			updateMovies(data);
-			//handleClose();
-			//reset();
+			handleClose();
+			reset();
 			setValidated(false);
 		}
 	};
@@ -70,7 +70,7 @@ export function AttachMovie({ allMovies, cinemas }) {
 				show={show}
 				onHide={() => {
 					handleClose();
-					//setValidated(false);
+					setValidated(false);
 				}}
 				centered
 			>
@@ -96,9 +96,9 @@ export function AttachMovie({ allMovies, cinemas }) {
 								renderMenuItemChildren={(option) => (
 									<div>
 										{option.name}
-										{/* <div>
+										<div>
 											<small>Location: {option.location}</small>
-										</div> */}
+										</div>
 									</div>
 								)}
 							/>
@@ -117,14 +117,7 @@ export function AttachMovie({ allMovies, cinemas }) {
 								}}
 								selected={selectedMovies}
 								clearButton
-								renderMenuItemChildren={(option) => (
-									<div>
-										{option.name}
-										{/* <div>
-											<small>Location: {option.location}</small>
-										</div> */}
-									</div>
-								)}
+								renderMenuItemChildren={(option) => <div>{option.name}</div>}
 							/>
 						</Form.Group>
 					</Form>

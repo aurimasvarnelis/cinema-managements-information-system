@@ -12,9 +12,7 @@ export function DeleteRoom({ room, cinemaId }) {
 
 	// Refreshing page after updating data
 	const router = useRouter();
-	const refreshData = () => {
-		router.replace(router.asPath);
-	};
+	const refreshData = () => router.replace(router.asPath);
 
 	const deleteData = async () => {
 		const res = await fetch(`/api/cinemas/${cinemaId}/rooms/${room._id}`, {

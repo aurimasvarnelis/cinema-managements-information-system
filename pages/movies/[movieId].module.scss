@@ -1,143 +1,117 @@
 .movieSection {
-  margin-left: 4rem;
-  margin-right: 4rem;
+	margin-left: 4rem;
+	margin-right: 4rem;
 }
 
 .movieInfo {
-  margin-top: 1rem;
+	margin-top: 1rem;
 
-  dl {
-    margin: 0;
-  }
+	dl {
+		margin: 0;
+	}
 
-  dt {
-    float: left;
-    clear: left;
-    font-weight: bold;
+	dt {
+		float: left;
+		clear: left;
+		font-weight: bold;
+	}
 
-  }
+	dt::after {
+		content: ":";
+		margin-right: 0.5rem;
+	}
 
-  dt::after {
-    content: ":";
-    margin-right: 0.5rem;
-  }
+	dd {
+		padding: 0 0 0.5em 0;
+	}
 
-  dd {
-    //margin: 0 0 0 100px;
-    //margin-left: 4rem;
-    padding: 0 0 0.5em 0;
-  }
-
-  color: $textColorDark;
-  font-size: 1rem;
+	color: $textColorDark;
+	font-size: 1rem;
 }
 
-// turn off all default styling
 .movieSynopsis {
-  margin-top: 1rem;
+	margin-top: 1rem;
 
-  color: $textColorDark;
-  font-size: 1rem;
+	color: $textColorDark;
+	font-size: 1rem;
 
-  // background: none;
-  // color: inherit;
-  // border: none;
-  // padding: 0;
-  // font-size: 1rem;
-  // cursor: pointer;
-  // outline: inherit;
-  // vertical-align: unset;
-  // text-decoration: none;
-  // display: block;
-  .movieSynopsisButton {
-    display: block;
-    padding: 0;
-    text-decoration: none;
-    color: $dark-accent;
-  }
+	.movieSynopsisButton {
+		display: block;
+		padding: 0;
+		text-decoration: none;
+		color: $dark-accent;
+	}
 
-  .movieSynopsisButton:hover {
-    outline: 0;
-    color: $dark-shade;
-  }
+	.movieSynopsisButton:hover {
+		outline: 0;
+		color: $dark-shade;
+	}
 }
 
 .playerWrapper {
-  position: relative;
-  padding-top: 56.25%;
-  /* 720 / 1280 = 0.5625 */
+	position: relative;
+	padding-top: 56.25%;
+	/* 720 / 1280 = 0.5625 */
 }
 
 .reactPlayer {
-  position: absolute;
-  top: 0;
-  left: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 
 .date {
-  border-bottom: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
 }
 
 .sessions {
-  margin: 0;
-  padding: 0;
+	margin: 0;
+	padding: 0;
 
-  // dont show link decoration
-  a {
-    text-decoration: none;
-  }
+	a {
+		text-decoration: none;
+	}
 
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
+	ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
 }
 
 .session {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  padding-left: 0;
-  padding-right: 0;
-  border-bottom: 1px solid #ccc;
-  display: flex;
-  align-items: center;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	padding-left: 0;
+	padding-right: 0;
+	border-bottom: 1px solid #ccc;
+	display: flex;
+	align-items: center;
 }
 
 .sessionTime {
-  font-size: 1.8rem;
-  color: $textColorDark;
+	font-size: 1.8rem;
+	color: $textColorDark;
 }
 
-// align right of the container
 .sessionBuy {
-
-  // float: right;
-  // display: flex;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  background: $dark-accent;
-  color: white;
-  text-align: center;
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: bold;
-  border-radius: 0.25rem;
-  transition: background 0.2s ease-in-out;
-  border: 0;
-  box-shadow: 0 0 .5rem 0.25rem rgba($dark-accent, 0.4);
-  outline: 0;
-  margin-left: auto;
-
-
-  //on hover change background color
-  &:hover {
-    background: $dark-shade;
-  }
-
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	background: $dark-accent;
+	color: white;
+	text-align: center;
+	text-decoration: none;
+	font-size: 1rem;
+	font-weight: bold;
+	border-radius: 0.25rem;
+	transition: background 0.2s ease-in-out;
+	border: 0;
+	box-shadow: 0 0 0.5rem 0.25rem rgba($dark-accent, 0.4);
+	outline: 0;
+	margin-left: auto;
+	&:hover {
+		background: $dark-shade;
+	}
 }
-
-
-//.video-wrapper > video { width: 55vw; height: min-content; }

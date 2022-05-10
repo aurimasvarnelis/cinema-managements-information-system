@@ -6,7 +6,6 @@ import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 
-// TODO: after creating account users signs in
 export function AddUser({ cinemas }) {
 	// Model state
 	const [show, setShow] = useState(false);

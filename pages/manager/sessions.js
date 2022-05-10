@@ -21,7 +21,6 @@ export default function Sessions({ cinemas, sessions, movies, rooms, ticketTypes
 		<>
 			<Container>
 				<Tabs defaultActiveKey={cinemas[0]._id} id="cinema-tabs" className={styles.cinemaTabs}>
-					{/* // map through all cinemas and get movies for each cinema */}
 					{cinemas.map((cinema, cinemaIdx) => (
 						<Tab eventKey={cinema._id} title={cinema.name} key={cinema._id} className={styles.cinemaTab}>
 							<AddSession sessions={sessions[cinemaIdx]} movies={movies[cinemaIdx]} rooms={rooms[cinemaIdx]} cinemaId={cinema._id} ticketTypes={ticketTypes} />
@@ -39,10 +38,6 @@ export default function Sessions({ cinemas, sessions, movies, rooms, ticketTypes
 								</thead>
 								<tbody>
 									{sessions[cinemaIdx].map((session, sessionIdx) => {
-										{
-											/* const movie = movies[cinemaIdx].find((movie) => movie._id === session.movie_id);
-										const room = movies[cinemaIdx].find((room) => room._id === session.room_id); */
-										}
 										return (
 											<tr key={session._id} className="item-row">
 												<td>{sessionIdx + 1}</td>
@@ -52,7 +47,6 @@ export default function Sessions({ cinemas, sessions, movies, rooms, ticketTypes
 												<td>{session.display_time}</td>
 
 												<td>
-													{/* // count percentage of seats occupied by comparing total seats to occupied seats */}
 													<ProgressBar
 														now={(session.room.occupied_seats / session.room.total_seats) * 100}
 														label={`${(session.room.occupied_seats / session.room.total_seats) * 100}%`}

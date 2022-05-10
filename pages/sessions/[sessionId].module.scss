@@ -2,7 +2,6 @@
 	margin-top: 2rem;
 	margin-bottom: 2rem;
 }
-// don`t let row to be split into different rows
 .seatRow {
 	display: flex;
 	flex-direction: row;
@@ -75,11 +74,9 @@
 	width: 10px;
 	height: 10px;
 }
-// remove li decoration
 .ticketTypesList {
 	padding: 0;
 	list-style: none;
-	// display list items horizontally
 	li {
 		display: inline-block;
 		margin-right: 1rem;
@@ -103,7 +100,6 @@
 		padding-top: 0.3rem;
 		padding-right: 0.5rem;
 		padding-left: 0.5rem;
-		//padding-bottom: 0.3rem;
 	}
 }
 .ticketTypeColumn {
@@ -113,8 +109,6 @@
 	align-items: center;
 	justify-content: center;
 	width: auto;
-	//border-bottom: 1px solid #ccc;
-	// flex-basis: calc(50% - 2rem);
 }
 .armchairBlock {
 	display: inline-flex;
@@ -125,7 +119,6 @@
 	width: 1.5rem;
 	height: 1.5rem;
 }
-// center the column in a row
 .ticketRow {
 	display: flex;
 	flex-direction: row;
@@ -146,7 +139,6 @@
 }
 .ticketType {
 	flex-basis: 40%;
-	// font-weight: bold;
 }
 .ticketsTotal {
 	display: flex;
@@ -155,11 +147,6 @@
 	align-items: center;
 	justify-content: center;
 	height: 2rem;
-	// display: flex;
-	// flex-direction: row;
-	// flex-wrap: nowrap;
-	// justify-content: end;
-	// flex-basis: 20%;
 }
 .ticketTotal {
 	flex-basis: 80%;
@@ -168,8 +155,6 @@
 .ticketPrice {
 	flex-basis: 20%;
 	text-align: end;
-	// font-size: 1rem;
-	// font-weight: bold;
 }
 .submit {
 	display: flex;

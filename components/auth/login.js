@@ -53,8 +53,6 @@ export default function Login() {
 				}}
 				centered
 			>
-				{/* <Modal.Header closeButton></Modal.Header> */}
-
 				{loginActive ? (
 					<>
 						<Modal.Header closeButton>
@@ -96,7 +94,6 @@ export default function Login() {
 									variant="link"
 									onClick={() => {
 										setLoginActive(false);
-										// handleShow();
 									}}
 								>
 									Sign up
@@ -127,7 +124,6 @@ export default function Login() {
 								form="register-hook-form"
 								onClick={() => {
 									setLoginActive(false);
-									// handleShow();
 								}}
 							>
 								Sign up

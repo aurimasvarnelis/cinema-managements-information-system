@@ -11,8 +11,6 @@ import { getSessionsByMovie } from "../../controllers/sessionController";
 import moment from "moment";
 import styles from "./[movieId].module.scss";
 
-// import ReactPlayer from "react-player";
-
 export default function Movie({ movie, sessions }) {
 	const [showMore, setShowMore] = useState(false);
 
@@ -28,15 +26,6 @@ export default function Movie({ movie, sessions }) {
 		r[date] = [...(r[date] || []), a];
 		return r;
 	}, {});
-
-	// get first group of sessions first date
-	// const firstDate = Object.keys(groupedSessions)[0];
-
-	useEffect(() => {
-		console.log(sortedSessions);
-		console.log(groupedSessions);
-		//console.log(firstDate);
-	}, []);
 
 	const [startDate, setStartDate] = useState(moment(Object.keys(groupedSessions)[0]).toDate());
 
@@ -62,9 +51,7 @@ export default function Movie({ movie, sessions }) {
 						<line x1="3" y1="10" x2="21" y2="10"></line>
 					</svg>
 					<span className={`${styles.dateValue} mx-3`}>{value}</span>
-					{/* <span className="px-2">Select date</span> */}
 				</Button>
-				{/* <span className={`${styles.dateValue} mx-5`}>{value}</span> */}
 			</>
 		);
 	});

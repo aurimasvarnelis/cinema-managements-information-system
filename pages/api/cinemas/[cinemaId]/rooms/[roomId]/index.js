@@ -1,8 +1,8 @@
-import nextConnect from "next-connect";
-import { dbMiddleware } from "../../../../../../middlewares/dbMiddleware";
-import { getRoom, putRoom, deleteRoom } from "../../../../../../controllers/roomController";
+import { deleteRoom, getRoom, putRoom } from "../../../../../../controllers/roomController";
 
-// TODO: finish this
+import { dbMiddleware } from "../../../../../../middlewares/dbMiddleware";
+import nextConnect from "next-connect";
+
 const handler = nextConnect({
 	onError: (err, req, res, next) => {
 		console.error(err.stack);

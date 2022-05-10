@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 
-// TODO: add image size validation
 export function EditMovie({ movie, genres, ratings }) {
 	// Model state
 	const [show, setShow] = useState(false);
@@ -18,9 +17,7 @@ export function EditMovie({ movie, genres, ratings }) {
 
 	// Refreshing page after updating data
 	const router = useRouter();
-	const refreshData = () => {
-		router.replace(router.asPath);
-	};
+	const refreshData = () => router.replace(router.asPath);
 
 	const toBase64 = (file) =>
 		new Promise((resolve, reject) => {
@@ -29,19 +26,6 @@ export function EditMovie({ movie, genres, ratings }) {
 			reader.onload = () => resolve(reader.result);
 			reader.onerror = (error) => reject(error);
 		});
-
-	// from base64 to file
-	const toFile = (base64) => {
-		const arr = base64.split(",");
-		const mime = arr[0].match(/:(.*?);/)[1];
-		const bstr = atob(arr[1]);
-		let n = bstr.length;
-		const u8arr = new Uint8Array(n);
-		while (n--) {
-			u8arr[n] = bstr.charCodeAt(n);
-		}
-		return new File([u8arr], `${Date.now()}.png`, { type: mime });
-	};
 
 	useEffect(() => {
 		setPoster(movie.poster);
@@ -62,9 +46,7 @@ export function EditMovie({ movie, genres, ratings }) {
 			},
 			body: JSON.stringify(data),
 		});
-		if (res.status < 300) {
-			refreshData();
-		}
+		if (res.status < 300) refreshData();
 	};
 
 	const onSubmit = (data, event) => {
