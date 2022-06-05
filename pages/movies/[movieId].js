@@ -19,12 +19,19 @@ export default function Movie({ movie, sessions }) {
 		setShowMore(!showMore);
 	};
 
-	// sort sessions by unique moment(session.start_time).format("YYYY-MM-DD") and group by date
+	// sort sessions by unique moment(session.start_time).format("YYYY-MM-DD")
 	const sortedSessions = sessions.sort((a, b) => (moment(a.start_time).format("YYYY-MM-DD") > moment(b.start_time).format("YYYY-MM-DD") ? 1 : -1));
-	const groupedSessions = sortedSessions.reduce((r, a) => {
-		const date = moment(a.start_time).format("YYYY-MM-DD");
-		r[date] = [...(r[date] || []), a];
-		return r;
+
+	// group by date and include only sessions that are not in the past
+	const groupedSessions = sortedSessions.reduce((acc, session) => {
+		const date = moment(session.start_time).format("YYYY-MM-DD");
+		if (moment(session.start_time).isAfter(moment())) {
+			if (!acc[date]) {
+				acc[date] = [];
+			}
+			acc[date].push(session);
+		}
+		return acc;
 	}, {});
 
 	const [startDate, setStartDate] = useState(moment(Object.keys(groupedSessions)[0]).toDate());

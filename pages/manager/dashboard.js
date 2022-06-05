@@ -62,7 +62,7 @@ export default function dashboard({
 										<div key={idx} className={styles.cinemaList}>
 											<div>{cinemas[idx].name}</div>
 											<div className={styles.cinemaNumbers}>
-												{order.ordersThisWeek}
+												{order.ordersCountThisWeek}
 												{order.changePercent > 0 ? (
 													<div className={styles.green}>+{order.changePercent}%</div>
 												) : order.changePercent < 0 ? (

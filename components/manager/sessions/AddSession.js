@@ -193,6 +193,7 @@ export function AddSession({ sessions, movies, rooms, cinemaId, ticketTypes }) {
 									required
 									disabled={disabled}
 									type="datetime-local"
+									min={moment(new Date()).format("YYYY-MM-DDTHH:mm")}
 									placeholder="Start time"
 									onChangeCapture={(e) => onStartDateTimeChange(e.target.value)}
 									isInvalid={error}
@@ -241,14 +242,17 @@ export function AddSession({ sessions, movies, rooms, cinemaId, ticketTypes }) {
 									</thead>
 									<tbody>
 										{schedule.map((roomSession) => {
-											return (
-												<tr key={roomSession._id}>
-													<td>{roomSession.movie_id.name}</td>
-													<td>{roomSession.room.name}</td>
-													<td>{moment(roomSession.start_time).format("DD/MM/YYYY HH:mm")}</td>
-													<td>{moment(roomSession.end_time).format("DD/MM/YYYY HH:mm")}</td>
-												</tr>
-											);
+											//include only sessions that are not in the past
+											if (moment(roomSession.start_time).isAfter(moment())) {
+												return (
+													<tr key={roomSession._id}>
+														<td>{roomSession.movie_id.name}</td>
+														<td>{roomSession.room.name}</td>
+														<td>{moment(roomSession.start_time).format("DD/MM/YYYY HH:mm")}</td>
+														<td>{moment(roomSession.end_time).format("DD/MM/YYYY HH:mm")}</td>
+													</tr>
+												);
+											}
 										})}
 										{schedule.length === 0 && (
 											<tr>
