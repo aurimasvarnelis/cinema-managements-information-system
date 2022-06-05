@@ -1,26 +1,14 @@
-import {
-	Button,
-	Card,
-	Col,
-	Container,
-	Form,
-	Modal,
-	Row,
-	Table,
-} from "react-bootstrap";
-import {
-	getGenres,
-	getMovies,
-	getRatings,
-} from "../controllers/movieController";
+import { Button, Card, Col, Container, Form, Modal, Row, Table } from "react-bootstrap";
+import { getGenres, getMovies, getRatings } from "../controllers/movieController";
 import { useEffect, useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
 import dbConnect from "../lib/dbConnect";
+import { getCookie } from "cookies-next";
 import styles from "./movies.module.scss";
 
-export default function Movies({ movies, genres, ratings }) {
+export default function Movies({ movies, genres, ratings, cinemaId }) {
 	// checkbox filter for movies
 	const [filterGenre, setGenreFilter] = useState([]);
 	const [filterRating, setRatingFilter] = useState([]);
@@ -76,11 +64,7 @@ export default function Movies({ movies, genres, ratings }) {
 												if (e.target.checked) {
 													setGenreFilter([...filterGenre, e.target.value]);
 												} else {
-													setGenreFilter(
-														filterGenre.filter(
-															(item) => item !== e.target.value
-														)
-													);
+													setGenreFilter(filterGenre.filter((item) => item !== e.target.value));
 												}
 											}}
 										/>
@@ -100,11 +84,7 @@ export default function Movies({ movies, genres, ratings }) {
 												if (e.target.checked) {
 													setRatingFilter([...filterRating, e.target.value]);
 												} else {
-													setRatingFilter(
-														filterRating.filter(
-															(item) => item !== e.target.value
-														)
-													);
+													setRatingFilter(filterRating.filter((item) => item !== e.target.value));
 												}
 											}}
 										/>
@@ -115,33 +95,28 @@ export default function Movies({ movies, genres, ratings }) {
 					</Col>
 					<Col xs={12} md={12} lg={10} xl={10}>
 						<Row>
-							{filteredMovies.map((movie) => (
-								<Col key={movie._id} xs={6} md={6} lg={4} xl={3}>
-									<Link href={`/movies/${movie._id}`}>
-										<Card className={`my-3 ${styles.movieCard}`}>
-											<div>
-												<Image
-													className="movie-poster rounded-3"
-													src={movie.poster}
-													alt="First slide"
-													width="686px"
-													height="1016px"
-													layout="responsive"
-												/>
-											</div>
+							{filteredMovies.map((movie) => {
+								if (movie.cinemas.includes(cinemaId)) {
+									return (
+										<Col key={movie._id} xs={6} md={6} lg={4} xl={3}>
+											<Link href={`/movies/${movie._id}`}>
+												<Card className={`my-3 ${styles.movieCard}`}>
+													<div>
+														<Image className="movie-poster rounded-3" src={movie.poster} alt="First slide" width="686px" height="1016px" layout="responsive" />
+													</div>
 
-											<Card.Body className={styles.movieInfo}>
-												<Card.Title className={styles.movieTitle}>
-													{movie.name}
-												</Card.Title>
-												<Card.Text className={styles.movieDetails}>
-													{movie.genre} | {movie.rating} | {movie.duration} min.
-												</Card.Text>
-											</Card.Body>
-										</Card>
-									</Link>
-								</Col>
-							))}
+													<Card.Body className={styles.movieInfo}>
+														<Card.Title className={styles.movieTitle}>{movie.name}</Card.Title>
+														<Card.Text className={styles.movieDetails}>
+															{movie.genre} | {movie.rating} | {movie.duration} min.
+														</Card.Text>
+													</Card.Body>
+												</Card>
+											</Link>
+										</Col>
+									);
+								}
+							})}
 						</Row>
 					</Col>
 				</Row>
@@ -150,9 +125,11 @@ export default function Movies({ movies, genres, ratings }) {
 	);
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
 	await dbConnect();
 
+	const cinemaId = getCookie("cinemaId", context);
+	// const movies = await getMovies(cinemaId);
 	const movies = await getMovies();
 	const genres = await getGenres();
 	const ratings = await getRatings();
@@ -162,6 +139,7 @@ export async function getServerSideProps() {
 			movies: JSON.parse(JSON.stringify(movies)),
 			genres: JSON.parse(JSON.stringify(genres)),
 			ratings: JSON.parse(JSON.stringify(ratings)),
+			cinemaId: cinemaId,
 		},
 	};
 }
