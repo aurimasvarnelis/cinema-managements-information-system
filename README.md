@@ -1,1 +1,8 @@
-Bachelor’s Final Degree Project
+# Bachelor’s Final Degree Project
+
+The project was made using Next.js fullstack framework.
+
+System was implemented that enables cinema staff to manage the cinemas and the auditoriums and screenings that take place in them.
+
+
+
